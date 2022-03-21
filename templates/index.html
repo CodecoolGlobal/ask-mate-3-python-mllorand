@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Overflow</title>
+</head>
+<body>
+    <h1>Ask Overflow</h1>
+    <table>
+        <tr>
+            {% for column_title in header %}
+                <th>{{ column_title.replace("_", " ").title() }}</th>
+            {% endfor %}
+        </tr>
+        {% for question in questions %}
+            <tr>
+                {% for cell in question %}
+                    {% if cell == "title" %}
+                        <td><a href="/story/{{ question["id"] }}">{{ question[cell] }}</a></td>
+                    {% else %}
+                        <td>{{ question[cell] | safe }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
