@@ -18,7 +18,7 @@
                     {% if cell == "title" %}
                         <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
                     {% elif cell == "image" %}
-                        <td><img src="{{ question["image"] }}"</td>
+                        <td><img src="{{ question["image"] }}" width="50"></td>
                     {% else %}
                         <td>{{ question[cell] | safe }}</td>
                     {% endif %}
