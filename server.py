@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import data_manager
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="/home/fekete/codecool/web_projects/ask-mate-1-python-horvatht9411/images")
 
 
 @app.route("/")
