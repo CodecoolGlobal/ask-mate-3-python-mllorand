@@ -1,13 +1,13 @@
 import csv
 
 
-def get_all_question():
+def read_csv(filename, header):
     try:
-        with open(QUESTION_FILE_PATH) as file:
+        with open(filename) as file:
             questions = [question for question in csv.DictReader(file)]
         return questions
     except FileNotFoundError:
-        with open(QUESTION_FILE_PATH, "w") as file:
-            file.write(",".join(QUESTION_HEADER))
+        with open(filename, "w") as file:
+            file.write(",".join(header))
             file.write("\n")
-        return get_all_question()
+        return read_csv(filename, header)

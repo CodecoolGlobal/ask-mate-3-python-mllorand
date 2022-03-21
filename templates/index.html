@@ -16,7 +16,9 @@
             <tr>
                 {% for cell in question %}
                     {% if cell == "title" %}
-                        <td><a href="/story/{{ question["id"] }}">{{ question[cell] }}</a></td>
+                        <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
+                    {% elif cell == "image" %}
+                        <td><img src="{{ question["image"] }}"</td>
                     {% else %}
                         <td>{{ question[cell] | safe }}</td>
                     {% endif %}
