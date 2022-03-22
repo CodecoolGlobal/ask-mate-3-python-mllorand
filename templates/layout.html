@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Overflow</title>
+    <style>
+        th {
+            white-space: nowrap;
+        }
+        .navbar {
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+        .content {
+            margin-top: 500px;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a href="/list"><input type="image" src="/images/logo.png" /></a>
+    <hr>
+</div>
+<div class="content">
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>
