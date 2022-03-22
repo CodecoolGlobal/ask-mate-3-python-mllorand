@@ -6,22 +6,26 @@
     <style>
         th {
             white-space: nowrap;
+            position: sticky;
+            top: 98px;
+            background-color: white;
         }
         .navbar {
-            overflow: hidden;
+            background-color: white;
             position: fixed;
             top: 0;
             width: 100%;
+            border-bottom: 5px solid black;
         }
         .content {
-            margin-top: 500px;
+            margin-top: 96px;
         }
+        {% block style %}{% endblock %}
     </style>
 </head>
 <body>
 <div class="navbar">
     <a href="/list"><input type="image" src="/images/logo.png" /></a>
-    <hr>
 </div>
 <div class="content">
 {% block content %}{% endblock %}
