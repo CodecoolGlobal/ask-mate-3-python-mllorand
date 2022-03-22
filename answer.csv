@@ -1,4 +1,2 @@
 id,submission_time,vote_number,question_id,message,image
-3,"2017-04-28, 18:49:14",4,3,You need to use brackets: my_list = [],
-2,"2017-04-25, 04:42:34",35,1,Look it up in the Python docs,
-1,"2017-04-28, 18:49:14",4,1,You need to use brackets: my_list = [],
+1,1493398154,4,1,You need to use brackets: my_list = [],
