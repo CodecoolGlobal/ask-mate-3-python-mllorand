@@ -2,15 +2,15 @@
 {% block content %}
     <table>
         <tr>
-            {% for column_title in header %}
-                <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
-                    {% if column_title not in ["id","image"] %}
-                        <a href="/list?sort_by={{ column_title }}&order=asc">˄</a>
-                        <a href="/list?sort_by={{ column_title }}&order=desc">˅</a>
-                    {% endif %}
-                </th>
-            {% endfor %}
-        </tr>
+                {% for column_title in header %}
+                    <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
+                        {% if column_title not in ["id","image"] %}
+                            <a href="/list?sort_by={{ column_title }}&order=asc">˄</a>
+                            <a href="/list?sort_by={{ column_title }}&order=desc">˅</a>
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
         {% for question in questions %}
             <tr>
                 {% for cell in question %}
