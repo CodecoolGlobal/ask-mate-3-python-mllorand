@@ -1,9 +1,12 @@
 {% extends "layout.html" %}
+{% block style %}
+
+{% endblock %}
 {% block content %}
     <table>
         <tr>
                 {% for column_title in header %}
-                    <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
+                    <th class="topheader"> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
                         {% if column_title not in ["id","image"] %}
                             <a href="/list?sort_by={{ column_title }}&order=asc">˄</a>
                             <a href="/list?sort_by={{ column_title }}&order=desc">˅</a>
@@ -18,6 +21,8 @@
                         <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
                     {% elif cell == "image" %}
                         <td><img src=" {{ question["image"] }}" width="50"></td>
+                    {% elif cell not in ["message"] %}
+                        <td style="text-align: center">{{ question[cell] | safe }}</td>
                     {% else %}
                         <td>{{ question[cell] | safe }}</td>
                     {% endif %}

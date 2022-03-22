@@ -18,9 +18,16 @@ def get_all_entries(file_path, file_header, sort_by=None, order=None):
             entries = sorted(entries, key=lambda x: int(x[sort_by]), reverse=order)
     else:
         entries.reverse()
-    for entry in entries:
-        entry["submission_time"] = datetime.fromtimestamp(int(entry["submission_time"])).strftime("%Y-%m-%d, %H:%M:%S")
+    convert_timestamp_to_date(entries)
     return entries
+
+
+def convert_timestamp_to_date(entries):
+    for entry in entries:
+        entry["submission_time"] = datetime.fromtimestamp(int(entry["submission_time"]))\
+                                                        .strftime("%Y-%m-%d <br> %H:%M:%S")
+    return entries
+
 
 
 def get_entry_by_id(entry_id, file_path, file_header):
