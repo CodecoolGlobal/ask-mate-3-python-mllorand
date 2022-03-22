@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div class="topheader">
 	<h1>Question {{ question_id }}</h1>
     <table>
         <tr>
@@ -17,11 +18,12 @@
         {% endfor %}
         </tr>
     </table><br>
-	<h1>Answers:</h1>
+	<h1 style="margin: 0;padding: 0">Answers:</h1><br>
+    </div>
 	<table>
-        <tr>
+        <tr style="background-color: white">
                 {% for column_title in answer_headers %}
-                    <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}</th>
+                    <th style="position: sticky; top: 275px; background-color: white"> {{ column_title.replace("_", " ").title() if column_title not in "image" }}</th>
                 {% endfor %}
             </tr>
         {% for answer in answers %}
@@ -30,7 +32,7 @@
                     {% if cell == "image" %}
                         <td><img src=" {{ answer["image"] }}" width="50"></td>
                     {% else %}
-                        <td>{{ answer[cell] | safe }}</td>
+                        <td style="text-align: center">{{ answer[cell] | safe }}</td>
                     {% endif %}
                 {% endfor %}
             </tr>
