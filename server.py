@@ -9,22 +9,20 @@ app = Flask(__name__, static_folder="/")
 def main():
     if request.args:
         print("must be sorted by "+request.args["sort_by"])
-    questions = data_manager.get_all_questions()
+    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
     header = data_manager.QUESTION_HEADER
     return render_template("index.html", header=header, questions=questions)
 
 
 @app.route("/question/<question_id>", methods=['GET', 'POST'])
 def route_question(question_id):
-    database = data_manager.read_csv()
-    dict_for_show = {}
-    if request.method == "GET":
-        for line in database:
-            if line['id'] == question_id:
-                print(line)
-                dict_for_show = line
     header = data_manager.QUESTION_HEADER
-    return render_template("question.html", header=header, dict_for_show=dict_for_show)
+    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, header)
+    if request.method == "GET":
+        for question in questions:
+            if question['id'] == question_id:
+                print(question)
+                return render_template("question.html", header=header, question=question)
 
 
 @app.route("/answer/<answer_id>/delete")
