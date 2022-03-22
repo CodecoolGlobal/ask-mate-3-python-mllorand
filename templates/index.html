@@ -1,33 +1,49 @@
 {% extends "layout.html" %}
-{% block style %}
-
+{% block navbar %}
+<div class="sortby">
+    <label for="sortby-select">Sort by:</label>
+    <select onchange="location = this.value" name="sort_by" id="sort_by">
+    {% if request.args.get("sort_by") == None %}
+        <option value="/list">Select an option to sort questions</option>
+    {% endif %}
+    {% for option in header %}
+        {% if option not in ["id","image"] %}
+            <option value="/list?sort_by={{ option }}&order=asc">{{ option.replace("_", " ").title() }}(asc)</option>
+            <option value="/list?sort_by={{ option }}&order=desc">{{ option.replace("_", " ").title() }}(desc)</option>
+        {% endif %}
+    {% endfor %}
+</select>
+</div>
 {% endblock %}
 {% block content %}
+    <div class="content">
+    <div class="main_table">
     <table>
-        <tr>
+        <thead>
+            <tr>
                 {% for column_title in header %}
-                    <th class="topheader"> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
-                        {% if column_title not in ["id","image"] %}
-                            <a href="/list?sort_by={{ column_title }}&order=asc">˄</a>
-                            <a href="/list?sort_by={{ column_title }}&order=desc">˅</a>
-                        {% endif %}
-                    </th>
+                    {% if column_title not in "image" %}
+                        <th> {{ column_title.replace("_", " ").title() }}</th>
+                    {% endif %}
                 {% endfor %}
             </tr>
+        </thead>
+        <tbody>
         {% for question in questions %}
             <tr>
                 {% for cell in question %}
                     {% if cell == "title" %}
                         <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
-                    {% elif cell == "image" %}
-                        <td><img src=" {{ question["image"] }}" width="50"></td>
-                    {% elif cell not in ["message"] %}
+                    {% elif cell not in ["message","image"] %}
                         <td style="text-align: center">{{ question[cell] | safe }}</td>
-                    {% else %}
+                    {% elif cell != "image" %}
                         <td>{{ question[cell] | safe }}</td>
                     {% endif %}
                 {% endfor %}
             </tr>
         {% endfor %}
+        </tbody>
     </table>
+    </div>
+    </div>
 {% endblock %}

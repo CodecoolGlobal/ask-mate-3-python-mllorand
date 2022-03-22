@@ -4,34 +4,77 @@
     <meta charset="UTF-8">
     <title>Ask Overflow</title>
     <style>
-        .topheader {
-            white-space: nowrap;
-            position: sticky;
-            top: 98px;
-            background-color: white;
-            padding: 0;
-            margin: 0;
+        html {
+            overflow-y:scroll
         }
         .navbar {
             background-color: white;
             position: fixed;
-            top: 0;
-            width: 100%;
             border-bottom: 5px solid black;
+            top: 0;
+            width: 99%;
+            z-index: 1;
         }
         .content {
-            margin-top: 96px;
-            position: -webkit-sticky;
+            position: absolute;
+            top: 98px;
+            width: 99%;
         }
-        {% block style %}{% endblock %}
+        .main_foot {
+            position: fixed;
+            bottom: 0;
+            width: 99%;
+            height: 40px;
+            background: black;
+            color: white;
+            display: flex;
+            justify-content: center;
+        }
+        .main_foot span {
+            font-size: 0.9em;
+            align-self: flex-end;
+        }
+        .main_table table{
+            position: relative;
+            border-collapse: collapse;
+            top: 0px;
+            bottom: 40px;
+            margin-bottom: 40px;
+        }
+        .main_table th:not(:first-child),td:not(:first-child){
+            padding-left: 30px;
+        }
+        .main_table td{
+            min-width: 40px;
+            border-bottom: 1px solid #dddddd;
+        }
+        .main_table thead tr{
+            background-color: #dddddd;
+            white-space: nowrap;
+            position: sticky;
+            top: 98px;
+        }
+        .main_table tbody tr:nth-of-type(even){
+            background-color: #dddddd;
+        }
+        .sortby {
+            z-index: 0;
+            position: fixed;
+            top:70px;
+            right: 40px;
+            left: auto;
+        }
     </style>
 </head>
 <body>
 <div class="navbar">
-    <a href="/list"><input type="image" src="/images/logo.png" /></a>
+    <a href="/list" style="text-align: center"><input type="image" src="/images/logo.png" /></a>
+    {% block navbar %}{% endblock %}
 </div>
-<div class="content">
 {% block content %}{% endblock %}
+<div class="main_foot">
+    <span>Powered by: ImmutableMultiDict Objects and other pain in the ass</span>
+{% block foot %}{% endblock %}
 </div>
 </body>
 </html>
