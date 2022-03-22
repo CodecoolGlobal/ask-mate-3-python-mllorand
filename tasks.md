@@ -6,10 +6,10 @@
     - The questions are sorted by most recent. Done
 
 2. Create the `/question/<question_id>` page that displays a question and the answers for it. (Tomi)
-    - The page is available under `/question/<question_id>`. 
-    - There are links to the question pages from the list page.
-    - The page displays the question title and message.
-    - The page displays all answers to a question.
+    - The page is available under `/question/<question_id>`. Done
+    - There are links to the question pages from the list page. Done
+    - The page displays the question title and message. Done
+    - The page displays all answers to a question. 
 
 3. Implement a form that allows the user to add a question. (Tomi)
     - There is an `/add-question` page with a form.
