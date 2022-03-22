@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template
 import data_manager
 
 app = Flask(__name__, static_folder="/")
@@ -14,12 +14,17 @@ def main():
     return render_template("index.html", header=header, questions=questions)
 
 
-@app.route("/answer/<answer_id>/delete")
-def route_answer(answer_id=None):
-    if answer_id:
-        return redirect(("question/"))
-
-
+@app.route("/question/<question_id>", methods=['GET', 'POST'])
+def route_question(question_id):
+    database = data_manager.read_csv()
+    dict_for_show = {}
+    if request.method == "GET":
+        for line in database:
+            if line['id'] == question_id:
+                print(line)
+                dict_for_show = line
+    header = data_manager.QUESTION_HEADER
+    return render_template("question.html", header=header, dict_for_show=dict_for_show)
 
 
 if __name__ == "__main__":

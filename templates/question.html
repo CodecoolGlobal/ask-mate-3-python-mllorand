@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+    <table>
+        <tr>
+            {% for column_title in header %}
+                {% if column_title in ["tittle","message"] %}
+                 <th>{{ header[column_title] | safe }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% for key, value in dict_for_show.items() %}
+            <tr>
+                {% if key in ["title", "message"] %}
+                    <td>{{ dict_for_show[value] | safe }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
