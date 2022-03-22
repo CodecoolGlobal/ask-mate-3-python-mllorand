@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Ask Overflow</title>
+    <style>
+        th {
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
-    <h1>Ask Overflow</h1>
+    <a href="/list"><input type="image" src="/images/logo.png" /></a>
+    <hr>
     <table>
         <tr>
             {% for column_title in header %}
-                <th>{{ column_title.replace("_", " ").title() }}</th>
+                <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
+                    {% if column_title not in ["id","image"] %}
+                        <a href="/list?sort_by={{ column_title }}&order=asc">˄</a>
+                        <a href="/list?sort_by={{ column_title }}&order=desc">˅</a>
+                    {% endif %}
+                </th>
             {% endfor %}
         </tr>
         {% for question in questions %}
@@ -18,7 +29,7 @@
                     {% if cell == "title" %}
                         <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
                     {% elif cell == "image" %}
-                        <td><img src="{{ question["image"] }}" width="50"></td>
+                        <td><img src=" {{ question["image"] }}" width="50"></td>
                     {% else %}
                         <td>{{ question[cell] | safe }}</td>
                     {% endif %}
