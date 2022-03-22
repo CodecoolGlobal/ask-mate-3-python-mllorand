@@ -16,13 +16,17 @@ def main():
 
 @app.route("/question/<question_id>", methods=['GET', 'POST'])
 def route_question(question_id):
-    header = data_manager.QUESTION_HEADER
-    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, header)
+    question_headers = data_manager.QUESTION_HEADER
+    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, question_headers)
     if request.method == "GET":
+        answer_headers = data_manager.ANSWER_HEADER
+        answers_list = data_manager.get_all_entries(data_manager.ANSWER_FILE_PATH, answer_headers)
+        answers = [answer for answer in answers_list if answer['question_id'] == question_id]
         for question in questions:
             if question['id'] == question_id:
-                print(question)
-                return render_template("question.html", header=header, question=question)
+                return render_template("question.html", question_headers=question_headers,
+                                       answer_headers=answer_headers,
+                                       question=question, question_id=question_id, answers=answers)
 
 
 @app.route("/answer/<answer_id>/delete")
@@ -30,7 +34,7 @@ def route_answer(answer_id=None):
     if answer_id:
         answer = data_manager.get_entry_by_id(answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
         question_id = answer['question_id']
-        data_manager.delete_entry(answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
+        data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
         return redirect("/question/" + question_id)
 
 
