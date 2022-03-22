@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ask Overflow</title>
-    <style>
-        th {
-            white-space: nowrap;
-        }
-    </style>
-</head>
-<body>
-    <a href="/list"><input type="image" src="/images/logo.png" /></a>
-    <hr>
+{% extends "layout.html" %}
+{% block content %}
     <table>
         <tr>
             {% for column_title in header %}
@@ -37,5 +25,4 @@
             </tr>
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}
