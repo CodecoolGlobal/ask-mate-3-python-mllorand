@@ -17,7 +17,7 @@
     - There is a POST form with at least `title` and `message` fields.
     - After submitting, the page redirects to "Display a question" page of this new question.
 
-4. Implement posting a new answer. (Lóri)
+4. Implement posting a new answer. (Lóri) (Todo)
     - The page URL is `/question/<question_id>/new-answer`.
     - The question detail page links to the page.
     - The page has a POST form with a form field called `message`.
@@ -46,7 +46,7 @@
     - The fields are pre-filled with existing question data.
     - After submitting, the page redirects to the "Display a question" page. The changed data is visible on the "Display a question" page.
 
-9. Implement deleting an answer.(Lóri)
+9. Implement deleting an answer.(Lóri)(In progress)
     - Deleting is implemented by `/answer/<answer_id>/delete` endpoint.
     - There is a deletion link on the question page, next to an answer.
     - Deleting redirects to the question detail page.
