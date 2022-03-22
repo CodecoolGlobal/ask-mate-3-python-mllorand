@@ -29,7 +29,6 @@ def convert_timestamp_to_date(entries):
     return entries
 
 
-
 def get_entry_by_id(entry_id, file_path, file_header):
     entries = connection.read_csv(file_path, file_header)
     key = 'id'
