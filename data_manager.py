@@ -25,9 +25,8 @@ def get_entry_by_id(entry_id, file_path, file_header):
     return entry
 
 
-def delete_entry(entry_id, file_path, file_header):
+def delete_entry(file_path, file_header, entry_to_delete):
     entries = get_all_entries(file_path, file_header)
-    entry_to_delete = get_entry_by_id(entry_id, file_path, file_header)
     with open(file_path, 'w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writeheader()

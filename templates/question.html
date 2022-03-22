@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
+	<h1>Question {{ question_id }}</h1>
     <table>
         <tr>
-            {% for column_title in header %}
+            {% for column_title in question_headers %}
                 {% if column_title in ["title","message"] %}
-                 <th>{{ column_title | safe }}</th>
+                 <th> {{ column_title.replace("_", " ").title() | safe if column_title not in "image" }}</th>
                 {% endif %}
             {% endfor %}
         </tr>
@@ -16,5 +17,24 @@
         {% endfor %}
         </tr>
     </table><br>
+	<h1>Answers:</h1>
+	<table>
+        <tr>
+                {% for column_title in answer_headers %}
+                    <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}</th>
+                {% endfor %}
+            </tr>
+        {% for answer in answers %}
+            <tr>
+                {% for cell in answer %}
+                    {% if cell == "image" %}
+                        <td><img src=" {{ answer["image"] }}" width="50"></td>
+                    {% else %}
+                        <td>{{ answer[cell] | safe }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
     <a href="/">Back to main menu</a>
 {% endblock %}

@@ -1,17 +1,17 @@
 ## Tasks
 
-1. Implement the `/list` page that displays all questions.
+1. Implement the `/list` page that displays all questions.(Dani) (Done)
     - The page is available under `/list`. Done
     - The data is loaded and displayed from `question.csv`. Done
     - The questions are sorted by most recent. Done
 
-2. Create the `/question/<question_id>` page that displays a question and the answers for it. (Tomi)
+2. Create the `/question/<question_id>` page that displays a question and the answers for it. (Tomi / Lóri)
     - The page is available under `/question/<question_id>`. Done
     - There are links to the question pages from the list page. Done
     - The page displays the question title and message. Done
-    - The page displays all answers to a question. 
+    - The page displays all answers to a question. Done
 
-3. Implement a form that allows the user to add a question. (Tomi)
+3. Implement a form that allows the user to add a question. (Tomi) (Todo)
     - There is an `/add-question` page with a form.
     - The page is linked from the list page.
     - There is a POST form with at least `title` and `message` fields.
@@ -23,7 +23,7 @@
     - The page has a POST form with a form field called `message`.
     - Posting an answer redirects to the question detail page. The new answer is displayed on the question detail page.
 
-5. Implement sorting for the question list.(Dani)
+5. Implement sorting for the question list.(Dani) (Todo)
     - The question list can be sorted by title, submission time, message, number of views, and number of votes.
     - The question list can be put in ascending and descending order.
     - The order is passed as query string parameters, such as `/list?order_by=title&order_direction=desc`.
@@ -33,23 +33,23 @@
     - There is a deletion link on the question page.
     - Deleting redirects to the list of questions.
 
-7. Allow the user to upload an image for a question or answer.(Lóri)
+7. Allow the user to upload an image for a question or answer.(Lóri) (Todo)
     - The forms for adding question and answer contain an "image" file field.
     - The user can attach an image (.jpg, .png).
     - The image is saved on server and displayed next to the question or the answer.
     - When deleting the question or answer, the image file is also deleted.
 
-8. Implement editing an existing question.(Tomi)
+8. Implement editing an existing question.(Tomi) (Todo)
     - There is a `/question/<question_id>/edit` page.
     - The page is linked from the question page.
     - There is a POST form with at least `title` and `message` fields.
     - The fields are pre-filled with existing question data.
     - After submitting, the page redirects to the "Display a question" page. The changed data is visible on the "Display a question" page.
 
-9. Implement deleting an answer.(Lóri)(In progress)
-    - Deleting is implemented by `/answer/<answer_id>/delete` endpoint.
-    - There is a deletion link on the question page, next to an answer.
-    - Deleting redirects to the question detail page.
+9. Implement deleting an answer.(Lóri)(Done)
+    - Deleting is implemented by `/answer/<answer_id>/delete` endpoint. Done
+    - There is a deletion link on the question page, next to an answer. Done
+    - Deleting redirects to the question detail page. Done
 
 10. Implement voting on questions.(Dani)
     - Vote numbers are displayed next to questions on the question list page.
