@@ -9,9 +9,15 @@ QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
-def get_all_entries(file_path, file_header):
+def get_all_entries(file_path, file_header, sort_by=None, order=None):
     entries = connection.read_csv(file_path, file_header)
-    entries.reverse()
+    if sort_by is not None:
+        if sort_by in ["title", "message"]:
+            entries = sorted(entries, key=lambda x: x[sort_by], reverse=order)
+        else:
+            entries = sorted(entries, key=lambda x: int(x[sort_by]), reverse=order)
+    else:
+        entries.reverse()
     for entry in entries:
         entry["submission_time"] = datetime.fromtimestamp(int(entry["submission_time"])).strftime("%Y-%m-%d, %H:%M:%S")
     return entries
@@ -26,7 +32,7 @@ def get_entry_by_id(entry_id, file_path, file_header):
 
 
 def delete_entry(file_path, file_header, entry_to_delete):
-    entries = get_all_entries(file_path, file_header)
+    entries = connection.read_csv(file_path, file_header)
     with open(file_path, 'w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writeheader()

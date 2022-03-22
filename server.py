@@ -7,10 +7,14 @@ app = Flask(__name__, static_folder="/")
 @app.route("/")
 @app.route("/list")
 def main():
-    if request.args:
-        print("must be sorted by "+request.args["sort_by"])
-    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
     header = data_manager.QUESTION_HEADER
+    if request.args:
+        questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH,
+                                                 data_manager.QUESTION_HEADER,
+                                                 request.args["sort_by"],
+                                                 order=True if request.args["order"] == "desc" else False)
+    else:
+        questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
     return render_template("index.html", header=header, questions=questions)
 
 
