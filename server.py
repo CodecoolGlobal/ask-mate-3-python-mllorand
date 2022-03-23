@@ -33,13 +33,21 @@ def route_question(question_id):
                                        question=question, question_id=question_id, answers=answers)
 
 
+@app.route("/question/<question_id>/new-answer", methods=['GET', 'POST'])
+def route_add_answer(question_id):
+    if request.method == 'GET':
+        return render_template("answer.html", question_id=question_id)
+    new_answer = request.form
+    data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, entry_to_add=new_answer)
+    return redirect("/question/" + question_id)
+
+
 @app.route("/answer/<answer_id>/delete")
-def route_answer(answer_id=None):
-    if answer_id:
-        answer = data_manager.get_entry_by_id(answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
-        question_id = answer['question_id']
-        data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
-        return redirect("/question/" + question_id)
+def route_answer(answer_id):
+    answer = data_manager.get_entry_by_id(answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
+    question_id = answer['question_id']
+    data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
+    return redirect("/question/" + question_id)
 
 
 if __name__ == "__main__":

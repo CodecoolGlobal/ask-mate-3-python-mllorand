@@ -46,3 +46,11 @@ def delete_entry(file_path, file_header, entry_to_delete):
             if entry == entry_to_delete:
                 continue
             writer.writerow(entry)
+
+
+def add_new_entry(file_path, file_header, entry_to_add):
+    #for header in file_header:
+     #   entry_to_add[header] =
+    with open(file_path, 'a', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=file_header)
+        writer.writerow(entry_to_add)
