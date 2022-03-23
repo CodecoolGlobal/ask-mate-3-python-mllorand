@@ -5,30 +5,30 @@
     - The data is loaded and displayed from `question.csv`. Done
     - The questions are sorted by most recent. Done
 
-2. Create the `/question/<question_id>` page that displays a question and the answers for it. (Tomi / Lóri)
+2. Create the `/question/<question_id>` page that displays a question and the answers for it. (Tomi / Lóri) (Done)
     - The page is available under `/question/<question_id>`. Done
     - There are links to the question pages from the list page. Done
     - The page displays the question title and message. Done
     - The page displays all answers to a question. Done
 
-3. Implement a form that allows the user to add a question. (Tomi) 
+3. Implement a form that allows the user to add a question. (Tomi) (Done)
     - There is an `/add-question` page with a form. Done
     - The page is linked from the list page. Done
     - There is a POST form with at least `title` and `message` fields. Done
     - After submitting, the page redirects to "Display a question" page of this new question. Done
 
-4. Implement posting a new answer. (Lóri) 
+4. Implement posting a new answer. (Lóri) (Done)
     - The page URL is `/question/<question_id>/new-answer`.Done
     - The question detail page links to the page.Done
     - The page has a POST form with a form field called `message`.Done
     - Posting an answer redirects to the question detail page. The new answer is displayed on the question detail page. Done
 
-5. Implement sorting for the question list.(Dani) (Todo)
+5. Implement sorting for the question list.(Dani) (Done)
     - The question list can be sorted by title, submission time, message, number of views, and number of votes. Done
     - The question list can be put in ascending and descending order. Done
     - The order is passed as query string parameters, such as `/list?order_by=title&order_direction=desc`. Done
 
-6. Implement deleting a question.(Tomi)
+6. Implement deleting a question.(Tomi/Lóri) (Done)
     - Deleting is implemented by the `/question/<question_id>/delete` endpoint.
     - There is a deletion link on the question page.
     - Deleting redirects to the list of questions.

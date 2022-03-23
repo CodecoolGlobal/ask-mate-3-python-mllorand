@@ -33,6 +33,18 @@ def route_question(question_id):
                                        question=question, question_id=question_id, answers=answers)
 
 
+@app.route("/question/<question_id>/delete")
+def route_delete_question(question_id):
+    question = data_manager.get_entry_by_id(question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
+    data_manager.delete_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, question)
+    answers_to_remove = [answer for answer in
+                         data_manager.get_all_entries_with_unix_timestamp(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
+                         if answer['question_id'] == question_id]
+    for answer in answers_to_remove:
+        data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
+    return redirect("/list")
+
+
 @app.route("/question/<question_id>/new-answer", methods=['GET', 'POST'])
 def route_add_answer(question_id):
     if request.method == 'GET':
@@ -44,7 +56,7 @@ def route_add_answer(question_id):
 
 
 @app.route("/answer/<answer_id>/delete")
-def route_answer(answer_id):
+def route_delete_answer(answer_id):
     answer = data_manager.get_entry_by_id(answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
     question_id = answer['question_id']
     data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
