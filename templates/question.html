@@ -18,6 +18,9 @@
         {% endfor %}
         </tr>
     </table><br>
+    <form method="get" action="/">
+        <button type="submit">Back to main page</button>
+    </form>
 	<h1 style="margin: 0;padding: 0">Answers:</h1><br>
     <button onclick="location.href='/question/{{ question_id }}/new-answer'">Add New Answer</button>
 	<table>
@@ -38,6 +41,5 @@
             </tr>
         {% endfor %}
     </table>
-    <a href="/">Back to main menu</a>
     </div>
 {% endblock %}

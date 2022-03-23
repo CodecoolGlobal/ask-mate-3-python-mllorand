@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content">
+        <body>
+            <h1>Add new question</h1>
+            <form action="/add-questiob" method="post">
+                {% for entry in question %}
+                    {% if entry == 'title' %}
+                        <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
+                        <input type="text" id="{{ entry }}" name="{{ entry }}"><br><br>
+                    {% elif entry == 'message' %}
+                        <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
+                        <textarea name="{{ entry }}" rows="4" cols="50" required ></textarea>
+                    {% elif entry in ['view_number', 'vote_number'] %}
+                        <input type="hidden" value="0">
+                    {% endif %}
+                {% endfor %}
+            </form>
+            <button value="submit">Submit new question</button>
+        </body>
+    </div>
+{% endblock %}
