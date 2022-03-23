@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block navbar %}
 <div class="sortby">
+    <button onclick="location.href='/add-question'" type="submit">Add new question</button>
     <label for="sortby-select">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
     {% if request.args.get("sort_by") == None %}
@@ -16,10 +17,7 @@
 </div>
 {% endblock %}
 {% block content %}
-    <form method="get" action="/add-question">
-        <button type="submit">Add new question</button>
-    </form>
-    <div class="main_table">
+     <div class="main_table">
     <table>
         <thead>
             <tr>
