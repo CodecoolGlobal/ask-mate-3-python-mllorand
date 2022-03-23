@@ -77,11 +77,16 @@ def add_new_entry(file_path, file_header, entry_to_add):
 
 def update_entry(file_path, file_header, entry_to_update):
     entries = connection.read_csv(file_path, file_header)
+    print(entry_to_update)
     with open(file_path, 'w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writeheader()
         for entry in entries:
-            if entry == entry_to_update:
-                print(entry)
-                writer.writerow(entry_to_update)
+            if entry['id'] == entry_to_update['id']:
+                entry['submission_time'] = entry_to_update['submission_time']
+                entry['view_number'] = entry_to_update['view_number']
+                entry['vote_number'] = entry_to_update['vote_number']
+                entry['title'] = entry_to_update['title']
+                entry['message'] = entry_to_update['message']
+                entry['image'] = entry_to_update['image']
             writer.writerow(entry)

@@ -83,8 +83,9 @@ def route_edit_question(question_id):
     if request.method == 'GET':
         return render_template('edit_question.html', question_header=data_manager.QUESTION_HEADER, question=question)
     if request.method == 'POST':
+        edited_question = dict(request.form)
         data_manager.update_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
-                                  entry_to_update=request.form)
+                                  entry_to_update=edited_question)
         return redirect('/question/'+question_id)
 
 
