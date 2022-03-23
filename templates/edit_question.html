@@ -1,0 +1,21 @@
+{% extends 'add_question.html' %}
+{% block content %}
+	<body>
+        <h1>Edit Question {{ question.id }}</h1>
+        <form action="/question/{{ question.id }}/edit" method="post">
+            {% for entry in question %}
+                {% if entry == 'title' %}
+                    <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
+                    <input type="text" id="{{ entry }}" name="{{ entry }}" value="{{ question[entry] }}"><br><br>
+                {% elif entry == 'message' %}
+                    <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
+                    <textarea name="{{ entry }}" rows="4" cols="50" required >{{ question[entry] }}</textarea>
+                {% else %}
+                    <input type="hidden" value="{{ question[entry] }}" id="{{ entry }}" name="{{ entry }}">
+                {% endif %}
+            {% endfor %}
+        <br>
+        <button type="submit" onclick="location.href='/question/{{ question.id }}/edit'">Edit Question</button>
+        </form>
+    </body>
+{% endblock %}
