@@ -35,7 +35,15 @@
                     {% if cell == "title" %}
                         <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
                     {% elif cell not in ["message","image"] %}
-                        <td style="text-align: center">{{ question[cell] | safe }}</td>
+                        {% if cell == "vote_number" %}
+                            <td style="text-align: center">
+                                <button class="vote_button" onclick="location.href='/question/{{ question["id"] }}/vote-up'" type="submit">+</button>
+                                {{ question[cell] | safe }}
+                                <button class="vote_button" onclick="location.href='/question/{{ question["id"] }}/vote-down'" type="submit">-</button>
+                            </td>
+                        {% else %}
+                            <td style="text-align: center">{{ question[cell] | safe }}</td>
+                        {% endif %}
                     {% elif cell != "image" %}
                         <td>{{ question[cell] | safe }}</td>
                     {% endif %}

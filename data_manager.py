@@ -22,10 +22,6 @@ def get_all_entries(file_path, file_header, sort_by=None, order=None):
     return entries
 
 
-def get_all_entries_with_unix_timestamp(file_path, file_header):
-    return connection.read_csv(file_path, file_header)
-
-
 def get_entry_by_id(entry_id, file_path, file_header):
     entries = connection.read_csv(file_path, file_header)
     key = 'id'
@@ -75,14 +71,17 @@ def add_new_entry(file_path, file_header, entry_to_add):
     return entry_to_add
 
 
-def update_entry(file_path, file_header, entry_to_update):
-    entry_to_update = dict(entry_to_update)
-    entries = connection.read_csv(file_path, file_header)
-    with open(file_path, 'w', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=file_header)
-        writer.writeheader()
-        for entry in entries:
-            if entry['id'] == entry_to_update['id']:
-                writer.writerow(entry_to_update)
-            else:
-                writer.writerow(entry)
+def vote_on_entry(file_path, file_header, vote, entry_id):
+    entry = get_entry_by_id(entry_id, file_path, file_header)
+    if vote == "vote-up":
+        entry["vote_number"] = int(entry["vote_number"])+1
+    elif vote == "vote-down":
+        entry["vote_number"] = int(entry["vote_number"])-1
+    old_entries = connection.read_csv(file_path, file_header)
+    new_entries =[]
+    for old_entry in old_entries:
+        if old_entry["id"] == entry["id"]:
+            new_entries.append(entry)
+        else:
+            new_entries.append(old_entry)
+    connection.write_csv(file_path, file_header, new_entries)

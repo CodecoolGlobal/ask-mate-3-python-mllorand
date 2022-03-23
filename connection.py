@@ -13,3 +13,11 @@ def read_csv(file_path, header):
         return read_csv(file_path, header)
 
 
+def write_csv(file_path, header, entries):
+    with open(file_path, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=header)
+        writer.writeheader()
+        for entry in entries:
+            writer.writerow(entry)
+
+
