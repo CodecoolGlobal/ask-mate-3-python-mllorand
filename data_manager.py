@@ -22,6 +22,10 @@ def get_all_entries(file_path, file_header, sort_by=None, order=None):
     return entries
 
 
+def get_all_entries_with_unix_timestamp(file_path, file_header):
+    return connection.read_csv(file_path, file_header)
+
+
 def get_entry_by_id(entry_id, file_path, file_header):
     entries = connection.read_csv(file_path, file_header)
     key = 'id'
@@ -36,6 +40,7 @@ def delete_entry(file_path, file_header, entry_to_delete):
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writeheader()
         for entry in entries:
+            print(entry)
             if entry == entry_to_delete:
                 continue
             writer.writerow(entry)

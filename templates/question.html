@@ -15,6 +15,7 @@
                     <td>{{ question[cell] | safe }}</td>
                 {% endif %}
         {% endfor %}
+        <td><button onclick="location.href='/question/{{ question['id'] }}/delete'">Delete Question</button></td>
         </tr>
     </table><br>
     <form method="get" action="/">
@@ -38,6 +39,7 @@
                         <td style="text-align: center">{{ answer[cell] | safe }}</td>
                     {% endif %}
                 {% endfor %}
+                <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>
             </tr>
         {% endfor %}
     </table>
