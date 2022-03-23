@@ -1,7 +1,7 @@
 import csv
 import os
 import connection
-from datetime import datetime
+import util
 
 QUESTION_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'question.csv'
 ANSWER_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'answer.csv'
@@ -18,14 +18,7 @@ def get_all_entries(file_path, file_header, sort_by=None, order=None):
             entries = sorted(entries, key=lambda x: int(x[sort_by]), reverse=order)
     else:
         entries.reverse()
-    convert_timestamp_to_date(entries)
-    return entries
-
-
-def convert_timestamp_to_date(entries):
-    for entry in entries:
-        entry["submission_time"] = datetime.fromtimestamp(int(entry["submission_time"]))\
-                                                        .strftime("%Y-%m-%d <br> %H:%M:%S")
+    util.convert_timestamp_to_date(entries)
     return entries
 
 
@@ -48,9 +41,15 @@ def delete_entry(file_path, file_header, entry_to_delete):
             writer.writerow(entry)
 
 
-def add_new_entry(file_path, file_header, entry_to_add):
-    #for header in file_header:
-     #   entry_to_add[header] =
-    with open(file_path, 'a', newline='') as file:
-        writer = csv.DictWriter(file, fieldnames=file_header)
-        writer.writerow(entry_to_add)
+def get_unique_id(file_path, header):
+    entries = connection.read_csv(file_path, header)
+    try:
+        last_story = entries[-1]
+        return str(int(last_story["id"])+1)
+    except IndexError:
+        return 1
+
+
+if __name__ == "__main__":
+    print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
+    
