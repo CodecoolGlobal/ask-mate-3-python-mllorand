@@ -50,17 +50,11 @@ def get_unique_id(file_path, header):
         return 1
 
 
-def add_new_question(file_path, file_header, form):
-    new_question = {'id': get_unique_id(file_path, file_header), 'submission_time': util.generate_timestamp()
-                    'view_number': '0', 'vote_number': '0', 'title': form['title'], 'message': form['message']}
-    return new_question
-
-
 if __name__ == "__main__":
     print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
 
 
-def add_new_entry(file_path, file_header, entry_to_add, question_id):
+def add_new_entry(file_path, file_header, entry_to_add):
     entry_to_add = dict(entry_to_add)
     for header in file_header:
         if header == 'id':
@@ -71,8 +65,7 @@ def add_new_entry(file_path, file_header, entry_to_add, question_id):
             entry_to_add[header] = 0
         elif header == 'image':
             entry_to_add[header] = 'image'
-        elif header == 'question_id':
-            entry_to_add[header] = question_id
     with open(file_path, 'a', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writerow(entry_to_add)
+    return entry_to_add
