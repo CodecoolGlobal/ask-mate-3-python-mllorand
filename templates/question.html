@@ -1,6 +1,5 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content">
 	<h1>Question {{ question_id }}</h1>
     <table>
         <tr>
@@ -23,7 +22,8 @@
     </form>
 	<h1 style="margin: 0;padding: 0">Answers:</h1><br>
     <button onclick="location.href='/question/{{ question_id }}/new-answer'">Add New Answer</button>
-	<table>
+	<div class="main_table">
+    <table>
         <tr style="background-color: white">
                 {% for column_title in answer_headers %}
                     <th style="position: sticky; top: 275px; background-color: white"> {{ column_title.replace("_", " ").title() if column_title not in "image" }}</th>

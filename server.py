@@ -39,7 +39,7 @@ def route_add_answer(question_id):
         return render_template("answer.html", question_id=question_id)
     new_answer = request.form
     data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
-                               entry_to_add=new_answer, question_id=question_id)
+                               entry_to_add=new_answer)
     return redirect("/question/" + question_id)
 
 
@@ -51,11 +51,13 @@ def route_answer(answer_id):
     return redirect("/question/" + question_id)
 
 
-@app.route('/add-question')
+@app.route('/add-question', methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
-        new_question = data_manager.add_new_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, request.form)
-        return redirect('/add_question/'+new_question['id'])
+        new_question = request.form
+        new_question = data_manager.add_new_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
+                                                  entry_to_add=new_question)
+        return redirect('/question/'+new_question['id'])
     return render_template('add_question.html', question=data_manager.QUESTION_HEADER)
 
 

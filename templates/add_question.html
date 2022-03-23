@@ -2,7 +2,7 @@
 {% block content %}
     <body>
         <h1>Add new question</h1>
-        <form action="/add-questiob" method="post">
+        <form action="/add-question" method="post">
             {% for entry in question %}
                 {% if entry == 'title' %}
                     <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
@@ -14,7 +14,8 @@
                     <input type="hidden" value="0">
                 {% endif %}
             {% endfor %}
+        <br>
+        <button onclick="location.href='/add-question'" value="submit">Submit new question</button>
         </form>
-        <button value="submit">Submit new question</button>
     </body>
 {% endblock %}
