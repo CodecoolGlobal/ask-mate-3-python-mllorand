@@ -50,5 +50,16 @@ def route_answer(answer_id):
     return redirect("/question/" + question_id)
 
 
+@app.route('/add-question')
+def route_add_question():
+    new_post = []
+    if request.method == 'POST':
+        temporary_dict = request.form
+        for value in temporary_dict.values():
+            new_post.append(value)
+        data_handler.add_new_user_story(new_post)
+    return render_template('add_question.html', question=data_manager.QUESTION_HEADER)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
