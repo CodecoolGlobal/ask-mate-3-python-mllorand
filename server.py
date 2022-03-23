@@ -38,7 +38,8 @@ def route_add_answer(question_id):
     if request.method == 'GET':
         return render_template("answer.html", question_id=question_id)
     new_answer = request.form
-    data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, entry_to_add=new_answer)
+    data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
+                               entry_to_add=new_answer, question_id=question_id)
     return redirect("/question/" + question_id)
 
 
