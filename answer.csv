@@ -1,13 +1,8 @@
 id,submission_time,vote_number,question_id,message,image
-1,1493398154,4,1,You need to use brackets: my_list = [],
+1,1493398154,6,1,You need to use brackets: my_list = [],
 2,1648033193,0,2,new answer added,image
 3,1648033429,0,2,asdfghzjol,image
-5,1648036891,0,5,kutyanak a fasza,image
-6,1648037061,0,5,sdfghj,image
-7,1648037992,0,5,"answer
-answeranswer
-answer",image
-9,1648039377,0,7,"asdfghjkjhgfdsasdfgh
-",image
-10,1648039381,0,7,sdfgsgdgfdfg,image
-11,1648053969,0,6,sdfgh,image
+4,1648036353,0,2,sdfghjkl,image
+5,1648036891,0,5,kutyànak a fasza,image
+6,1648037061,-2,5,sdfghj,image
+7,1648038000,2,5,äàä,image

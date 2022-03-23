@@ -36,6 +36,12 @@
                 {% for cell in answer %}
                     {% if cell == "image" %}
                         <td><img src=" {{ answer["image"] }}" width="50"></td>
+                    {% elif cell == "vote_number" %}
+                        <td style="text-align: center">
+                            <button class="vote_button" onclick="location.href='/answer/{{ answer["id"] }}/vote-up'" type="submit">+</button>
+                            {{ answer[cell] | safe }}
+                            <button class="vote_button" onclick="location.href='/answer/{{ answer["id"] }}/vote-down'" type="submit">-</button>
+                        </td>
                     {% else %}
                         <td style="text-align: center">{{ answer[cell] | safe }}</td>
                     {% endif %}
