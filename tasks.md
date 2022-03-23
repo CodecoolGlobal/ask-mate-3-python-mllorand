@@ -11,22 +11,22 @@
     - The page displays the question title and message. Done
     - The page displays all answers to a question. Done
 
-3. Implement a form that allows the user to add a question. (Tomi) (Todo)
-    - There is an `/add-question` page with a form.
-    - The page is linked from the list page.
-    - There is a POST form with at least `title` and `message` fields.
-    - After submitting, the page redirects to "Display a question" page of this new question.
+3. Implement a form that allows the user to add a question. (Tomi) 
+    - There is an `/add-question` page with a form. Done
+    - The page is linked from the list page. Done
+    - There is a POST form with at least `title` and `message` fields. Done
+    - After submitting, the page redirects to "Display a question" page of this new question. Done
 
-4. Implement posting a new answer. (Lóri) (Todo)
-    - The page URL is `/question/<question_id>/new-answer`.
-    - The question detail page links to the page.
-    - The page has a POST form with a form field called `message`.
-    - Posting an answer redirects to the question detail page. The new answer is displayed on the question detail page.
+4. Implement posting a new answer. (Lóri) 
+    - The page URL is `/question/<question_id>/new-answer`.Done
+    - The question detail page links to the page.Done
+    - The page has a POST form with a form field called `message`.Done
+    - Posting an answer redirects to the question detail page. The new answer is displayed on the question detail page. Done
 
 5. Implement sorting for the question list.(Dani) (Todo)
-    - The question list can be sorted by title, submission time, message, number of views, and number of votes.
-    - The question list can be put in ascending and descending order.
-    - The order is passed as query string parameters, such as `/list?order_by=title&order_direction=desc`.
+    - The question list can be sorted by title, submission time, message, number of views, and number of votes. Done
+    - The question list can be put in ascending and descending order. Done
+    - The order is passed as query string parameters, such as `/list?order_by=title&order_direction=desc`. Done
 
 6. Implement deleting a question.(Tomi)
     - Deleting is implemented by the `/question/<question_id>/delete` endpoint.
