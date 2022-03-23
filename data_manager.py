@@ -40,7 +40,6 @@ def delete_entry(file_path, file_header, entry_to_delete):
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writeheader()
         for entry in entries:
-            print(entry)
             if entry == entry_to_delete:
                 continue
             writer.writerow(entry)
@@ -74,3 +73,15 @@ def add_new_entry(file_path, file_header, entry_to_add):
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writerow(entry_to_add)
     return entry_to_add
+
+
+def update_entry(file_path, file_header, entry_to_update):
+    entries = connection.read_csv(file_path, file_header)
+    with open(file_path, 'w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=file_header)
+        writer.writeheader()
+        for entry in entries:
+            if entry == entry_to_update:
+                print(entry)
+                writer.writerow(entry_to_update)
+            writer.writerow(entry)
