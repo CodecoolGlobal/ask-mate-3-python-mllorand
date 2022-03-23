@@ -50,6 +50,12 @@ def get_unique_id(file_path, header):
         return 1
 
 
+def add_new_question(file_path, file_header, form):
+    new_question = {'id': get_unique_id(file_path, file_header), 'submission_time': util.generate_timestamp()
+                    'view_number': '0', 'vote_number': '0', 'title': form['title'], 'message': form['message']}
+    return new_question
+
+
 if __name__ == "__main__":
     print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
 
