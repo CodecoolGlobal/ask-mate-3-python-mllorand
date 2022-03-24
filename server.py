@@ -64,7 +64,7 @@ def route_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         new_question = request.form
-        if 'image' not in new_question:
+        if request.files.get('image').content_type == 'application/octet-stream':
             path = './uploaded_files/no_image_found.png'
         else:
             image = request.files['image']
