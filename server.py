@@ -7,7 +7,6 @@ app = Flask(__name__, static_folder="/")
 @app.route("/")
 @app.route("/list")
 def main():
-    header = data_manager.QUESTION_HEADER
     if request.args:
         questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH,
                                                  data_manager.QUESTION_HEADER,
@@ -15,7 +14,8 @@ def main():
                                                  order=True if request.args["order"] == "desc" else False)
     else:
         questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
-    return render_template("index.html", header=header, questions=questions)
+    return render_template("index.html", header=data_manager.QUESTION_HEADER,
+                           questions=questions)
 
 
 @app.route("/question/<question_id>", methods=['GET', 'POST'])
@@ -62,12 +62,12 @@ def route_add_question():
 
 
 @app.route("/answer/<answer_id>/<vote>", methods=["GET"])
-@app.route("/question/<question_id>/<vote>", methods=["GET"])
+@app.route("/question/<question_id>/<vote>'", methods=["GET", "POST"])
 def add_vote(vote, answer_id=None, question_id=None):
     if question_id:
         data_manager.vote_on_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
                                    vote=vote, entry_id=question_id)
-        return redirect("/list")
+        return redirect(request.form["original_url"])
     elif answer_id:
         data_manager.vote_on_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
                                    vote=vote, entry_id=answer_id)
