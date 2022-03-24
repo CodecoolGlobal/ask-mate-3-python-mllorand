@@ -41,9 +41,12 @@ def route_add_answer(question_id):
     if request.method == 'GET':
         return render_template("answer.html", question_id=question_id)
     new_answer = request.form
-    image = request.files['image']
-    path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-    image.save(path)
+    if 'image' not in new_answer:
+        path = './uploaded_files/no_image_found.png'
+    else:
+        image = request.files['image']
+        path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+        image.save(path)
     data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
                                entry_to_add=new_answer, upload_path=path)
     return redirect("/question/" + question_id)
@@ -61,9 +64,12 @@ def route_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         new_question = request.form
-        image = request.files['image']
-        path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-        image.save(path)
+        if 'image' not in new_question:
+            path = './uploaded_files/no_image_found.png'
+        else:
+            image = request.files['image']
+            path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            image.save(path)
         new_question = data_manager.add_new_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
                                                   entry_to_add=new_question, upload_path=path)
         return redirect('/question/'+new_question['id'])
