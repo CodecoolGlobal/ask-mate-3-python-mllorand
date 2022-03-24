@@ -1,36 +1,10 @@
 id,submission_time,view_number,vote_number,title,message,image
 1,1493368154,29,9,How to make lists in Python?,"I am totally new to this, any hints?",
-2,1493068124,15,14,Wordpress loading multiple jQuery Versions,"I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
-
-I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
-
-BUT in my theme i also using jquery via webpack so the loading order is now following:
-
-jquery
-booklet
-app.js (bundled file with webpack, including jquery)",images/image1.png
-3,1493015432,1364,145,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
+3,1493015432,1364,63,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
 
 This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",
-5,1648051493,0,17,xxxx,xxxxx,image
-6,1648053791,0,17,gggg,gggg,image
-7,1648114396,0,0,imagetest,imagetests,
-8,1648114496,0,0,asdfghj,asdfgh,
-9,1648114733,0,0,asdfgh,asdfgh,/uploaded_files/taxi-g8778bc2c8_640.png
-10,1648115674,0,0,imagetest,imagetest,/uploaded_files/taxi-g8778bc2c8_640.png
-11,1648116556,0,0,rtr,rtr,/uploaded_files\beard-1295040.png
-12,1648117662,0,0,gh,dfghj,/uploaded_files\sun-47083.png
-13,1648117957,0,0,sdfghj,ghjkl,/uploaded_files\ship-in-a-bottle-26569.png
-14,1648119366,0,0,sw,sw,/uploaded_files/no_image_found.png
-15,1648119430,0,0,fg,fg,/uploaded_files/no_image_found.png
-16,1648123435,0,0,sdfgh,sdfgh,/uploaded_files/no_image_found.png
-17,1648123514,0,0,asdfgh,asdfghj,/uploaded_files/no_image_found.png
-18,1648123531,0,0,asdfgh,asdfgh,/uploaded_files/no_image_found.png
-19,1648123714,0,0,asdfg,asdfg,/uploaded_files/no_image_found.png
-20,1648123720,0,0,sdfg,sdfgh,/uploaded_files/no_image_found.png
-21,1648123799,0,0,sdf,asdf,/uploaded_files/no_image_found.png
-22,1648123976,0,0,fdsdfgfds,sdfdsdf,/uploaded_files/no_image_found.png
-23,1648123995,0,0,asdfgh,sdfgh,/uploaded_files/no_image_found.png
-24,1648124048,0,0,asdf,asdf,/uploaded_files/no_image_found.png
-25,1648124140,0,0,asdfgh,asdfgh,/uploaded_files/taxi-g8778bc2c8_640.png
-26,1648124146,0,0,asdfg,asdfg,/uploaded_files/no_image_found.png
+4,1648130729,17,2,voterklokk,how can i read down mein vaterklokk,/uploaded_files/no_image_found.png
+5,1648131079,4,7,Bojler ,"Mein boiler ist kaput gegangen
+hielfe bitte pls",/uploaded_files/dadwf.jpeg
+6,1648131210,8,3,Das meine kleine KONVEKTOR,Please rate meine gaskonvetkor bitte!,/uploaded_files/fdf241.jpeg
+7,1648131375,10,-2,Gas klokk,Meine gasklokk ist always late wunderbar,/uploaded_files/265256773_633319561143084_1070558105904948898_n.jpeg
