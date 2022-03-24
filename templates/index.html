@@ -26,7 +26,7 @@
         <thead>
             <tr>
                 {% for column_title in header %}
-                    <th> {{ column_title.replace("_", " ").title() }}</th>
+                    <th> {{ column_title.replace("_", " ").title() if column_title not in "image" else "" }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -39,14 +39,14 @@
                     {% elif cell not in ["message","image"] %}
                         {% if cell == "vote_number" %}
                             <td style="text-align: center">
-                                <form style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-up'">
+                                <form id="anchor_to_question_{{ question["id"] }}" style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-up'">
                                     <button class="vote_button" type="submit">+</button>
-                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}">
+                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}#anchor_to_question_{{ question['id'] }}">
                                 </form>
                                 {{ question[cell] | safe }}
                                 <form style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-down'">
                                     <button class="vote_button" type="submit">-</button>
-                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}">
+                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}#anchor_to_question_{{ question['id'] }}">
                                 </form>                            </td>
                         {% else %}
                             <td style="text-align: center">{{ question[cell] | safe }}</td>
@@ -55,7 +55,7 @@
                         <td>{{ question[cell] | safe }}</td>
                     {% else %}
 	                    <td>
-		                    <img src="{{ question[cell] }}" alt="image" height="50" width="50">
+		                    <img src="{{ question[cell] if question[cell] else "../uploaded_files/no_image_found.png" }}" alt="image" height="50" width="50">
 	                    </td>
                     {% endif %}
                 {% endfor %}

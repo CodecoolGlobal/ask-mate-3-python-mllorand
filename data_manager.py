@@ -78,10 +78,16 @@ def vote_on_entry(file_path, file_header, vote, entry_id):
     elif vote == "vote-down":
         entry["vote_number"] = int(entry["vote_number"])-1
     old_entries = connection.read_csv(file_path, file_header)
-    new_entries =[]
     for old_entry in old_entries:
         if old_entry["id"] == entry["id"]:
-            new_entries.append(entry)
-        else:
-            new_entries.append(old_entry)
-    connection.write_csv(file_path, file_header, new_entries)
+            old_entry["vote_number"] = entry["vote_number"]
+    connection.write_csv(file_path, file_header, old_entries)
+
+
+def add_view_to_entry(entry_id, file_path, file_header):
+    updatable_entry = get_entry_by_id(entry_id, file_path, file_header)
+    old_entries = connection.read_csv(file_path, file_header)
+    for old_entry in old_entries:
+        if updatable_entry["id"] == old_entry["id"]:
+            old_entry["view_number"] = int(old_entry["view_number"]) + 1
+    connection.write_csv(file_path, file_header, old_entries)
