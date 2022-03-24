@@ -2,10 +2,14 @@
 {% block navbar %}
 <div class="sortby">
     <button onclick="location.href='/add-question'" type="submit">Add new question</button>
-    <label for="sortby-select">Sort by:</label>
+    <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
     {% if request.args.get("sort_by") == None %}
         <option value="/list">Select an option to sort questions</option>
+    {% else %}
+        <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
+            {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
+        </option>
     {% endif %}
     {% for option in header %}
         {% if option not in ["id","image"] %}
@@ -37,10 +41,15 @@
                     {% elif cell not in ["message","image"] %}
                         {% if cell == "vote_number" %}
                             <td style="text-align: center">
-                                <button class="vote_button" onclick="location.href='/question/{{ question["id"] }}/vote-up'" type="submit">+</button>
+                                <form style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-up'">
+                                    <button class="vote_button" type="submit">+</button>
+                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}">
+                                </form>
                                 {{ question[cell] | safe }}
-                                <button class="vote_button" onclick="location.href='/question/{{ question["id"] }}/vote-down'" type="submit">-</button>
-                            </td>
+                                <form style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-down'">
+                                    <button class="vote_button" type="submit">-</button>
+                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}">
+                                </form>                            </td>
                         {% else %}
                             <td style="text-align: center">{{ question[cell] | safe }}</td>
                         {% endif %}
