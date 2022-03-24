@@ -5,7 +5,8 @@
     <title>Ask Overflow</title>
     <style>
         html {
-            overflow-y:scroll
+            overflow-y:scroll;
+            scroll-padding-top: 136px;
         }
         .navbar {
             background-color: white;
@@ -35,17 +36,20 @@
             align-self: flex-end;
         }
         .main_table table{
+            width: 99%;
             position: relative;
             border-collapse: collapse;
             top: 0px;
             bottom: 40px;
             margin-bottom: 40px;
         }
+        .main_table td:nth-child(-n+4){
+            width: 10px;
+        }
         .main_table th:not(:first-child),td:not(:first-child){
             padding-left: 30px;
         }
         .main_table td{
-            min-width: 40px;
             border-bottom: 1px solid #dddddd;
         }
         .main_table thead tr{

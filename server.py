@@ -23,6 +23,7 @@ def main():
 
 @app.route("/question/<question_id>", methods=['GET', 'POST'])
 def route_question(question_id):
+    data_manager.add_view_to_entry(question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
     question_headers = data_manager.QUESTION_HEADER
     questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, question_headers)
     if request.method == "GET":
@@ -72,7 +73,7 @@ def route_add_question():
             image.save(path)
         new_question = data_manager.add_new_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
                                                   entry_to_add=new_question, upload_path=path)
-        return redirect('/question/'+new_question['id'])
+        return redirect('/question/'+str(new_question['id']))
     return render_template('add_question.html', question=data_manager.QUESTION_HEADER)
 
 
