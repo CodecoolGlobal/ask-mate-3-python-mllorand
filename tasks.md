@@ -39,7 +39,7 @@
     - The image is saved on server and displayed next to the question or the answer.
     - When deleting the question or answer, the image file is also deleted.
 
-8. Implement editing an existing question.(Tomi) (Todo)
+8. Implement editing an existing question.(Tomi/Lóri) (Done)
     - There is a `/question/<question_id>/edit` page.
     - The page is linked from the question page.
     - There is a POST form with at least `title` and `message` fields.
@@ -51,14 +51,14 @@
     - There is a deletion link on the question page, next to an answer. Done
     - Deleting redirects to the question detail page. Done
 
-10. Implement voting on questions.(Dani)
+10. Implement voting on questions.(Dani)(Done)
     - Vote numbers are displayed next to questions on the question list page.
     - There are "vote up/down" links next to questions on the question list page.
     - Voting uses `/question/<question_id>/vote_up` and `/question/<question_id>/vote_down` endpoints.
     - Voting up increases, voting down decreases the `vote_number` of the question by one.
     - Voting redirects to the question list.
 
-11. Implement voting on answers.(Dani)
+11. Implement voting on answers.(Dani)(Done)
     - Vote numbers are displayed next to answers on the question detail page.
     - There are "vote up/down" links next to answers.
     - Voting uses `/answer/<answer_id>/vote_up` and `/answer/<answer_id>/vote_down` endpoints.

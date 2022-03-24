@@ -54,7 +54,7 @@ if __name__ == "__main__":
     print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
 
 
-def add_new_entry(file_path, file_header, entry_to_add):
+def add_new_entry(file_path, file_header, entry_to_add, upload_path):
     entry_to_add = dict(entry_to_add)
     for header in file_header:
         if header == 'id':
@@ -64,7 +64,7 @@ def add_new_entry(file_path, file_header, entry_to_add):
         elif header in ['view_number', 'vote_number']:
             entry_to_add[header] = 0
         elif header == 'image':
-            entry_to_add[header] = 'image'
+            entry_to_add[header] = upload_path[1:]
     with open(file_path, 'a', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=file_header)
         writer.writerow(entry_to_add)

@@ -2,16 +2,17 @@
 {% block content %}
     <body>
         <h1>Add new question</h1>
-        <form action="/add-question" method="post">
+        <form action="/add-question" method="post" enctype="multipart/form-data">
             {% for entry in question %}
                 {% if entry == 'title' %}
                     <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
-                    <input type="text" id="{{ entry }}" name="{{ entry }}"><br><br>
+                        <input type="text" id="{{ entry }}" name="{{ entry }}"><br><br>
                 {% elif entry == 'message' %}
                     <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
-                    <textarea name="{{ entry }}" rows="4" cols="50" required ></textarea>
-                {% elif entry in ['view_number', 'vote_number'] %}
-                    <input type="hidden" value="0">
+                        <textarea name="{{ entry }}" rows="4" cols="50" required ></textarea>
+                {% elif entry == 'image' %}
+                    <label for="image">Upload image:</label>
+						<input type="file" id="image" name="image" accept="image/png, image/jpg">
                 {% endif %}
             {% endfor %}
         <br>
