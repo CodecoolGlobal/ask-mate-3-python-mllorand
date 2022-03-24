@@ -41,7 +41,7 @@ def route_add_answer(question_id):
     if request.method == 'GET':
         return render_template("answer.html", question_id=question_id)
     new_answer = request.form
-    if 'image' not in new_answer:
+    if request.files.get('image').content_type == 'application/octet-stream':
         path = './uploaded_files/no_image_found.png'
     else:
         image = request.files['image']
