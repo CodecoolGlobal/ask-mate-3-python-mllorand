@@ -26,9 +26,7 @@
         <thead>
             <tr>
                 {% for column_title in header %}
-                    {% if column_title not in "image" %}
-                        <th> {{ column_title.replace("_", " ").title() }}</th>
-                    {% endif %}
+                    <th> {{ column_title.replace("_", " ").title() }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -55,6 +53,10 @@
                         {% endif %}
                     {% elif cell != "image" %}
                         <td>{{ question[cell] | safe }}</td>
+                    {% else %}
+	                    <td>
+		                    <img src="{{ question[cell] }}" alt="image" height="50" width="50">
+	                    </td>
                     {% endif %}
                 {% endfor %}
             </tr>
