@@ -6,13 +6,13 @@
             {% for entry in question %}
                 {% if entry == 'title' %}
                     <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
-                        <input type="text" id="{{ entry }}" name="{{ entry }}"><br><br>
+                        <input type="text" id="{{ entry }}" name="{{ entry }}" required><br><br>
                 {% elif entry == 'message' %}
                     <label for="{{ entry }}">{{ entry | replace('_',' ') | capitalize }}:</label><br>
-                        <textarea name="{{ entry }}" rows="4" cols="50" required ></textarea>
+                        <textarea name="{{ entry }}" rows="4" cols="50" required ></textarea><br><br>
                 {% elif entry == 'image' %}
                     <label for="image">Upload image:</label>
-						<input type="file" id="image" name="image" accept="image/png, image/jpg">
+						<input type="file" id="image" name="image" accept="image/png, image/jpg"><br>
                 {% endif %}
             {% endfor %}
         <br>
