@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from bonus_questions import SAMPLE_QUESTIONS
+from flask import Flask
 
 app = Flask(__name__)
 
