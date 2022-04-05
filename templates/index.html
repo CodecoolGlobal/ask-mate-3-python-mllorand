@@ -1,67 +1,38 @@
 {% extends "layout.html" %}
+{% block page_title %}Home{% endblock %}
 {% block navbar %}
-<div class="sortby">
-    <button onclick="location.href='/add-question'" type="submit">Add new question</button>
+<div class="main-nav">
+    <div><button onclick="location.href='/list'" type="submit">All question</button></div>
+    <div><button onclick="location.href='/add-question'" type="submit">Add new question</button></div>
+<div>
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
-    {% if request.args.get("sort_by") == None %}
-        <option value="/list">Select an option to sort questions</option>
-    {% else %}
-        <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
-            {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
-        </option>
-    {% endif %}
-    {% for option in header %}
-        {% if option not in ["id","image"] %}
-            <option value="/list?sort_by={{ option }}&order=asc">{{ option.replace("_", " ").title() }}(asc)</option>
-            <option value="/list?sort_by={{ option }}&order=desc">{{ option.replace("_", " ").title() }}(desc)</option>
+        {% if request.args.get("sort_by") == None %}
+            <option value="/list">Select an option to sort questions</option>
+        {% else %}
+            <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
+                {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
+            </option>
         {% endif %}
-    {% endfor %}
-</select>
+        {% for option in header %}
+            {% if option not in ["id","image"] %}
+                <option value="/list?sort_by={{ option }}&order=asc">{{ option.replace("_", " ").title() }}(asc)</option>
+                <option value="/list?sort_by={{ option }}&order=desc">{{ option.replace("_", " ").title() }}(desc)</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</div>
+
 </div>
 {% endblock %}
 {% block content %}
-     <div class="main_table">
-    <table>
-        <thead>
-            <tr>
-                {% for column_title in header %}
-                    <th> {{ column_title.replace("_", " ").title() if column_title not in "image" else "" }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for question in questions %}
-            <tr>
-                {% for cell in question %}
-                    {% if cell == "title" %}
-                        <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
-                    {% elif cell not in ["message","image"] %}
-                        {% if cell == "vote_number" %}
-                            <td style="text-align: center">
-                                <form id="anchor_to_question_{{ question["id"] }}" style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-up'">
-                                    <button class="vote_button" type="submit">+</button>
-                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}#anchor_to_question_{{ question['id'] }}">
-                                </form>
-                                {{ question[cell] | safe }}
-                                <form style="display: inline" method="post" action="/question/{{ question["id"] }}/vote-down'">
-                                    <button class="vote_button" type="submit">-</button>
-                                    <input type="hidden" name="original_url" id="original_url" value="/list{{ "?sort_by="+request.args["sort_by"]+"&order="+request.args["order"] if request.args }}#anchor_to_question_{{ question['id'] }}">
-                                </form>                            </td>
-                        {% else %}
-                            <td style="text-align: center">{{ question[cell] | safe }}</td>
-                        {% endif %}
-                    {% elif cell != "image" %}
-                        <td>{{ question[cell] | safe }}</td>
-                    {% else %}
-	                    <td>
-		                    <img src="{{ question[cell] if question[cell] else "../uploaded_files/no_image_found.png" }}" alt="image" height="50" width="50">
-	                    </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    </div>
+    {% for question in questions %}
+        <div class="question-card">
+            <div class="card-title"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
+            <div class="card-message">{{ question.message }}</div>
+            <div class="card-vote-number">{{ question.vote_number }}</div>
+            <div class="card-view-number">{{ question.view_number }}</div>
+            <div class="card-smt">{{ question.submission_time.date() }}<br>{{ question.submission_time.time() }}</div>
+        </div>
+    {% endfor %}
 {% endblock %}

@@ -1,0 +1,137 @@
+:root {
+    color: white;
+    --sc: #a8a8a8;
+    --fbg: #1c1c1c;
+    --sbg: #626262;
+    --cardbg: #e5e5e5;
+    --cardc:black;
+}
+
+body {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    background-color: var(--sbg);
+    display: grid;
+    grid-template-columns: auto 80% auto;
+    grid-template-rows: 166px auto 40px;
+    grid-template-areas:
+    'header header header'
+    '. content .'
+    'footer footer footer';
+}
+.header-container {
+    background-color: var(--fbg);
+    position: sticky;
+    top: 0;
+    padding: 1em;
+    z-index: 10;
+    grid-area: header;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+        'logo upper-nav'
+        'logo lower-nav';
+}
+.header-logo{
+    grid-area: logo;
+}
+.navbar-fix{
+    grid-area: upper-nav;
+    margin-left: auto;
+    margin-right: 2em;
+}
+.navbar-custom-container{
+    grid-area: lower-nav;
+}
+.main-nav{
+    display: flex;
+    height: 100%;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.content-container {
+    grid-area: content;
+    position: relative;
+    width: 100%;
+}
+.footer-container {
+    grid-area: footer;
+    background: var(--fbg);
+    display: flex;
+    justify-content: center;
+}
+.footer-container span {
+    font-size: 0.9em;
+    align-self: flex-end;
+}
+
+.question-card{
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    display: grid;
+    grid-template-columns: auto 200px;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+        'title smt'
+        'message vote-number'
+        'message view-number'
+        'message .';
+    margin: 20px;
+    padding: 0.5em;
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+}
+.card-title{
+    grid-area: title;
+}
+.card-message{
+    grid-area: message;
+}
+.card-smt{
+    grid-area: smt;
+}
+.card-vote-number{
+    grid-area: vote-number;
+}
+.card-view-number{
+    grid-area: view-number;
+}
+.main_table table{
+    width: 99%;
+    position: relative;
+    border-collapse: collapse;
+    top: 0;
+    bottom: 40px;
+    margin-bottom: 40px;
+}
+.main_table td:nth-child(-n+4){
+    width: 10px;
+}
+.main_table th:not(:first-child),td:not(:first-child){
+    padding-left: 30px;
+}
+.main_table td{
+    border-bottom: 1px solid #dddddd;
+}
+.main_table thead tr{
+    background-color: #dddddd;
+    white-space: nowrap;
+    position: sticky;
+    top: 98px;
+}
+.main_table tbody tr:nth-of-type(even){
+    background-color: #dddddd;
+}
+
+.vote_button{
+    background: none;
+    border: none;
+    border-radius: 50%;
+}
