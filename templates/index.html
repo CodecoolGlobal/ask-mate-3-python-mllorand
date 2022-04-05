@@ -1,41 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ask Overflow</title>
-    <style>
-        th {
-            white-space: nowrap;
-        }
-    </style>
-</head>
-<body>
-    <a href="/list"><input type="image" src="/images/logo.png" /></a>
-    <hr>
-    <table>
-        <tr>
-            {% for column_title in header %}
-                <th> {{ column_title.replace("_", " ").title() if column_title not in "image" }}
-                    {% if column_title not in ["id","image"] %}
-                        <a href="/list?sort_by={{ column_title }}&order=asc">˄</a>
-                        <a href="/list?sort_by={{ column_title }}&order=desc">˅</a>
-                    {% endif %}
-                </th>
-            {% endfor %}
-        </tr>
-        {% for question in questions %}
-            <tr>
-                {% for cell in question %}
-                    {% if cell == "title" %}
-                        <td><a href="/question/{{ question["id"] }}">{{ question[cell] }}</a></td>
-                    {% elif cell == "image" %}
-                        <td><img src=" {{ question["image"] }}" width="50"></td>
-                    {% else %}
-                        <td>{{ question[cell] | safe }}</td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
+{% extends "layout.html" %}
+{% block page_title %}Home{% endblock %}
+{% block navbar %}
+<div class="main-nav">
+    <div><button onclick="location.href='/list'" type="submit">All question</button></div>
+    <div><button onclick="location.href='/add-question'" type="submit">Add new question</button></div>
+<div>
+    <label for="sort_by">Sort by:</label>
+    <select onchange="location = this.value" name="sort_by" id="sort_by">
+        {% if request.args.get("sort_by") == None %}
+            <option value="/list">Select an option to sort questions</option>
+        {% else %}
+            <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
+                {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
+            </option>
+        {% endif %}
+        {% for option in header %}
+            {% if option not in ["id","image"] %}
+                <option value="/list?sort_by={{ option }}&order=asc">{{ option.replace("_", " ").title() }}(asc)</option>
+                <option value="/list?sort_by={{ option }}&order=desc">{{ option.replace("_", " ").title() }}(desc)</option>
+            {% endif %}
         {% endfor %}
-    </table>
-</body>
-</html>
+    </select>
+</div>
+
+</div>
+{% endblock %}
+{% block content %}
+    {% for question in questions %}
+        <div class="question-card">
+            <div class="card-title">{{ question.title }}</div>
+            <div class="card-message">{{ question.message }}</div>
+            <div class="card-vote-number">{{ question.vote_number }}</div>
+            <div class="card-view-number">{{ question.view_number }}</div>
+            <div class="card-smt">{{ question.submission_time.date() }}<br>{{ question.submission_time.time() }}</div>
+        </div>
+    {% endfor %}
+{% endblock %}
