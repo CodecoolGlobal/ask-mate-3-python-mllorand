@@ -2,11 +2,81 @@ import csv
 import os
 import connection
 import util
+from psycopg2 import sql
+
 
 QUESTION_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'question.csv'
 ANSWER_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'answer.csv'
 QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+
+
+@connection.connection_handler
+def get_all_records(cursor, table_):
+    query = """
+        SELECT * FROM {table_}"""
+    cursor.execute(sql.SQL(query).format(
+        table_=sql.Identifier(table_)))
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_records_by_id(cursor, table_, id_):
+    query = """
+        SELECT * FROM {table_}
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        table_=sql.Identifier(table_),
+        id_=sql.Identifier(id_)))
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def delete_record_by_id(cursor, table_, id_):
+    query = """
+        DELETE FROM {table_}
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        table_=sql.Identifier(table_),
+        id_=sql.Identifier(id_)))
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def add_new_record(cursor, table_, form):
+    form = dict(form)
+    columns = ', '.join(form.keys())
+    values_ = ', '.join([str(val) for val in form.values()])
+    print(columns)
+    print(sql.Identifier(columns))
+    query = """
+        INSERT INTO {table_} ({columns})
+        VALUES ({values_})"""
+    cursor.execute(sql.SQL(query).format(
+        table_=sql.Identifier(table_),
+        columns=sql.Identifier(columns),
+        values_=sql.Literal(values_)))
+
+
+if __name__ == '__main__':
+    add_new_record('question',
+                   {'submission_time': '2017-05-01 10:41:00.000000',
+                    'view_number': 125,
+                    'vote_number': 23,
+                    'title': 'valamizé',
+                    'message': 'izé',
+                    'image': 'image'})
+
+
+
+
+
+
+
+
+
+
+
 
 
 def get_all_entries(file_path, file_header, sort_by=None, order=None):
