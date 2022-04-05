@@ -27,7 +27,7 @@ def get_records_by_id(cursor, table_, id_):
         WHERE id = {id_}"""
     cursor.execute(sql.SQL(query).format(
         table_=sql.Identifier(table_),
-        id_=sql.Identifier(id_)))
+        id_=sql.Literal(id_)))
     return cursor.fetchall()
 
 
@@ -55,6 +55,9 @@ def add_new_record(cursor, table_, form):
         table_=sql.Identifier(table_),
         columns=columns,
         values_=values_))
+
+
+
 
 
 

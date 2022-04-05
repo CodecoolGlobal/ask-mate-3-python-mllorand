@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for
 import data_manager
 
 
@@ -24,10 +24,9 @@ def list():
 @app.route("/question/<question_id>", methods=['GET', 'POST'])
 def route_question(question_id):
     question = data_manager.get_records_by_id('question', question_id)
-    print(question)
     if request.method == "GET":
         data_manager.get_all_records('answer')
-        return render_template("question.html", question=question)
+        return render_template("question.html", question=question, question_id=question_id)
 
 
 @app.route("/question/<question_id>/delete")
@@ -109,25 +108,20 @@ def add_vote(vote, answer_id=None, question_id=None):
         return redirect("/question/"+answer["question_id"])
 
 
-@app.route('/question/<question_id>/new-comment', methods=['POST'])
-def route_add_comment(question_id):
-        if request.method == "POST":
-            data_manager.add_new_record('comment', request.form)
-            return redirect('/question/<question_id>')
-        return render_template('add_comment.html', question_id=question_id)
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+def route_add_comment_to_question(question_id):
+    if request.method == "POST":
+        data_manager.add_new_record('comment', request.form)
+        return redirect(url_for('route_question', question_id=question_id))
+    return render_template('add_comment.html', question_id=question_id)
 
 
-@app.route('/question/<question_id>/new-comment', methods=['POST'])
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def route_add_comment_to_answer(question_id, answer_id):
     if request.method == "POST":
-        question_id = request.form.get("question_id")
-        answer_id = request.form.get("answer_id")
-        message = request.form.get("message")
-        edited_count = request.form.get('edited_count')
-        data_manager.add_new_comment_to_answer(
-            question_id, answer_id, message, edited_count)
-        return redirect('/question/<question_id>')
-    return render_template('add_comment_to_answer.html')
+        data_manager.add_new_record('comment', request.form)
+        return redirect(url_for('route_question', question_id=question_id))
+    return render_template('add_comment_to_answer.html', answer_id=answer_id)
 
 
 if __name__ == "__main__":
