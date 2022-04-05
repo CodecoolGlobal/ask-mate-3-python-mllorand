@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
 	<h1>Question {{ question_id }}</h1>
-    <table>
+    <table class="question-card_for_one">
         <tr>
-            <th>Title</th>
-            <th>Message</th>
+            {% for cell in question %}
+                <div class="card-title"><th>{{ cell.title }}</th></div>
+            {% endfor %}
         </tr>
         <tr>
         {% for cell in question %}
-            <td>{{ cell.title }}</td>
-            <td>{{ cell.message }}</td>
+            <div class="card-message"><td>{{ cell.message }}</td></div>
         {% endfor %}
-        <td><button onclick="location.href='/question/{{ question['id'] }}/delete'">Delete Question</button></td>
-        <td><button onclick="location.href='/question/{{ question['id'] }}/edit'">Edit Question</button></td>
-        <td><button onclick="location.href='/question/{{ question_id }}/new-comment'">Add new comment</button></td>
+            <div><td><button onclick="location.href='/question/{{ question['id'] }}/delete'">Delete Question</button></td></div>
+            <div><td><button onclick="location.href='/question/{{ question['id'] }}/edit'">Edit Question</button></td></div>
+            <div><td><button onclick="location.href='/question/{{ question_id }}/new-comment'">Add new comment</button></td></div>
 
         </tr>
     </table><br>
