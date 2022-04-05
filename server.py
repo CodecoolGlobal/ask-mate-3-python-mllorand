@@ -11,12 +11,12 @@ app.config['UPLOAD_FOLDER'] = './uploaded_files'
 @app.route("/list")
 def main():
     if request.args:
-        questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH,
-                                                 data_manager.QUESTION_HEADER,
-                                                 request.args["sort_by"],
-                                                 order=True if request.args["order"] == "desc" else False)
+        questions = data_manager.get_all_records('question')#get_all_entries(data_manager.QUESTION_FILE_PATH,
+                                                 #data_manager.QUESTION_HEADER,
+                                                 #request.args["sort_by"],
+                                                 #order=True if request.args["order"] == "desc" else False)
     else:
-        questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
+        questions = data_manager.get_all_records('question') #get_all_entries(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
     return render_template("index.html", header=data_manager.QUESTION_HEADER,
                            questions=questions)
 
