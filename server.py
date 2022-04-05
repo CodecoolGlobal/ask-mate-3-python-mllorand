@@ -9,7 +9,9 @@ app.config['UPLOAD_FOLDER'] = './uploaded_files'
 
 @app.route("/")
 def main():
-    questions = data_manager.get_table('question', limit='5')
+    questions = data_manager.get_table('question', limit='5',
+                                       sort_by='submission_time',
+                                       order='desc')
     return render_template("index.html", questions=questions)
 
 
