@@ -17,16 +17,16 @@ def main():
 
 @app.route("/list")
 def list():
-    questions = data_manager.get_table('question')
-    return render_template("index.html", questions=questions)
+    return render_template("index.html", questions=data_manager.get_all_records('question'))
 
 
-@app.route("/question/<question_id>", methods=['GET', 'POST'])
+@app.route("/question/<question_id>")
 def route_question(question_id):
-    question = data_manager.get_records_by_id('question', question_id)
-    if request.method == "GET":
-        data_manager.get_all_records('answer')
-        return render_template("question.html", question=question, question_id=question_id)
+    return render_template("question.html",
+                           question=data_manager.get_records_by_id('question', question_id),
+                           answers=data_manager.get_all_answers(question_id),
+                           answer_headers=data_manager.get_column_names('answer'),
+                           question_id=question_id)
 
 
 @app.route("/question/<question_id>/delete")
