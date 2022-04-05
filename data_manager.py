@@ -45,33 +45,16 @@ def delete_record_by_id(cursor, table_, id_):
 @connection.connection_handler
 def add_new_record(cursor, table_, form):
     form = dict(form)
-    columns = ', '.join(form.keys())
-    values_ = ', '.join([str(val) for val in form.values()])
+    columns = sql.SQL(', ').join([sql.Identifier(key) for key in form.keys()])
+    values_ = sql.SQL(', ').join([sql.Literal(value) for value in form.values()])
     print(columns)
-    print(sql.Identifier(columns))
     query = """
         INSERT INTO {table_} ({columns})
         VALUES ({values_})"""
     cursor.execute(sql.SQL(query).format(
         table_=sql.Identifier(table_),
-        columns=sql.Identifier(columns),
-        values_=sql.Literal(values_)))
-
-
-if __name__ == '__main__':
-    add_new_record('question',
-                   {'submission_time': '2017-05-01 10:41:00.000000',
-                    'view_number': 125,
-                    'vote_number': 23,
-                    'title': 'valamizé',
-                    'message': 'izé',
-                    'image': 'image'})
-
-
-
-
-
-
+        columns=columns,
+        values_=values_))
 
 
 
@@ -118,11 +101,6 @@ def get_unique_id(file_path, header):
         return str(int(last_story["id"])+1)
     except IndexError:
         return 1
-
-
-if __name__ == "__main__":
-    print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
-
 
 def add_new_entry(file_path, file_header, entry_to_add, upload_path):
     entry_to_add = dict(entry_to_add)
