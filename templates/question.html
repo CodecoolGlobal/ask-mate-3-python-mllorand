@@ -24,11 +24,11 @@
     <button onclick="location.href='/question/{{ question_id }}/new-answer'">Add New Answer</button>
 	<div class="main_table">
     <table>
-        <tr style="background-color: white">
-                {% for column_title in answer_headers %}
-                    <th style="position: sticky; top: 275px; background-color: white"> {{ column_title.replace("_", " ").title() }}</th>
-                {% endfor %}
-            </tr>
+        <tr>
+            {% for column_title in answer_headers %}
+                <th>{{ column_title.replace("_", " ").title() }}</th>
+            {% endfor %}
+        </tr>
         {% for answer in answers %}
             <tr>
                 {% for cell in answer %}
@@ -41,7 +41,7 @@
                             <button class="vote_button" onclick="location.href='/answer/{{ answer["id"] }}/vote-down'" type="submit">-</button>
                         </td>
                     {% else %}
-                        <td style="text-align: center">{{ answer[cell] | safe }}</td>
+                        <td style="text-align: center">{{ answer.cell | safe }}</td>
                     {% endif %}
                 {% endfor %}
                 <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>

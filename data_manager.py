@@ -1,14 +1,5 @@
-import csv
-import os
 import connection
-import util
 from psycopg2 import sql
-
-
-QUESTION_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'question.csv'
-ANSWER_FILE_PATH = os.getenv('DATA_FILE_PATH') if 'DATA_FILE_PATH' in os.environ else 'answer.csv'
-QUESTION_HEADER = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
-ANSWER_HEADER = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 
 
 @connection.connection_handler
@@ -38,7 +29,7 @@ def delete_record_by_id(cursor, table_, id_):
         WHERE id = {id_}"""
     cursor.execute(sql.SQL(query).format(
         table_=sql.Identifier(table_),
-        id_=sql.Identifier(id_)))
+        id_=sql.Literal(id_)))
     return cursor.fetchall()
 
 
@@ -56,6 +47,25 @@ def add_new_record(cursor, table_, form):
         columns=columns,
         values_=values_))
 
+
+@connection.connection_handler
+def get_column_names(cursor, table_):
+    query = """
+        SELECT *
+        FROM {table_}
+        LIMIT 0"""
+    cursor.execute(sql.SQL(query).format(
+        table_=sql.Identifier(table_)))
+    return [desc[0] for desc in cursor.description]
+
+
+@connection.connection_handler
+def get_all_answers(cursor, question_id):
+    query = """
+        SELECT * FROM answer
+        WHERE question_id = {question_id}"""
+    cursor.execute(sql.SQL(query).format(question_id=sql.Literal(question_id)))
+    return cursor.fetchall()
 
 
 
