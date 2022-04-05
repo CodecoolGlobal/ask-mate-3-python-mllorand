@@ -102,6 +102,11 @@ def get_unique_id(file_path, header):
     except IndexError:
         return 1
 
+
+if __name__ == "__main__":
+    print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
+
+
 def add_new_entry(file_path, file_header, entry_to_add, upload_path):
     entry_to_add = dict(entry_to_add)
     for header in file_header:

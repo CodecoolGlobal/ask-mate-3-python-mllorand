@@ -23,18 +23,11 @@ def list():
 
 @app.route("/question/<question_id>", methods=['GET', 'POST'])
 def route_question(question_id):
-    data_manager.add_view_to_entry(question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
-    question_headers = data_manager.QUESTION_HEADER
-    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, question_headers)
+    question = data_manager.get_records_by_id('question', question_id)
+    print(question)
     if request.method == "GET":
-        answer_headers = data_manager.ANSWER_HEADER
-        answers_list = data_manager.get_all_entries(data_manager.ANSWER_FILE_PATH, answer_headers)
-        answers = [answer for answer in answers_list if answer['question_id'] == question_id]
-        for question in questions:
-            if question['id'] == question_id:
-                return render_template("question.html", question_headers=question_headers,
-                                       answer_headers=answer_headers,
-                                       question=question, question_id=question_id, answers=answers)
+        data_manager.get_all_records('answer')
+        return render_template("question.html", question=question)
 
 
 @app.route("/question/<question_id>/delete")
@@ -114,6 +107,27 @@ def add_vote(vote, answer_id=None, question_id=None):
                                               data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
         print("vote on answer in progress")
         return redirect("/question/"+answer["question_id"])
+
+
+@app.route('/question/<question_id>/new-comment', methods=['POST'])
+def route_add_comment(question_id):
+        if request.method == "POST":
+            data_manager.add_new_record('comment', request.form)
+            return redirect('/question/<question_id>')
+        return render_template('add_comment.html', question_id=question_id)
+
+
+@app.route('/question/<question_id>/new-comment', methods=['POST'])
+def route_add_comment_to_answer(question_id, answer_id):
+    if request.method == "POST":
+        question_id = request.form.get("question_id")
+        answer_id = request.form.get("answer_id")
+        message = request.form.get("message")
+        edited_count = request.form.get('edited_count')
+        data_manager.add_new_comment_to_answer(
+            question_id, answer_id, message, edited_count)
+        return redirect('/question/<question_id>')
+    return render_template('add_comment_to_answer.html')
 
 
 if __name__ == "__main__":

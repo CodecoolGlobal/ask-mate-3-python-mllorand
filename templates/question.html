@@ -3,20 +3,18 @@
 	<h1>Question {{ question_id }}</h1>
     <table>
         <tr>
-            {% for column_title in question_headers %}
-                {% if column_title in ["title","message"] %}
-                 <th> {{ column_title.replace("_", " ").title() | safe }}</th>
-                {% endif %}
-            {% endfor %}
+            <th>Title</th>
+            <th>Message</th>
         </tr>
         <tr>
+        {% print(question) %}
         {% for cell in question %}
-                {% if cell in ["title", "message"] %}
-                    <td>{{ question[cell] | safe }}</td>
-                {% endif %}
+            <td>{{ question[cell] | safe }}</td>
         {% endfor %}
         <td><button onclick="location.href='/question/{{ question['id'] }}/delete'">Delete Question</button></td>
         <td><button onclick="location.href='/question/{{ question['id'] }}/edit'">Edit Question</button></td>
+        <td><button onclick="location.href='/question/{{ question['id'] }}/new-comment'">Add new comment</button></td>
+
         </tr>
     </table><br>
     <form method="get" action="/">
@@ -47,6 +45,7 @@
                     {% endif %}
                 {% endfor %}
                 <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>
+                <td><button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button></td>
             </tr>
         {% endfor %}
     </table>
