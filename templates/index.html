@@ -28,7 +28,7 @@
 {% block content %}
     {% for question in questions %}
         <div class="question-card">
-            <div class="card-title">{{ question.title }}</div>
+            <div class="card-title"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
             <div class="card-message">{{ question.message }}</div>
             <div class="card-vote-number">{{ question.vote_number }}</div>
             <div class="card-view-number">{{ question.view_number }}</div>

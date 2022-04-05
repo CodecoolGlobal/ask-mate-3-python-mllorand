@@ -97,6 +97,9 @@ def add_view_to_entry(entry_id, file_path, file_header):
 def get_table(cursor, table_name, sort_by=None, order=None, limit=None):
     query = """
     select * from """+table_name
+    if sort_by:
+        query += """
+        order by """+sort_by+""" """+order.upper()
     if limit:
         query += """
         limit """+limit
