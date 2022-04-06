@@ -16,7 +16,13 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-comment'">Add new comment</button></td></div>
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
-
+    </table>
+    <table>
+        <tr>
+            {% for cell in tags %}
+                <th>{{ cell.name }}</th>
+            {% endfor %}
+        </tr>
     </table>
     <div  class="question-card_for_comment">
     <table>
