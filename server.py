@@ -39,8 +39,12 @@ def route_question(question_id):
     return render_template("question.html",
                            question=data_manager.get_table('question', selector='id',
                                                            selected_value=question_id),
+                           comment_for_question=data_manager.get_table('comment', selector='question_id',
+                                                                       selected_value=question_id),
+                           # tags_for_question=data_manager.get_table(''),
                            answers=data_manager.get_table('answer', selector='question_id',
                                                           selected_value=question_id),
+                           # comment_for_answers=data_manager.get_table(''),
                            answer_headers=data_manager.get_column_names('answer'),
                            question_id=question_id)
 
@@ -143,7 +147,9 @@ def add_vote(vote, answer_id=None, question_id=None):
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def route_add_comment_to_question(question_id):
     if request.method == "POST":
-        data_manager.add_new_record('comment', request.form)
+        form = dict(request.form)
+        form['submission_time'] = datetime.datetime.now()
+        data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment.html', question_id=question_id)
 
