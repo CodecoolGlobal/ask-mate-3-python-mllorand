@@ -81,8 +81,8 @@ def route_delete_question(question_id):
 def route_add_answer(question_id):
     if request.method == 'GET':
         return render_template("answer.html", question_id=question_id)
-    if request.files.get('image').content_type == 'application/octet-stream':
-        path = './uploaded_files/no_image_found.png'
+    if not request.files.get('image'):
+        path = './static/images/no_image_found.png'
     else:
         image = request.files['image']
         path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
@@ -107,7 +107,7 @@ def route_delete_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
-            path = './uploaded_files/no_image_found.png'
+            path = './static/images/no_image_found.png'
         else:
             image = request.files['image']
             path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)

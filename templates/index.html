@@ -33,7 +33,7 @@
             <div class="card-message">{{ question.message }}</div>
             <div class="card-vote-number">votes: {{ question.vote_number }}</div>
             <div class="card-view-number">views: {{ question.view_number }}</div>
-            <img class="card-image" src="../static/{{ question.image }}">
+            <img class="card-image" src="{{ question.image }}">
             <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
         </div>
     {% endfor %}

@@ -46,9 +46,8 @@
         {% for answer in answers %}
             <tr>
                 {% for cell in answer %}
-	                {% print(cell) %}
                     {% if cell == "image" %}
-                        <td><img src=" {{ answer[cell] }}" width="50" height="50"></td>
+                        <td><img class="card-image" src="{{ answer[cell] }}"></td>
                     {% elif cell == "vote_number" %}
                         <td style="text-align: center">
                             <button class="vote_button" onclick="location.href='/answer/{{ answer[cell] }}/vote-up'" type="submit">+</button>
