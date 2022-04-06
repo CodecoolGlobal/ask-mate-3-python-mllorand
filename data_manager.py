@@ -116,10 +116,6 @@ def get_unique_id(file_path, header):
         return 1
 
 
-if __name__ == "__main__":
-    print(get_unique_id(ANSWER_FILE_PATH, ANSWER_HEADER))
-
-
 def add_new_entry(file_path, file_header, entry_to_add, upload_path):
     entry_to_add = dict(entry_to_add)
     for header in file_header:
@@ -160,14 +156,23 @@ def add_view_to_entry(entry_id, file_path, file_header):
 
 
 @connection.connection_handler
-def get_table(cursor, table_name, sort_by=None, order=None, limit=None):
-    query = """
-    select * from """+table_name
-    if sort_by:
-        query += """
-        order by """+sort_by+""" """+order.upper()
-    if limit:
-        query += """
-        limit """+limit
+def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None):
+    query = query_builder_select(table, columns, sort_by, order, limit)
     cursor.execute(query)
     return cursor.fetchall()
+
+
+def query_builder_select(table, columns: list, sort_by, order, limit):
+    base_query = """select {columns} from {table}""" if columns else """select * from {table}"""
+    if columns:
+        executable_query = sql.SQL(base_query).format(table=sql.Identifier(table),
+                                                      columns=sql.SQL(', ').join(map(sql.Identifier, columns)))
+    else:
+        executable_query = sql.SQL(base_query).format(table=sql.Identifier(table))
+    if sort_by:
+        order = 'asc' if order.lower() == 'asc' else 'desc'
+        executable_query += sql.SQL(""" order by {sort_by} {order}""").format(sort_by=sql.Identifier(sort_by),
+                                                                              order=sql.SQL(order))
+    if limit:
+        executable_query += sql.SQL(""" limit {limit}""").format(limit=sql.Literal(limit))
+    return executable_query
