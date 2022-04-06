@@ -122,6 +122,7 @@ def route_add_question():
 def route_add_tag(question_id):
     if request.method == 'POST':
         data_manager.add_new_record('tag', request.form)
+        # newest_tag = data_manager.query_builder_select('tag', columns=['id'][0])
         return redirect(url_for('route_add_tag', question_id=question_id))
     tags = data_manager.get_table(table='tag')
     return render_template('add_tags.html', question_id=question_id, tags=tags)

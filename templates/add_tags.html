@@ -4,13 +4,21 @@
         <h1>Add Tags</h1>
         <div class="question-card_for_comment">
             <form action=/question/{{ question_id }}/new-tag method="post" enctype="multipart/form-data">
-                <input type="text" name="name" id="name" placeholder="Add a new tag">
+                <input type="text" name="name" id="name" placeholder="Add a new tag"><br>
             <br>
             <button onclick="location.href='/question/{{ question_id }}" value="submit">Submit new tag</button>
+                <br><br>
             </form>
-                {% for cell in tags %}
-                    <p>{{ cell.name }}</p>
+                {% for tag in tags %}
+                    <fieldset>
+                        <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}" value="{{ tag.id }}"><label for="{{ tag.name }}">{{ tag.name }}</label>
+                    </fieldset>
                 {% endfor %}
+                <input type="submit">
+            <br>
+            <form method="get" action="/question/{{ question_id }}">
+        <button type="submit">Back to main page</button>
+    </form>
         </div>
     </body>
 {% endblock %}
