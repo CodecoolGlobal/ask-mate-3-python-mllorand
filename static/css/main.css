@@ -35,10 +35,10 @@ body {
     grid-area: header;
     display: grid;
     grid-template-columns: auto auto;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 2fr 1fr;
     grid-template-areas:
         'logo upper-nav'
-        'logo lower-nav';
+        'lower-nav lower-nav';
     box-shadow: 0 16px 16px rgba(0,0,0,1);
 }
 
@@ -76,10 +76,12 @@ body {
 .main-nav a:before {
     position: relative;
     top: -4px;
+    left: 10%;
     content: "";
     display: block;
     border-radius: 2px;
     height: 4px;
+    max-width: 80%;
     background-color: var(--sc);
     transform: scale(0,1);
     transition: transform ease-in-out 200ms;
@@ -87,6 +89,26 @@ body {
 
 .main-nav a:hover::before {
     transform: scale(1,1);
+}
+
+.nav-search{
+    margin-right: auto;
+
+}
+.nav-search button,input{
+    outline: none;
+    border: none;
+    background-color: white;
+    border-radius: 1em;
+}
+.nav-search input{
+    padding-left: 1em;
+    padding-right: 1.6em;
+}
+
+.nav-search button{
+    position: relative;
+    left: -22px;
 }
 
 .content-container {
@@ -197,9 +219,7 @@ body {
 .main_table th:not(:first-child),td:not(:first-child){
     padding-left: 30px;
 }
-.main_table td{
-    border-bottom: 1px solid #dddddd;
-}
+
 .main_table thead tr{
     background-color: #dddddd;
     white-space: nowrap;
@@ -207,10 +227,11 @@ body {
     top: 98px;
 }
 .main_table tbody tr:nth-of-type(even){
-    background-color: #dddddd;
+    background-color: var(--fbg);
 }
 
 .vote_button{
+    color: var(--fc);
     background: none;
     border: none;
     border-radius: 50%;
