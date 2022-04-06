@@ -169,6 +169,7 @@ body {
     color: var(--fbg);
     background-color: var(--cardbg);
     margin: auto;
+    text-align: center;
     padding: 0.5em;
     width: max-content;   /* FIX ME!!!! */
     box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
