@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for
 import data_manager
 
 
@@ -9,42 +9,51 @@ app.config['UPLOAD_FOLDER'] = './uploaded_files'
 
 @app.route("/")
 def main():
-    questions = data_manager.get_table('question', limit='5')
-    return render_template("index.html", questions=questions)
+    column_names = data_manager.get_column_names('question')
+    questions = data_manager.get_table(table='question',
+                                       sort_by='submission_time',
+                                       order='desc',
+                                       limit='5')
+    return render_template("index.html",
+                           questions=questions,
+                           columns=column_names)
 
 
 @app.route("/list")
 def list():
-    questions = data_manager.get_table('question')
-    return render_template("index.html", questions=questions)
+    column_names = data_manager.get_column_names('question')
+    if not request.args:
+        questions = data_manager.get_table(table='question',
+                                           columns=column_names)
+    else:
+        questions = data_manager.get_table(table='question',
+                                           columns=column_names,
+                                           sort_by=request.args['sort_by'],
+                                           order=request.args['order'])
+    return render_template("index.html", questions=questions, columns=column_names)
 
 
-@app.route("/question/<question_id>", methods=['GET', 'POST'])
+@app.route("/question/<question_id>")
 def route_question(question_id):
-    data_manager.add_view_to_entry(question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
-    question_headers = data_manager.QUESTION_HEADER
-    questions = data_manager.get_all_entries(data_manager.QUESTION_FILE_PATH, question_headers)
-    if request.method == "GET":
-        answer_headers = data_manager.ANSWER_HEADER
-        answers_list = data_manager.get_all_entries(data_manager.ANSWER_FILE_PATH, answer_headers)
-        answers = [answer for answer in answers_list if answer['question_id'] == question_id]
-        for question in questions:
-            if question['id'] == question_id:
-                return render_template("question.html", question_headers=question_headers,
-                                       answer_headers=answer_headers,
-                                       question=question, question_id=question_id, answers=answers)
+    return render_template("question.html",
+                           question=data_manager.get_table('question', selector='id',
+                                                           selected_value=question_id),
+                           answers=data_manager.get_table('answer', selector='question_id',
+                                                          selected_value=question_id),
+                           answer_headers=data_manager.get_column_names('answer'),
+                           question_id=question_id)
 
 
 @app.route("/question/<question_id>/delete")
 def route_delete_question(question_id):
-    question = data_manager.get_entry_by_id(question_id, data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER)
-    data_manager.delete_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER, question)
-    answers_to_remove = [answer for answer in
-                         data_manager.get_all_entries_with_unix_timestamp(data_manager.ANSWER_FILE_PATH,
-                                                                          data_manager.ANSWER_HEADER)
-                         if answer['question_id'] == question_id]
-    for answer in answers_to_remove:
-        data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
+    data_manager.delete_record_by_id('question', 'id', question_id)
+    data_manager.delete_record_by_id('answer', 'question_id', question_id)
+    data_manager.delete_record_by_id('comment', 'question_id', question_id)
+    answers = data_manager.get_table('answer', columns=['id'],
+                                     selector='question_id',
+                                     selected_value=question_id)
+    for cell in answers:
+        data_manager.delete_record_by_id('comment', selector='answer_id', selected_value=cell.get('id'))
     return redirect("/list")
 
 
@@ -65,10 +74,12 @@ def route_add_answer(question_id):
 
 @app.route("/answer/<answer_id>/delete")
 def route_delete_answer(answer_id):
-    answer = data_manager.get_entry_by_id(answer_id, data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
-    question_id = answer['question_id']
-    data_manager.delete_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER, answer)
-    return redirect("/question/" + question_id)
+    question_id = data_manager.get_table('answer', columns=['question_id'], selector='id',
+                                         selected_value=answer_id)[0]
+    print(question_id)
+    data_manager.delete_record_by_id('answer', 'id', answer_id)
+    data_manager.delete_record_by_id('comment', 'answer_id', answer_id)
+    return redirect("/question/" + str(question_id.get('question_id')))
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -112,6 +123,22 @@ def add_vote(vote, answer_id=None, question_id=None):
                                               data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
         print("vote on answer in progress")
         return redirect("/question/"+answer["question_id"])
+
+
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+def route_add_comment_to_question(question_id):
+    if request.method == "POST":
+        data_manager.add_new_record('comment', request.form)
+        return redirect(url_for('route_question', question_id=question_id))
+    return render_template('add_comment.html', question_id=question_id)
+
+
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+def route_add_comment_to_answer(question_id, answer_id):
+    if request.method == "POST":
+        data_manager.add_new_record('comment', request.form)
+        return redirect(url_for('route_question', question_id=question_id))
+    return render_template('add_comment_to_answer.html', answer_id=answer_id)
 
 
 if __name__ == "__main__":
