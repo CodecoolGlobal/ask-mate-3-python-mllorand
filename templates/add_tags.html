@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <body>
+        <h1>Add Tags</h1>
+        <div class="question-card_for_comment">
+            <form action=/question/{{ question_id }}/new-tag method="post" enctype="multipart/form-data">
+                <input type="text" name="name" id="name" placeholder="Add a new tag">
+            <br>
+            <button onclick="location.href='/question/{{ question_id }}" value="submit">Submit new tag</button>
+            </form>
+                {% for cell in tags %}
+                    <p>{{ cell.name }}</p>
+                {% endfor %}
+        </div>
+    </body>
+{% endblock %}
