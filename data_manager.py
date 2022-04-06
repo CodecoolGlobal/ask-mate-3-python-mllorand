@@ -1,3 +1,5 @@
+import datetime
+
 import connection
 from psycopg2 import sql
 
@@ -18,7 +20,6 @@ def add_new_record(cursor, table_, form):
     form = dict(form)
     columns = sql.SQL(', ').join([sql.Identifier(key) for key in form.keys()])
     values_ = sql.SQL(', ').join([sql.Literal(value) for value in form.values()])
-    print(columns)
     query = """
         INSERT INTO {table_} ({columns})
         VALUES ({values_})"""
