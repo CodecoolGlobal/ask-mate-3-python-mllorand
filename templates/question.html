@@ -14,9 +14,29 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button></td></div>
             <div><td><button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button></td></div>
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-comment'">Add new comment</button></td></div>
-
+            <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
-    </table><br>
+    </table>
+    <table>
+        <tr>
+            {% for cell in tags %}
+                <th>{{ cell.name }}</th>
+            {% endfor %}
+        </tr>
+    </table>
+    <div  class="question-card_for_comment">
+    <table>
+        {% for comment in comment_for_question %}
+            <tr>
+                {% for cell in comment %}
+                    {% if cell in ["message", "submission_time"] %}
+                        <div> <td>{{ comment[cell] }}</td></div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </tr>
+    </table>
+    </div>
     <form method="get" action="/">
         <button type="submit">Back to main page</button>
     </form>

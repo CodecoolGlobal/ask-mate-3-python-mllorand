@@ -1,7 +1,10 @@
 import datetime
 
+import psycopg2
+
 import connection
 from psycopg2 import sql
+import json
 
 
 @connection.connection_handler
@@ -65,6 +68,36 @@ def query_builder_select(table, columns: list, sort_by, order, limit, selector, 
     if limit:
         executable_query += sql.SQL(""" limit {limit}""").format(limit=sql.Literal(limit))
     return executable_query
+
+
+@connection.connection_handler
+def tag_table(cursor, question_id):
+    query = """
+        SELECT *
+        FROM question_tag t1
+        JOIN tag t2
+        ON t1.tag_id = t2.id
+        WHERE question_id = %(question_id)s"""
+    cursor.execute(query, {'question_id': question_id})
+    return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_tag_by_id(cursor):
+    dict_cur = cursor(cursor_factory=psycopg2.extras.DictCursor)
+    dict_cur.execute("SELECT id FROM tag")
+    rec = dict_cur.fetchone()
+    return rec
+
+@connection.connection_handler
+def tag_to_question_tag(cursor, question_id, tag_id):
+    for cell in tag_id:
+        tag_ids = cell.get('id')
+    query = f"""
+        INSERT INTO question_tag
+        VALUES ('{question_id}', '{tag_ids}')"""
+    cursor.execute(query)
+
 
 
 def QUESTION_FILE_PATH():
