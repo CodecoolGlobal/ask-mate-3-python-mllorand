@@ -1,10 +1,11 @@
+import datetime
 import os
 from flask import Flask, request, render_template, redirect, url_for
 import data_manager
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = './uploaded_files'
+app.config['UPLOAD_FOLDER'] = './static/images'
 
 
 @app.route("/")
@@ -82,8 +83,10 @@ def route_add_answer(question_id):
         image = request.files['image']
         path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
         image.save(path)
-    data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
-                               entry_to_add=request.form, upload_path=path)
+    form = dict(request.form)
+    form['submission_time'] = datetime.datetime.now()
+    form['image'] = path
+    data_manager.add_new_record('answer', form)
     return redirect("/question/" + question_id)
 
 
@@ -91,13 +94,12 @@ def route_add_answer(question_id):
 def route_delete_answer(answer_id):
     question_id = data_manager.get_table('answer', columns=['question_id'], selector='id',
                                          selected_value=answer_id)[0]
-    print(question_id)
     data_manager.delete_record_by_id('answer', 'id', answer_id)
     data_manager.delete_record_by_id('comment', 'answer_id', answer_id)
     return redirect("/question/" + str(question_id.get('question_id')))
 
 
-@app.route('/add-question', methods=['GET', 'POST'])
+@app.route("/add-question", methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
@@ -106,10 +108,23 @@ def route_add_question():
             image = request.files['image']
             path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
             image.save(path)
-        new_question = data_manager.add_new_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
-                                                  entry_to_add=request.form, upload_path=path)
-        return redirect('/question/'+str(new_question['id']))
-    return render_template('add_question.html', question=data_manager.QUESTION_HEADER)
+        form = dict(request.form)
+        form['submission_time'] = datetime.datetime.now()
+        form['image'] = path
+        data_manager.add_new_record('question', form)
+        question_id = str(data_manager.get_table('question', columns=['id'],
+                                                 sort_by='id', order='desc')[0].get('id'))
+        return redirect('/question/' + question_id)
+    return render_template('add_question.html', question=data_manager.get_column_names('question'))
+
+
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def route_add_tag(question_id):
+    if request.method == 'POST':
+        data_manager.add_new_record('tag', request.form)
+        return redirect(url_for('route_add_tag', question_id=question_id))
+    tags = data_manager.get_table(table='tag')
+    return render_template('add_tags.html', question_id=question_id, tags=tags)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])

@@ -7,6 +7,7 @@
         <input type="hidden" name="question_id" value="{{ question_id }}"><br>
 	<label for="image">Upload image:</label>
 		<input type="file" id="image" name="image" accept="image/png, image/jpg"><br><br>
+		<input type="hidden" id="vote_number" name="vote_number" value="0">
 	<button type="submit">Submit New Answer</button>
 	</form>
 {% endblock %}
