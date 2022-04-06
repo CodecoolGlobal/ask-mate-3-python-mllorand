@@ -33,8 +33,23 @@ def list():
     return render_template("index.html", questions=questions, columns=column_names)
 
 
+@app.route("/search")
+def search():
+    column_names = data_manager.get_column_names('question')
+    if request.args:
+        questions = data_manager.get_table(table='question',
+                                           columns=column_names,
+                                           sort_by='submission_time',
+                                           order='desc')
+    else:
+        questions = data_manager.get_table(table='question',
+                                           columns=column_names)
+    return render_template("index.html", questions=questions, columns=column_names)
+
+
 @app.route("/question/<question_id>")
 def route_question(question_id):
+    print(data_manager.get_all_answers(question_id))
     return render_template("question.html",
                            question=data_manager.get_records_by_id('question', question_id),
                            answers=data_manager.get_all_answers(question_id),

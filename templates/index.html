@@ -2,6 +2,9 @@
 {% block page_title %}Home{% endblock %}
 {% block navbar %}
 <div class="main-nav">
+    <form class="nav-search" action="/search">
+        <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
+    </form>
     <div><a href="/list" type="submit">All question</a></div>
     <div><a href="/add-question" type="submit">Add new question</a></div>
 <div>
