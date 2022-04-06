@@ -147,16 +147,12 @@ def route_edit_question(question_id):
 @app.route("/question/<question_id>/<vote>'", methods=["GET", "POST"])
 def add_vote(vote, answer_id=None, question_id=None):
     if question_id:
-        data_manager.vote_on_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
-                                   vote=vote, entry_id=question_id)
-        return redirect(request.form["original_url"])
+        data_manager.update_vote_number('question', question_id, vote)
+        return redirect('question/' + question_id)
     elif answer_id:
-        data_manager.vote_on_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
-                                   vote=vote, entry_id=answer_id)
-        answer = data_manager.get_entry_by_id(answer_id,
-                                              data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER)
-        print("vote on answer in progress")
-        return redirect("/question/"+answer["question_id"])
+        data_manager.update_vote_number('answer', answer_id, vote)
+        answer = data_manager.get_table('answer', selector='id', selected_value=answer_id)[0]
+        return redirect('/question/' + str(answer.get('question_id')))
 
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])

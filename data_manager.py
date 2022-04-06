@@ -1,5 +1,3 @@
-import datetime
-
 import connection
 from psycopg2 import sql
 
@@ -55,6 +53,22 @@ def update_question(cursor, form):
         title=title,
         message=message,
         id_=id_))
+
+
+@connection.connection_handler
+def update_vote_number(cursor, table, id_, vote):
+    if vote == 'vote-up':
+        vote = '+'
+    else:
+        vote = '-'
+    query = f"""
+        UPDATE {table}
+        SET vote_number = vote_number {vote} 1
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        table=sql.Identifier(table),
+        vote=sql.Literal(vote),
+        id_=sql.Literal(id_)))
 
 
 @connection.connection_handler
