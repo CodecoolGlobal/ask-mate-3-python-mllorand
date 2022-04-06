@@ -57,8 +57,6 @@ def update_question(cursor, form):
         id_=id_))
 
 
-
-
 @connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
     query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
