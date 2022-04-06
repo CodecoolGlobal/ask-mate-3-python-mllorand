@@ -41,7 +41,7 @@ def route_question(question_id):
                                                            selected_value=question_id),
                            comment_for_question=data_manager.get_table('comment', selector='question_id',
                                                                        selected_value=question_id),
-                           # tags_for_question=data_manager.get_table(''),
+                           tags=data_manager.tag_table(question_id),
                            answers=data_manager.get_table('answer', selector='question_id',
                                                           selected_value=question_id),
                            # comment_for_answers=data_manager.get_table(''),
@@ -111,7 +111,8 @@ def route_add_question():
 def route_add_tag(question_id):
     if request.method == 'POST':
         data_manager.add_new_record('tag', request.form)
-        # newest_tag = data_manager.query_builder_select('tag', columns=['id'][0])
+        tag_id = data_manager.get_table('tag', columns=['id'])[-1:]
+        data_manager.tag_to_question_tag(question_id, tag_id)
         return redirect(url_for('route_add_tag', question_id=question_id))
     tags = data_manager.get_table(table='tag')
     return render_template('add_tags.html', question_id=question_id, tags=tags)
