@@ -115,6 +115,15 @@ def route_add_question():
     return render_template('add_question.html', question=data_manager.QUESTION_HEADER)
 
 
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def route_add_tag(question_id):
+    if request.method == 'POST':
+        data_manager.add_new_record('tag', request.form)
+        return redirect(url_for('route_add_tag', question_id=question_id))
+    tags = data_manager.get_table(table='tag')
+    return render_template('add_tags.html', question_id=question_id, tags=tags)
+
+
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def route_edit_question(question_id):
     question = data_manager.get_entry_by_id(question_id, data_manager.QUESTION_FILE_PATH,
