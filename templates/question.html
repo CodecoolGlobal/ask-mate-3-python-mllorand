@@ -17,8 +17,8 @@
         {% for cell in question %}
             <div class="card-message"><td>{{ cell.message }}</td></div>
         {% endfor %}
-            <div><td><button onclick="location.href='/question/{{ question['id'] }}/delete'">Delete Question</button></td></div>
-            <div><td><button onclick="location.href='/question/{{ question['id'] }}/edit'">Edit Question</button></td></div>
+            <div><td><button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button></td></div>
+            <div><td><button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button></td></div>
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-comment'">Add new comment</button></td></div>
 
         </tr>
