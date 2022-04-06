@@ -114,13 +114,12 @@ def route_add_tag(question_id):
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def route_edit_question(question_id):
-    question = data_manager.get_entry_by_id(question_id, data_manager.QUESTION_FILE_PATH,
-                                            data_manager.QUESTION_HEADER)
+    question = data_manager.get_table('question', selector='id', selected_value=question_id)[0]
     if request.method == 'GET':
-        return render_template('edit_question.html', question_headers=data_manager.QUESTION_HEADER, question=question)
+        return render_template('edit_question.html', question_headers=data_manager.get_column_names('question'),
+                               question=question)
     if request.method == 'POST':
-        data_manager.update_entry(data_manager.QUESTION_FILE_PATH, data_manager.QUESTION_HEADER,
-                                  entry_to_update=request.form)
+        data_manager.update_question(request.form)
         return redirect('/question/' + question_id)
 
 

@@ -41,6 +41,25 @@ def get_column_names(cursor, table_):
 
 
 @connection.connection_handler
+def update_question(cursor, form):
+    form = dict(form)
+    id_ = sql.Literal(form.get('id'))
+    title = sql.Literal(form.get('title'))
+    message = sql.Literal(form.get('message'))
+    query = """
+        UPDATE question
+        SET title = {title},
+            message = {message}
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        title=title,
+        message=message,
+        id_=id_))
+
+
+
+
+@connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
     query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
     cursor.execute(query)
