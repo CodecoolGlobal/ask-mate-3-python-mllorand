@@ -2,8 +2,8 @@
 {% block page_title %}Home{% endblock %}
 {% block navbar %}
 <div class="main-nav">
-    <div><button onclick="location.href='/list'" type="submit">All question</button></div>
-    <div><button onclick="location.href='/add-question'" type="submit">Add new question</button></div>
+    <div><a href="/list" type="submit">All question</a></div>
+    <div><a href="/add-question" type="submit">Add new question</a></div>
 <div>
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
@@ -14,11 +14,9 @@
                 {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
             </option>
         {% endif %}
-        {% for option in header %}
-            {% if option not in ["id","image"] %}
-                <option value="/list?sort_by={{ option }}&order=asc">{{ option.replace("_", " ").title() }}(asc)</option>
-                <option value="/list?sort_by={{ option }}&order=desc">{{ option.replace("_", " ").title() }}(desc)</option>
-            {% endif %}
+        {% for column in columns if column not in ['id','image'] %}
+            <option value="/list?sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').capitalize() }}(asc)</option>
+            <option value="/list?sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').capitalize() }}(desc)</option>
         {% endfor %}
     </select>
 </div>
@@ -30,9 +28,10 @@
         <div class="question-card">
             <div class="card-title"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
             <div class="card-message">{{ question.message }}</div>
-            <div class="card-vote-number">{{ question.vote_number }}</div>
-            <div class="card-view-number">{{ question.view_number }}</div>
-            <div class="card-smt">{{ question.submission_time.date() }}<br>{{ question.submission_time.time() }}</div>
+            <div class="card-vote-number">votes: {{ question.vote_number }}</div>
+            <div class="card-view-number">views: {{ question.view_number }}</div>
+            <img class="card-image" src="../static/{{ question.image }}">
+            <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
         </div>
     {% endfor %}
 {% endblock %}

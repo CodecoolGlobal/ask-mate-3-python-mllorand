@@ -9,15 +9,28 @@ app.config['UPLOAD_FOLDER'] = './uploaded_files'
 
 @app.route("/")
 def main():
-    questions = data_manager.get_table('question', limit='5',
+    column_names = data_manager.get_column_names('question')
+    questions = data_manager.get_table(table='question',
                                        sort_by='submission_time',
-                                       order='desc')
-    return render_template("index.html", questions=questions)
+                                       order='desc',
+                                       limit='5')
+    return render_template("index.html",
+                           questions=questions,
+                           columns=column_names)
 
 
 @app.route("/list")
 def list():
-    return render_template("index.html", questions=data_manager.get_all_records('question'))
+    column_names = data_manager.get_column_names('question')
+    if not request.args:
+        questions = data_manager.get_table(table='question',
+                                           columns=column_names)
+    else:
+        questions = data_manager.get_table(table='question',
+                                           columns=column_names,
+                                           sort_by=request.args['sort_by'],
+                                           order=request.args['order'])
+    return render_template("index.html", questions=questions, columns=column_names)
 
 
 @app.route("/question/<question_id>")
