@@ -1,10 +1,11 @@
+import datetime
 import os
 from flask import Flask, request, render_template, redirect, url_for
 import data_manager
 
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = './uploaded_files'
+app.config['UPLOAD_FOLDER'] = './static/images'
 
 
 @app.route("/")
@@ -67,8 +68,10 @@ def route_add_answer(question_id):
         image = request.files['image']
         path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
         image.save(path)
-    data_manager.add_new_entry(data_manager.ANSWER_FILE_PATH, data_manager.ANSWER_HEADER,
-                               entry_to_add=request.form, upload_path=path)
+    form = dict(request.form)
+    form['submission_time'] = datetime.datetime.now()
+    form['image'] = path
+    data_manager.add_new_record('answer', form)
     return redirect("/question/" + question_id)
 
 
@@ -82,7 +85,7 @@ def route_delete_answer(answer_id):
     return redirect("/question/" + str(question_id.get('question_id')))
 
 
-@app.route('/add-question', methods=['GET', 'POST'])
+@app.route("/add-question", methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
