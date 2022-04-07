@@ -1,4 +1,11 @@
 {% extends "layout.html" %}
+{% block navbar %}
+    <div class="main-nav">
+        <div><a href="/">Home Page</a></div>
+        <div><a href="/list">All questions</a></div>
+        <div><a href='/question/{{ question_id }}/new-answer'>Add New Answer</a></div>
+    </div>
+{% endblock %}
 {% block content %}
 	<h1>Question {{ question_id }}</h1>
     <table class="question-card_for_one">
@@ -17,13 +24,23 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
     </table>
+    <div class="tags">
     <table>
-        <tr>
-            {% for cell in tags %}
-                <th>{{ cell.name }}</th>
-            {% endfor %}
-        </tr>
+    <tr>
+        {% for tag in tags %}
+                <div><th>{{ tag.name }} <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-times-circle"></i></a>,</th></div>
+        {% endfor %}
+    </tr>
     </table>
+    </div>
+{#    <table>#}
+{#        <tr>#}
+{#            {% for cell in tags %}#}
+{#                <th>{{ cell.name }}<a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-times-circle-o"></i>#}
+{#                        </a> ,</th>#}
+{#            {% endfor %}#}
+{#        </tr>#}
+{#    </table>#}
     <div  class="question-card_for_comment">
     <table>
         {% for comment in comment_for_question %}
@@ -36,6 +53,8 @@
                     {% endif %}
                 {% endfor %}
             <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
+            <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
+                        </a></td>
             {% endfor %}
         </tr>
     </table>
@@ -44,7 +63,6 @@
         <button type="submit">Back to main page</button>
     </form>
 	<h1 style="margin: 0;padding: 0">Answers:</h1><br>
-    <button onclick="location.href='/question/{{ question_id }}/new-answer'">Add New Answer</button>
 	<div class="main_table">
     <table>
         <tr>
@@ -55,14 +73,13 @@
         {% for answer in answers %}
             <tr>
                 {% for cell in answer %}
-	                {% print(cell) %}
                     {% if cell == "image" %}
-                        <td><img src=" {{ answer[cell] }}" width="50" height="50"></td>
+                        <td><img class="card-image" src="../static/{{ answer[cell] }}"></td>
                     {% elif cell == "vote_number" %}
-                        <td style="text-align: center">
-                            <button class="vote_button" onclick="location.href='/answer/{{ answer[cell] }}/vote-up'" type="submit">+</button>
+                        <td style="text-align: center; white-space: nowrap">
+                            <button class="vote_button" onclick="location.href='/answer/{{ answer.id }}/vote-up'" type="submit">+</button>
                             {{ answer[cell] | safe }}
-                            <button class="vote_button" onclick="location.href='/answer/{{ answer[cell] }}/vote-down'" type="submit">-</button>
+                            <button class="vote_button" onclick="location.href='/answer/{{ answer.id }}/vote-down'" type="submit">-</button>
                         </td>
                     {% else %}
                         <td style="text-align: center">{{ answer[cell] | safe }}</td>
