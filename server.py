@@ -8,6 +8,11 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/images'
 
 
+@app.route("/catch_hacker")
+def catch_hacker():
+    return render_template('hack.html')
+
+
 @app.route("/")
 def main():
     column_names = data_manager.get_column_names('question')
@@ -22,6 +27,7 @@ def main():
 
 @app.route("/list")
 def list():
+    order = request.args.get('order')
     column_names = data_manager.get_column_names('question')
     if not request.args:
         questions = data_manager.get_table(table='question',
@@ -31,6 +37,7 @@ def list():
                                            columns=column_names,
                                            sort_by=request.args['sort_by'],
                                            order=request.args['order'])
+    if order not in ['asc', 'desc', None]: return redirect(url_for('catch_hacker'))
     return render_template("index.html", cards=questions, columns=column_names)
 
 
@@ -45,6 +52,7 @@ def search():
                                                            order=order)
     else:
         return redirect(url_for('main'))
+    if order not in ['asc', 'desc', None]: return redirect(url_for('catch_hacker'))
     return render_template("search.html", cards=search_result, columns=column_names)
 
 
@@ -108,7 +116,7 @@ def route_delete_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
-            path = 'images/no_image_found.png'
+            path = './static/images/no_image_found.png'
         else:
             image = request.files['image']
             path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
