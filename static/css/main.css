@@ -276,10 +276,16 @@ div[class^="card-"] {
 .main_table tbody tr:nth-of-type(even){
     background-color: var(--fbg);
 }
+.for_comment{
+    background-color: var(--sbg) ;
+}
 
 .vote_button{
     color: var(--fc);
     background: none;
     border: none;
     border-radius: 50%;
+}
+i{
+    color: red;
 }

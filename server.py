@@ -179,7 +179,7 @@ def add_vote(vote, answer_id=None, question_id=None):
 def route_add_comment_to_question(question_id):
     if request.method == "POST":
         form = dict(request.form)
-        form['submission_time'] = datetime.datetime.now()
+        form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment.html', question_id=question_id)
@@ -190,7 +190,7 @@ def route_add_comment_to_answer(answer_id):
     question_id = data_manager.get_table('answer', selector='id', selected_value=answer_id)[0].get('question_id')
     if request.method == "POST":
         form = dict(request.form)
-        form['submission_time'] = datetime.datetime.now()
+        form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment_to_answer.html', answer_id=answer_id)
