@@ -30,9 +30,12 @@
             <tr>
                 {% for cell in comment %}
                     {% if cell in ["message", "submission_time"] %}
-                        <div> <td>{{ comment[cell] }}</td></div>
+                        <div><td>{{ comment[cell] }}</td></div>
+                    {% elif cell in ["edited_count"]%}
+	                    <div><td>Edited {{ comment[cell] }} times</td></div>
                     {% endif %}
                 {% endfor %}
+            <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
             {% endfor %}
         </tr>
     </table>
@@ -67,6 +70,7 @@
                 {% endfor %}
                 <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>
                 <td><button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button></td>
+                <td><button onclick="location.href='/answer/{{ answer['id'] }}/edit'">Edit answer</button></td>
             </tr>
         {% endfor %}
     </table>

@@ -44,6 +44,60 @@ def get_column_names(cursor, table_):
 
 
 @connection.connection_handler
+def update_question(cursor, form):
+    form = dict(form)
+    id_ = sql.Literal(form.get('id'))
+    title = sql.Literal(form.get('title'))
+    message = sql.Literal(form.get('message'))
+    query = """
+        UPDATE question
+        SET title = {title},
+            message = {message}
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        title=title,
+        message=message,
+        id_=id_))
+
+
+@connection.connection_handler
+def update_vote_number(cursor, table, id_, vote):
+    if vote == 'vote-up':
+        vote = '+'
+    else:
+        vote = '-'
+    query = f"""
+        UPDATE {table}
+        SET vote_number = vote_number {vote} 1
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        table=sql.Identifier(table),
+        vote=sql.Literal(vote),
+        id_=sql.Literal(id_)))
+
+
+@connection.connection_handler
+def update_message(cursor, table_, id_, message, edited_count=None):
+    query = """
+        UPDATE {table_}
+        SET message = {message},
+            {edit_count}
+            submission_time = now()::timestamp(0)
+        WHERE id = {id_}"""
+    if edited_count:
+        edit_count = sql.SQL('{edited_count_column} = {edited_count} + 1,').format(
+                edited_count_column=sql.Identifier('edited_count'),
+                edited_count=sql.Literal(edited_count))
+    else:
+        edit_count = sql.SQL('')
+    cursor.execute(sql.SQL(query).format(
+        message=sql.Literal(message),
+        id_=sql.Literal(id_),
+        table_=sql.Identifier(table_),
+        edit_count=edit_count))
+
+
+@connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
     query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
     cursor.execute(query)
@@ -89,6 +143,7 @@ def get_tag_by_id(cursor):
     rec = dict_cur.fetchone()
     return rec
 
+
 @connection.connection_handler
 def tag_to_question_tag(cursor, question_id, tag_id):
     for cell in tag_id:
@@ -98,6 +153,31 @@ def tag_to_question_tag(cursor, question_id, tag_id):
         VALUES ('{question_id}', '{tag_ids}')"""
     cursor.execute(query)
 
+
+@connection.connection_handler
+def get_records_by_search(cursor, word, sort_by=None, order=None):
+    query ="""
+        select q.id,a.id as a_id,title,
+        q.message,a.message as a_message,
+        q.view_number,
+        q.vote_number,a.vote_number as a_vote_number,
+        q.submission_time,a.submission_time as a_submission_time
+        from question as q
+        full outer join
+        (select id,question_id,message,vote_number,submission_time from answer
+        where message like '%{word}%') as a on q.id=a.question_id
+        where title like '%{word}%'
+        or q.message like '%{word}%'
+        or a.message like '%{word}%'
+    """
+    if sort_by:
+        order = 'asc' if order.lower() == 'asc' else 'desc'
+        null_handler = "nulls first" if order == "asc" else "nulls last"
+        query += """ order by {sort_by} {order} {null_handler}""".format(sort_by=sort_by,
+                                                                         order=order,
+                                                                         null_handler=null_handler)
+    cursor.execute(sql.SQL(query).format(word=sql.SQL(word)))
+    return cursor.fetchall()
 
 
 def QUESTION_FILE_PATH():
