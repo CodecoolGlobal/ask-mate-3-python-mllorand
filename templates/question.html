@@ -44,7 +44,7 @@
                             {% endif %}
                         {% endfor %}
                     <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
-                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i style="color: red" class="fa fa-trash"></i>
+                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
                                 </a></td>
                     {% endfor %}
                 </tr>
@@ -99,7 +99,7 @@
                                 <td></td>
                                 <td></td>
                     <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
-                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i style="color: red" class="fa fa-trash"></i>
+                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
                                 </a></td>
                         {% endif %}
                     {% endfor %}
