@@ -106,6 +106,7 @@ def get_tag_by_id(cursor):
     rec = dict_cur.fetchone()
     return rec
 
+
 @connection.connection_handler
 def tag_to_question_tag(cursor, question_id, tag_id):
     for cell in tag_id:
@@ -115,6 +116,31 @@ def tag_to_question_tag(cursor, question_id, tag_id):
         VALUES ('{question_id}', '{tag_ids}')"""
     cursor.execute(query)
 
+
+@connection.connection_handler
+def get_records_by_search(cursor, word, sort_by=None, order=None):
+    query ="""
+        select q.id,a.id as a_id,title,
+        q.message,a.message as a_message,
+        q.view_number,
+        q.vote_number,a.vote_number as a_vote_number,
+        q.submission_time,a.submission_time as a_submission_time
+        from question as q
+        full outer join
+        (select id,question_id,message,vote_number,submission_time from answer
+        where message like '%{word}%') as a on q.id=a.question_id
+        where title like '%{word}%'
+        or q.message like '%{word}%'
+        or a.message like '%{word}%'
+    """
+    if sort_by:
+        order = 'asc' if order.lower() == 'asc' else 'desc'
+        null_handler = "nulls first" if order == "asc" else "nulls last"
+        query += """ order by {sort_by} {order} {null_handler}""".format(sort_by=sort_by,
+                                                                         order=order,
+                                                                         null_handler=null_handler)
+    cursor.execute(sql.SQL(query).format(word=sql.SQL(word)))
+    return cursor.fetchall()
 
 
 def QUESTION_FILE_PATH():
