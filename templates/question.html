@@ -31,24 +31,26 @@
     </tr>
     </table>
     </div>
-    <div  class="question-card_for_comment">
-    <table>
-        {% for comment in comment_for_question %}
-            <tr>
-                {% for cell in comment %}
-                    {% if cell in ["message", "submission_time"] %}
-                        <div><td>{{ comment[cell] }}</td></div>
-                    {% elif cell in ["edited_count"]%}
-	                    <div><td>Edited {{ comment[cell] }} times</td></div>
-                    {% endif %}
-                {% endfor %}
-            <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
-            <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i style="color: red" class="fa fa-trash"></i>
-                        </a></td>
-            {% endfor %}
-        </tr>
-    </table>
-    </div>
+    {% if comment_for_question %}
+        <div  class="question-card_for_comment">
+            <table>
+                {% for comment in comment_for_question %}
+                    <tr>
+                        {% for cell in comment %}
+                            {% if cell in ["message", "submission_time"] %}
+                                <div><td>{{ comment[cell] }}</td></div>
+                            {% elif cell in ["edited_count"]%}
+                                <div><td>Edited {{ comment[cell] }} times</td></div>
+                            {% endif %}
+                        {% endfor %}
+                    <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
+                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i style="color: red" class="fa fa-trash"></i>
+                                </a></td>
+                    {% endfor %}
+                </tr>
+            </table>
+        </div>
+    {% endif %}
     <form method="get" action="/">
         <button type="submit">Back to main page</button>
     </form>

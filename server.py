@@ -66,13 +66,14 @@ def route_question(question_id):
 @app.route("/")
 @app.route("/question/<question_id>/delete")
 def route_delete_question(question_id):
-    data_manager.delete_record_by_id('answer', 'question_id', question_id)
-    data_manager.delete_record_by_id('comment', 'question_id', question_id)
     answers = data_manager.get_table('answer', columns=['id'],
                                      selector='question_id',
                                      selected_value=question_id)
     for cell in answers:
         data_manager.delete_record_by_id('comment', selector='answer_id', selected_value=cell.get('id'))
+    data_manager.delete_record_by_id('answer', 'question_id', question_id)
+    data_manager.delete_record_by_id('question_tag', 'question_id', question_id)
+    data_manager.delete_record_by_id('comment', 'question_id', question_id)
     data_manager.delete_record_by_id('question', 'id', question_id)
     return redirect("/list")
 
@@ -170,7 +171,7 @@ def add_vote(vote, answer_id=None, question_id=None):
 def route_add_comment_to_question(question_id):
     if request.method == "POST":
         form = dict(request.form)
-        form['submission_time'] = datetime.datetime.now()
+        form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment.html', question_id=question_id)
@@ -181,7 +182,7 @@ def route_add_comment_to_answer(answer_id):
     question_id = data_manager.get_table('answer', selector='id', selected_value=answer_id)[0].get('question_id')
     if request.method == "POST":
         form = dict(request.form)
-        form['submission_time'] = datetime.datetime.now()
+        form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment_to_answer.html', answer_id=answer_id)
