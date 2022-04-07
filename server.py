@@ -37,7 +37,6 @@ def list():
 @app.route("/search")
 def search():
     column_names = ["vote_number", "a_vote_number", "submission_time", "a_submission_time"]
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     sort_by = request.args['sort_by'] if request.args.get('sort_by') in column_names else None
     order = request.args['order'] if sort_by else None
     if len(request.args['q'].strip()) > 0:
@@ -131,6 +130,8 @@ def route_add_tag(question_id):
         tag_id = data_manager.get_table('tag', columns=['id'])[-1:]
         data_manager.tag_to_question_tag(question_id, tag_id)
         return redirect(url_for('route_add_tag', question_id=question_id))
+    if request.method == 'GET':
+        data_manager.add_existing_tag_to_question_tag(question_id, request.args.values())
     tags = data_manager.get_table(table='tag')
     return render_template('add_tags.html', question_id=question_id, tags=tags)
 

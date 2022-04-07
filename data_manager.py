@@ -99,12 +99,6 @@ def update_message(cursor, table_, id_, message, edited_count=None):
 
 @connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
-    query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
-    cursor.execute(query)
-    return cursor.fetchall()
-
-
-def query_builder_select(table, columns: list, sort_by, order, limit, selector, selected_value):
     base_query = """select {columns} from {table}""" if columns else """select * from {table}"""
     if columns:
         executable_query = sql.SQL(base_query).format(table=sql.Identifier(table),
@@ -121,7 +115,8 @@ def query_builder_select(table, columns: list, sort_by, order, limit, selector, 
                                                                               order=sql.SQL(order))
     if limit:
         executable_query += sql.SQL(""" limit {limit}""").format(limit=sql.Literal(limit))
-    return executable_query
+    cursor.execute(executable_query)
+    return cursor.fetchall()
 
 
 @connection.connection_handler
@@ -155,6 +150,15 @@ def tag_to_question_tag(cursor, question_id, tag_id):
 
 
 @connection.connection_handler
+def add_existing_tag_to_question_tag(cursor, question_id, tag_id):
+    for tag in tag_id:
+        query = f"""
+            INSERT INTO question_tag
+            VALUES ('{question_id}', '{tag}')"""
+        cursor.execute(query)
+
+
+@connection.connection_handler
 def get_records_by_search(cursor, word, sort_by=None, order=None):
     query ="""
         select q.id,a.id as a_id,title,
@@ -165,10 +169,10 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
         from question as q
         full outer join
         (select id,question_id,message,vote_number,submission_time from answer
-        where message like '%{word}%') as a on q.id=a.question_id
-        where title like '%{word}%'
-        or q.message like '%{word}%'
-        or a.message like '%{word}%'
+        where message ilike '%{word}%') as a on q.id=a.question_id
+        where title ilike '%{word}%'
+        or q.message ilike '%{word}%'
+        or a.message ilike '%{word}%'
     """
     if sort_by:
         order = 'asc' if order.lower() == 'asc' else 'desc'

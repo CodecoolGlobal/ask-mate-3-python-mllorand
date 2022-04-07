@@ -2,6 +2,7 @@
 {% block navbar %}
     <div class="main-nav">
         <div><a href="/">Home Page</a></div>
+        <div><a href="/list">All questions</a></div>
         <div><a href='/question/{{ question_id }}/new-answer'>Add New Answer</a></div>
     </div>
 {% endblock %}
@@ -26,7 +27,7 @@
     <table>
         <tr>
             {% for cell in tags %}
-                <th>{{ cell.name }}</th>
+                <th>{{ cell.name }},</th>
             {% endfor %}
         </tr>
     </table>
