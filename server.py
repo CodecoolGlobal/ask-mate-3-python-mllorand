@@ -66,14 +66,15 @@ def route_question(question_id):
 @app.route("/")
 @app.route("/question/<question_id>/delete")
 def route_delete_question(question_id):
-    data_manager.delete_record_by_id('question', 'id', question_id)
-    data_manager.delete_record_by_id('answer', 'question_id', question_id)
-    data_manager.delete_record_by_id('comment', 'question_id', question_id)
     answers = data_manager.get_table('answer', columns=['id'],
                                      selector='question_id',
                                      selected_value=question_id)
     for cell in answers:
         data_manager.delete_record_by_id('comment', selector='answer_id', selected_value=cell.get('id'))
+    data_manager.delete_record_by_id('answer', 'question_id', question_id)
+    data_manager.delete_record_by_id('question_tag', 'question_id', question_id)
+    data_manager.delete_record_by_id('comment', 'question_id', question_id)
+    data_manager.delete_record_by_id('question', 'id', question_id)
     return redirect("/list")
 
 
@@ -98,8 +99,8 @@ def route_add_answer(question_id):
 def route_delete_answer(answer_id):
     question_id = data_manager.get_table('answer', columns=['question_id'], selector='id',
                                          selected_value=answer_id)[0]
-    data_manager.delete_record_by_id('answer', 'id', answer_id)
     data_manager.delete_record_by_id('comment', 'answer_id', answer_id)
+    data_manager.delete_record_by_id('answer', 'id', answer_id)
     return redirect("/question/" + str(question_id.get('question_id')))
 
 
