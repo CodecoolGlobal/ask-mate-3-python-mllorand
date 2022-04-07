@@ -29,7 +29,7 @@
 {% block content %}
     {% for card in cards%}
         <div class="search-card">
-            <div class="card-title">Q: <a href="/question/{{card.id}}">{{ card.title }}</a></div>
+            <div class="card-title">Q: <a href="/question/{{card.id}}">{{ card.title | replace(request.args['q'].lower(),'<mark>'+request.args['q'].lower()+'</mark>') | replace(request.args['q'].capitalize(),'<mark>'+request.args['q'].capitalize()+'</mark>') | safe }}</a></div>
             <div class="card-message">{{ card.message | replace(request.args['q'].lower(),'<mark>'+request.args['q'].lower()+'</mark>') | replace(request.args['q'].capitalize(),'<mark>'+request.args['q'].capitalize()+'</mark>') | safe }}</div>
             <div class="card-vote-number">votes: {{ card.vote_number }}</div>
             <div class="card-view-number">views: {{ card.view_number }}</div>
