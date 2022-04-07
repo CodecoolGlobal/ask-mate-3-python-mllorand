@@ -24,23 +24,23 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
     </table>
-{#    <div class="tags">#}
-{#        {% for tag in tags %}#}
-{#            {% if tag %}#}
-{#                <div><p>{{ tag.name }}</p>#}
-{#                    <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-trash"></i>#}
-{#                        </a>#}
-{#                </div>#}
-{#                    {% endif %}#}
-{#                {% endfor %}#}
-{#                </div>#}
+    <div class="tags">
     <table>
-        <tr>
-            {% for cell in tags %}
-                <th>{{ cell.name }},</th>
-            {% endfor %}
-        </tr>
+    <tr>
+        {% for tag in tags %}
+                <div><th>{{ tag.name }} <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-times-circle"></i></a>,</th></div>
+        {% endfor %}
+    </tr>
     </table>
+    </div>
+{#    <table>#}
+{#        <tr>#}
+{#            {% for cell in tags %}#}
+{#                <th>{{ cell.name }}<a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-times-circle-o"></i>#}
+{#                        </a> ,</th>#}
+{#            {% endfor %}#}
+{#        </tr>#}
+{#    </table>#}
     <div  class="question-card_for_comment">
     <table>
         {% for comment in comment_for_question %}
