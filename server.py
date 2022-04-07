@@ -66,13 +66,15 @@ def route_question(question_id):
 @app.route("/")
 @app.route("/question/<question_id>/delete")
 def route_delete_question(question_id):
-    data_manager.delete_record_by_id('answer', 'question_id', question_id)
-    data_manager.delete_record_by_id('comment', 'question_id', question_id)
     answers = data_manager.get_table('answer', columns=['id'],
                                      selector='question_id',
                                      selected_value=question_id)
     for cell in answers:
         data_manager.delete_record_by_id('comment', selector='answer_id', selected_value=cell.get('id'))
+    data_manager.delete_record_by_id('answer', 'question_id', question_id)
+    data_manager.delete_record_by_id('question_tag', 'question_id', question_id)
+    data_manager.delete_record_by_id('comment', 'question_id', question_id)
+    data_manager.delete_record_by_id('question', 'id', question_id)
     data_manager.delete_record_by_id('question', 'id', question_id)
     return redirect("/list")
 
@@ -107,7 +109,7 @@ def route_delete_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
-            path = 'images/no_image_found.png'
+            path = './static/images/no_image_found.png'
         else:
             image = request.files['image']
             path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
