@@ -37,7 +37,6 @@ def list():
 @app.route("/search")
 def search():
     column_names = ["vote_number", "a_vote_number", "submission_time", "a_submission_time"]
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     sort_by = request.args['sort_by'] if request.args.get('sort_by') in column_names else None
     order = request.args['order'] if sort_by else None
     if len(request.args['q'].strip()) > 0:

@@ -153,10 +153,10 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
         from question as q
         full outer join
         (select id,question_id,message,vote_number,submission_time from answer
-        where message like '%{word}%') as a on q.id=a.question_id
-        where title like '%{word}%'
-        or q.message like '%{word}%'
-        or a.message like '%{word}%'
+        where message ilike '%{word}%') as a on q.id=a.question_id
+        where title ilike '%{word}%'
+        or q.message ilike '%{word}%'
+        or a.message ilike '%{word}%'
     """
     if sort_by:
         order = 'asc' if order.lower() == 'asc' else 'desc'
