@@ -58,11 +58,12 @@ def route_question(question_id):
                            tags=data_manager.tag_table(question_id),
                            answers=data_manager.get_table('answer', selector='question_id',
                                                           selected_value=question_id),
-                           # comment_for_answers=data_manager.get_table(''),
+                           comment_for_answers=data_manager.get_table('comment'),
                            answer_headers=data_manager.get_column_names('answer'),
                            question_id=question_id)
 
 
+@app.route("/")
 @app.route("/question/<question_id>/delete")
 def route_delete_question(question_id):
     data_manager.delete_record_by_id('question', 'id', question_id)
@@ -130,6 +131,8 @@ def route_add_tag(question_id):
         tag_id = data_manager.get_table('tag', columns=['id'])[-1:]
         data_manager.tag_to_question_tag(question_id, tag_id)
         return redirect(url_for('route_add_tag', question_id=question_id))
+    if request.method == 'GET':
+        data_manager.add_existing_tag_to_question_tag(question_id, request.args.values())
     tags = data_manager.get_table(table='tag')
     return render_template('add_tags.html', question_id=question_id, tags=tags)
 
@@ -167,10 +170,13 @@ def route_add_comment_to_question(question_id):
     return render_template('add_comment.html', question_id=question_id)
 
 
-@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
-def route_add_comment_to_answer(question_id, answer_id):
+@app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
+def route_add_comment_to_answer(answer_id):
+    question_id = data_manager.get_table('answer', selector='id', selected_value=answer_id)[0].get('question_id')
     if request.method == "POST":
-        data_manager.add_new_record('comment', request.form)
+        form = dict(request.form)
+        form['submission_time'] = datetime.datetime.now()
+        data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment_to_answer.html', answer_id=answer_id)
 
@@ -193,6 +199,14 @@ def route_edit_answer(answer_id):
     data_manager.update_message('answer', answer_id, request.form.get('message'))
     return redirect('/question/' + str(answer.get('question_id')))
 
+
+@app.route("/comments/<comment_id>/delete", methods=['POST', 'GET', 'DELETE'])
+def delete_comment(comment_id):
+    print(comment_id)
+    question_id = data_manager.get_table('comment', columns=['question_id'], selector='id', selected_value=comment_id)
+    data_manager.delete_record_by_id('comment', selector='id', selected_value=comment_id)
+    for cell in question_id:
+        return redirect(url_for("route_question", question_id=cell.get('question_id')))
 
 
 
