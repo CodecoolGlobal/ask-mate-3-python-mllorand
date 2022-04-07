@@ -137,6 +137,12 @@ def route_add_tag(question_id):
     return render_template('add_tags.html', question_id=question_id, tags=tags)
 
 
+@app.route('/question/<question_id>/delete-tag', methods=['GET'])
+def delete_tag_from_question(question_id):
+    data_manager.delete_record_by_id('question_tag', selector='tag_id', selected_value=request.args.get('tag_id'))
+    return redirect(url_for("route_question", question_id=question_id))
+
+
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def route_edit_question(question_id):
     question = data_manager.get_table('question', selector='id', selected_value=question_id)[0]
@@ -202,7 +208,6 @@ def route_edit_answer(answer_id):
 
 @app.route("/comments/<comment_id>/delete", methods=['POST', 'GET', 'DELETE'])
 def delete_comment(comment_id):
-    print(comment_id)
     question_id = data_manager.get_table('comment', columns=['question_id'], selector='id', selected_value=comment_id)
     data_manager.delete_record_by_id('comment', selector='id', selected_value=comment_id)
     for cell in question_id:

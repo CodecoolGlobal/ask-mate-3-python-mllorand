@@ -24,13 +24,23 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
     </table>
+    <div class="tags">
     <table>
-        <tr>
-            {% for cell in tags %}
-                <th>{{ cell.name }}</th>
-            {% endfor %}
-        </tr>
+    <tr>
+        {% for tag in tags %}
+                <div><th>{{ tag.name }} <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-times-circle"></i></a>,</th></div>
+        {% endfor %}
+    </tr>
     </table>
+    </div>
+{#    <table>#}
+{#        <tr>#}
+{#            {% for cell in tags %}#}
+{#                <th>{{ cell.name }}<a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-times-circle-o"></i>#}
+{#                        </a> ,</th>#}
+{#            {% endfor %}#}
+{#        </tr>#}
+{#    </table>#}
     <div  class="question-card_for_comment">
     <table>
         {% for comment in comment_for_question %}
@@ -43,6 +53,8 @@
                     {% endif %}
                 {% endfor %}
             <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
+            <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
+                        </a></td>
             {% endfor %}
         </tr>
     </table>
