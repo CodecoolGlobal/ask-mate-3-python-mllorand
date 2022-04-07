@@ -1,4 +1,10 @@
 {% extends "layout.html" %}
+{% block navbar %}
+    <div class="main-nav">
+        <div><a href="/">Home Page</a></div>
+        <div><a href='/question/{{ question_id }}/new-answer'>Add New Answer</a></div>
+    </div>
+{% endblock %}
 {% block content %}
 	<h1>Question {{ question_id }}</h1>
     <table class="question-card_for_one">
@@ -17,20 +23,10 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
     </table>
-{#    <div class="tags">#}
-{#        {% for tag in tags %}#}
-{#            {% if tag %}#}
-{#                <div><p>{{ tag.name }}</p>#}
-{#                    <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-trash"></i>#}
-{#                        </a>#}
-{#                </div>#}
-{#                    {% endif %}#}
-{#                {% endfor %}#}
-{#                </div>#}
     <table>
         <tr>
             {% for cell in tags %}
-                <th>{{ cell.name }},</th>
+                <th>{{ cell.name }}</th>
             {% endfor %}
         </tr>
     </table>
@@ -40,11 +36,12 @@
             <tr>
                 {% for cell in comment %}
                     {% if cell in ["message", "submission_time"] %}
-                        <div> <td>{{ comment[cell] }}</td></div>
+                        <div><td>{{ comment[cell] }}</td></div>
+                    {% elif cell in ["edited_count"]%}
+	                    <div><td>Edited {{ comment[cell] }} times</td></div>
                     {% endif %}
                 {% endfor %}
-            <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
-                        </a></td>
+            <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
             {% endfor %}
         </tr>
     </table>
@@ -53,7 +50,6 @@
         <button type="submit">Back to main page</button>
     </form>
 	<h1 style="margin: 0;padding: 0">Answers:</h1><br>
-    <button onclick="location.href='/question/{{ question_id }}/new-answer'">Add New Answer</button>
 	<div class="main_table">
     <table>
         <tr>
@@ -76,8 +72,9 @@
                         <td style="text-align: center">{{ answer[cell] | safe }}</td>
                     {% endif %}
                 {% endfor %}
-                <td><button onclick="location.href='/answer/{{ answer_id }}/delete'">Delete Answer</button></td>
-                <td><button onclick="location.href='/answer/{{ answer_id }}/new-comment'">Add new comment</button></td>
+                <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>
+                <td><button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button></td>
+                <td><button onclick="location.href='/answer/{{ answer['id'] }}/edit'">Edit answer</button></td>
             </tr>
         {% endfor %}
     </table>

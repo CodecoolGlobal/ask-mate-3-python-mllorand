@@ -61,6 +61,43 @@ def update_question(cursor, form):
 
 
 @connection.connection_handler
+def update_vote_number(cursor, table, id_, vote):
+    if vote == 'vote-up':
+        vote = '+'
+    else:
+        vote = '-'
+    query = f"""
+        UPDATE {table}
+        SET vote_number = vote_number {vote} 1
+        WHERE id = {id_}"""
+    cursor.execute(sql.SQL(query).format(
+        table=sql.Identifier(table),
+        vote=sql.Literal(vote),
+        id_=sql.Literal(id_)))
+
+
+@connection.connection_handler
+def update_message(cursor, table_, id_, message, edited_count=None):
+    query = """
+        UPDATE {table_}
+        SET message = {message},
+            {edit_count}
+            submission_time = now()::timestamp(0)
+        WHERE id = {id_}"""
+    if edited_count:
+        edit_count = sql.SQL('{edited_count_column} = {edited_count} + 1,').format(
+                edited_count_column=sql.Identifier('edited_count'),
+                edited_count=sql.Literal(edited_count))
+    else:
+        edit_count = sql.SQL('')
+    cursor.execute(sql.SQL(query).format(
+        message=sql.Literal(message),
+        id_=sql.Literal(id_),
+        table_=sql.Identifier(table_),
+        edit_count=edit_count))
+
+
+@connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
     query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
     cursor.execute(query)
@@ -118,15 +155,6 @@ def tag_to_question_tag(cursor, question_id, tag_id):
 
 
 @connection.connection_handler
-def add_existing_tag_to_question_tag(cursor, question_id, tag_id):
-    for tag in tag_id:
-        query = f"""
-            INSERT INTO question_tag
-            VALUES ('{question_id}', '{tag}')"""
-        cursor.execute(query)
-
-
-@connection.connection_handler
 def get_records_by_search(cursor, word, sort_by=None, order=None):
     query ="""
         select q.id,a.id as a_id,title,
@@ -150,15 +178,6 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
                                                                          null_handler=null_handler)
     cursor.execute(sql.SQL(query).format(word=sql.SQL(word)))
     return cursor.fetchall()
-
-
-@connection.connection_handler
-def delete_comment_by_comment_id(cursor, comment_id):
-    query = '''
-    DELETE from comment
-    WHERE id = %(comment_id)s
-    '''
-    cursor.execute(query, {"comment_id": comment_id})
 
 
 def QUESTION_FILE_PATH():
