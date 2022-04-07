@@ -134,6 +134,15 @@ def tag_to_question_tag(cursor, question_id, tag_id):
 
 
 @connection.connection_handler
+def add_existing_tag_to_question_tag(cursor, question_id, tag_id):
+    for tag in tag_id:
+        query = f"""
+            INSERT INTO question_tag
+            VALUES ('{question_id}', '{tag}')"""
+        cursor.execute(query)
+
+
+@connection.connection_handler
 def get_records_by_search(cursor, word, sort_by=None, order=None):
     query ="""
         select q.id,a.id as a_id,title,
