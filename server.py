@@ -108,7 +108,7 @@ def route_delete_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
-            path = 'images/no_image_found.png'
+            path = './static/images/no_image_found.png'
         else:
             image = request.files['image']
             path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
