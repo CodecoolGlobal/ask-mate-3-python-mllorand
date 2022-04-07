@@ -29,13 +29,13 @@
 {% block content %}
     {% for card in cards%}
         <div class="search-card">
-            <div class="card-title">Q: <a href="/question/{{card.id}}">{{ card.title }}</a></div>
-            <div class="card-message">{{ card.message }}</div>
+            <div class="card-title">Q: <a href="/question/{{card.id}}">{{ card.title | replace(request.args['q'].lower(),'<mark>'+request.args['q'].lower()+'</mark>') | replace(request.args['q'].capitalize(),'<mark>'+request.args['q'].capitalize()+'</mark>') | safe }}</a></div>
+            <div class="card-message">{{ card.message | replace(request.args['q'].lower(),'<mark>'+request.args['q'].lower()+'</mark>') | replace(request.args['q'].capitalize(),'<mark>'+request.args['q'].capitalize()+'</mark>') | safe }}</div>
             <div class="card-vote-number">votes: {{ card.vote_number }}</div>
             <div class="card-view-number">views: {{ card.view_number }}</div>
             <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ card.submission_time.date() }}<br>&ensp;{{ card.submission_time.time() }}</span></div>
         {% if card.a_id is not none %}
-            <div class="card-message-a">Answer: <a href="/question/{{card.id}}">{{ card.a_message }}</a></div>
+            <div class="card-message-a">Answer: <a href="/question/{{card.id}}">{{ card.a_message | replace(request.args['q'].lower(),'<mark>'+request.args['q'].lower()+'</mark>') | replace(request.args['q'].capitalize(),'<mark>'+request.args['q'].capitalize()+'</mark>') | safe }}</a></div>
             <div class="card-vote-number-a">votes: {{ card.a_vote_number }}</div>
             <div class="card-smt-a"><label for ="card-smt-a" >created:&nbsp;</label><span id="card-smt-a">{{ card.a_submission_time.date() }}<br>&ensp;{{ card.a_submission_time.time() }}</span></div>
         {% endif %}

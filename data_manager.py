@@ -77,13 +77,28 @@ def update_vote_number(cursor, table, id_, vote):
 
 
 @connection.connection_handler
+def update_message(cursor, table_, id_, message, edited_count=None):
+    query = """
+        UPDATE {table_}
+        SET message = {message},
+            {edit_count}
+            submission_time = now()::timestamp(0)
+        WHERE id = {id_}"""
+    if edited_count:
+        edit_count = sql.SQL('{edited_count_column} = {edited_count} + 1,').format(
+                edited_count_column=sql.Identifier('edited_count'),
+                edited_count=sql.Literal(edited_count))
+    else:
+        edit_count = sql.SQL('')
+    cursor.execute(sql.SQL(query).format(
+        message=sql.Literal(message),
+        id_=sql.Literal(id_),
+        table_=sql.Identifier(table_),
+        edit_count=edit_count))
+
+
+@connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
-    query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
-    cursor.execute(query)
-    return cursor.fetchall()
-
-
-def query_builder_select(table, columns: list, sort_by, order, limit, selector, selected_value):
     base_query = """select {columns} from {table}""" if columns else """select * from {table}"""
     if columns:
         executable_query = sql.SQL(base_query).format(table=sql.Identifier(table),
@@ -100,7 +115,8 @@ def query_builder_select(table, columns: list, sort_by, order, limit, selector, 
                                                                               order=sql.SQL(order))
     if limit:
         executable_query += sql.SQL(""" limit {limit}""").format(limit=sql.Literal(limit))
-    return executable_query
+    cursor.execute(executable_query)
+    return cursor.fetchall()
 
 
 @connection.connection_handler
@@ -153,10 +169,10 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
         from question as q
         full outer join
         (select id,question_id,message,vote_number,submission_time from answer
-        where message like '%{word}%') as a on q.id=a.question_id
-        where title like '%{word}%'
-        or q.message like '%{word}%'
-        or a.message like '%{word}%'
+        where message ilike '%{word}%') as a on q.id=a.question_id
+        where title ilike '%{word}%'
+        or q.message ilike '%{word}%'
+        or a.message ilike '%{word}%'
     """
     if sort_by:
         order = 'asc' if order.lower() == 'asc' else 'desc'

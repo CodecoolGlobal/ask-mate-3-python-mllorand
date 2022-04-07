@@ -37,7 +37,6 @@ def list():
 @app.route("/search")
 def search():
     column_names = ["vote_number", "a_vote_number", "submission_time", "a_submission_time"]
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     sort_by = request.args['sort_by'] if request.args.get('sort_by') in column_names else None
     order = request.args['order'] if sort_by else None
     if len(request.args['q'].strip()) > 0:
@@ -178,6 +177,27 @@ def route_add_comment_to_answer(question_id, answer_id):
         data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment_to_answer.html', answer_id=answer_id)
+
+
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def route_edit_comment(comment_id):
+    comment = data_manager.get_table('comment', selector="id", selected_value=comment_id)[0]
+    if request.method == 'GET':
+        return render_template('edit_comment.html', comment=comment)
+    data_manager.update_message('comment', comment_id, request.form.get('message'),
+                                request.form.get('edited_count'))
+    return redirect('/question/' + str(comment.get('question_id')))
+
+
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def route_edit_answer(answer_id):
+    answer = data_manager.get_table('answer', selector="id", selected_value=answer_id)[0]
+    if request.method == 'GET':
+        return render_template('edit_answer.html', answer=answer)
+    data_manager.update_message('answer', answer_id, request.form.get('message'))
+    return redirect('/question/' + str(answer.get('question_id')))
+
+
 
 
 @app.route("/comments/<comment_id>/delete", methods=['POST', 'GET', 'DELETE'])
