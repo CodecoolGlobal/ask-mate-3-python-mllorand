@@ -173,9 +173,21 @@ def route_add_comment_to_question(question_id):
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def route_add_comment_to_answer(question_id, answer_id):
     if request.method == "POST":
-        data_manager.add_new_record('comment', request.form)
+        form = dict(request.form)
+        form['submission_time'] = datetime.datetime.now()
+        data_manager.add_new_record('comment', form)
         return redirect(url_for('route_question', question_id=question_id))
     return render_template('add_comment_to_answer.html', answer_id=answer_id)
+
+
+@app.route("/comments/<comment_id>/delete", methods=['POST', 'GET', 'DELETE'])
+def delete_comment(comment_id):
+    print(comment_id)
+    question_id = data_manager.get_table('comment', columns=['question_id'], selector='id', selected_value=comment_id)
+    data_manager.delete_record_by_id('comment', selector='id', selected_value=comment_id)
+    for cell in question_id:
+        return redirect(url_for("route_question", question_id=cell.get('question_id')))
+
 
 
 if __name__ == "__main__":

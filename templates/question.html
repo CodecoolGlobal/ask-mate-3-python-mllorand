@@ -23,6 +23,16 @@
             <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
         </tr>
     </table>
+{#    <div class="tags">#}
+{#        {% for tag in tags %}#}
+{#            {% if tag %}#}
+{#                <div><p>{{ tag.name }}</p>#}
+{#                    <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i class="fa fa-trash"></i>#}
+{#                        </a>#}
+{#                </div>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#                </div>#}
     <table>
         <tr>
             {% for cell in tags %}
@@ -39,6 +49,8 @@
                         <div> <td>{{ comment[cell] }}</td></div>
                     {% endif %}
                 {% endfor %}
+            <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
+                        </a></td>
             {% endfor %}
         </tr>
     </table>
@@ -69,8 +81,8 @@
                         <td style="text-align: center">{{ answer[cell] | safe }}</td>
                     {% endif %}
                 {% endfor %}
-                <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>
-                <td><button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button></td>
+                <td><button onclick="location.href='/answer/{{ answer_id }}/delete'">Delete Answer</button></td>
+                <td><button onclick="location.href='/answer/{{ answer_id }}/new-comment'">Add new comment</button></td>
             </tr>
         {% endfor %}
     </table>

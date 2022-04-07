@@ -168,5 +168,14 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
     return cursor.fetchall()
 
 
+@connection.connection_handler
+def delete_comment_by_comment_id(cursor, comment_id):
+    query = '''
+    DELETE from comment
+    WHERE id = %(comment_id)s
+    '''
+    cursor.execute(query, {"comment_id": comment_id})
+
+
 def QUESTION_FILE_PATH():
     return None
