@@ -131,6 +131,8 @@ def route_add_tag(question_id):
         tag_id = data_manager.get_table('tag', columns=['id'])[-1:]
         data_manager.tag_to_question_tag(question_id, tag_id)
         return redirect(url_for('route_add_tag', question_id=question_id))
+    if request.method == 'GET':
+        data_manager.add_existing_tag_to_question_tag(question_id, request.args.values())
     tags = data_manager.get_table(table='tag')
     return render_template('add_tags.html', question_id=question_id, tags=tags)
 

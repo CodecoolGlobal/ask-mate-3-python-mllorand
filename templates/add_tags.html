@@ -6,19 +6,19 @@
             <form action=/question/{{ question_id }}/new-tag method="post" enctype="multipart/form-data">
                 <input type="text" name="name" id="name" placeholder="Add a new tag"><br>
             <br>
-            <button onclick="location.href='/question/{{ question_id }}" value="submit">Submit new tag</button>
+            <button onclick="location.href='/question/{{ question_id }}/new-tag'" value="submit">Submit new tag</button>
                 <br><br>
             </form>
+            <form>
                 {% for tag in tags %}
                     <fieldset>
                         <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}" value="{{ tag.id }}"><label for="{{ tag.name }}">{{ tag.name }}</label>
                     </fieldset>
                 {% endfor %}
-                <input type="submit">
-            <br>
-
+                <button onclick="location.href='/question/{{ question_id }}/new-tag'" value="submit">Add tags</button>
+            </form><br>
             <form method="get" action="/question/{{ question_id }}">
-        <button type="submit">Back to main page</button>
+        <button type="submit">Back to question</button>
     </form>
         </div>
     </body>
