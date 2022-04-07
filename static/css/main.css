@@ -222,6 +222,9 @@ body {
 .main_table tbody tr:nth-of-type(even){
     background-color: #dddddd;
 }
+.for_comment{
+    background-color: var(--sbg) ;
+}
 
 .vote_button{
     background: none;
