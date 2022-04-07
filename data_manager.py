@@ -77,6 +77,27 @@ def update_vote_number(cursor, table, id_, vote):
 
 
 @connection.connection_handler
+def update_message(cursor, table_, id_, message, edited_count=None):
+    query = """
+        UPDATE {table_}
+        SET message = {message},
+            {edit_count}
+            submission_time = now()::timestamp(0)
+        WHERE id = {id_}"""
+    if edited_count:
+        edit_count = sql.SQL('{edited_count_column} = {edited_count} + 1,').format(
+                edited_count_column=sql.Identifier('edited_count'),
+                edited_count=sql.Literal(edited_count))
+    else:
+        edit_count = sql.SQL('')
+    cursor.execute(sql.SQL(query).format(
+        message=sql.Literal(message),
+        id_=sql.Literal(id_),
+        table_=sql.Identifier(table_),
+        edit_count=edit_count))
+
+
+@connection.connection_handler
 def get_table(cursor, table, columns=None, sort_by=None, order=None, limit=None, selector=None, selected_value=None):
     query = query_builder_select(table, columns, sort_by, order, limit, selector, selected_value)
     cursor.execute(query)

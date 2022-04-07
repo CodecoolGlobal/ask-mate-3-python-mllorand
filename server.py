@@ -176,5 +176,26 @@ def route_add_comment_to_answer(question_id, answer_id):
     return render_template('add_comment_to_answer.html', answer_id=answer_id)
 
 
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def route_edit_comment(comment_id):
+    comment = data_manager.get_table('comment', selector="id", selected_value=comment_id)[0]
+    if request.method == 'GET':
+        return render_template('edit_comment.html', comment=comment)
+    data_manager.update_message('comment', comment_id, request.form.get('message'),
+                                request.form.get('edited_count'))
+    return redirect('/question/' + str(comment.get('question_id')))
+
+
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def route_edit_answer(answer_id):
+    answer = data_manager.get_table('answer', selector="id", selected_value=answer_id)[0]
+    if request.method == 'GET':
+        return render_template('edit_answer.html', answer=answer)
+    data_manager.update_message('answer', answer_id, request.form.get('message'))
+    return redirect('/question/' + str(answer.get('question_id')))
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
