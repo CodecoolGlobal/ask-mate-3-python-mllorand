@@ -16,7 +16,7 @@ def main():
                                        order='desc',
                                        limit='5')
     return render_template("index.html",
-                           questions=questions,
+                           cards=questions,
                            columns=column_names)
 
 
@@ -31,26 +31,26 @@ def list():
                                            columns=column_names,
                                            sort_by=request.args['sort_by'],
                                            order=request.args['order'])
-    return render_template("index.html", questions=questions, columns=column_names)
+    return render_template("index.html", cards=questions, columns=column_names)
 
 
 @app.route("/search")
 def search():
-    column_names = data_manager.get_column_names('question')
-    if request.args:
-        questions = data_manager.get_table(table='question',
-                                           columns=column_names,
-                                           sort_by='submission_time',
-                                           order='desc')
+    column_names = ["vote_number", "a_vote_number", "submission_time", "a_submission_time"]
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    sort_by = request.args['sort_by'] if request.args.get('sort_by') in column_names else None
+    order = request.args['order'] if sort_by else None
+    if len(request.args['q'].strip()) > 0:
+        search_result = data_manager.get_records_by_search(word=request.args['q'],
+                                                           sort_by=sort_by,
+                                                           order=order)
     else:
-        questions = data_manager.get_table(table='question',
-                                           columns=column_names)
-    return render_template("index.html", questions=questions, columns=column_names)
+        return redirect(url_for('main'))
+    return render_template("search.html", cards=search_result, columns=column_names)
 
 
 @app.route("/question/<question_id>")
 def route_question(question_id):
-    print(data_manager.get_all_answers(question_id))
     return render_template("question.html",
                            question=data_manager.get_table('question', selector='id',
                                                            selected_value=question_id),
@@ -88,7 +88,7 @@ def route_add_answer(question_id):
         path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
         image.save(path)
     form = dict(request.form)
-    form['submission_time'] = datetime.datetime.now()
+    form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     form['image'] = path
     data_manager.add_new_record('answer', form)
     return redirect("/question/" + question_id)
@@ -107,14 +107,16 @@ def route_delete_answer(answer_id):
 def route_add_question():
     if request.method == 'POST':
         if request.files.get('image').content_type == 'application/octet-stream':
-            path = './static/images/no_image_found.png'
+            path = 'images/no_image_found.png'
         else:
             image = request.files['image']
             path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
             image.save(path)
         form = dict(request.form)
-        form['submission_time'] = datetime.datetime.now()
+        form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         form['image'] = path
+        form['vote_number'] = form.get('vote_number', 0)
+        form['view_number'] = form.get('view_number', 0)
         data_manager.add_new_record('question', form)
         question_id = str(data_manager.get_table('question', columns=['id'],
                                                  sort_by='id', order='desc')[0].get('id'))

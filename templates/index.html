@@ -11,7 +11,7 @@
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
         {% if request.args.get("sort_by") == None %}
-            <option value="/list">Select an option to sort questions</option>
+            <option>Select an option to sort questions</option>
         {% else %}
             <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
                 {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
@@ -27,14 +27,14 @@
 </div>
 {% endblock %}
 {% block content %}
-    {% for question in questions %}
+    {% for card in cards%}
         <div class="question-card">
-            <div class="card-title"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
-            <div class="card-message">{{ question.message }}</div>
-            <div class="card-vote-number">votes: {{ question.vote_number }}</div>
-            <div class="card-view-number">views: {{ question.view_number }}</div>
-            <img class="card-image" src="{{ question.image }}">
-            <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
+            <div class="card-title"><a href="/question/{{card.id}}">{{ card.title }}</a></div>
+            <div class="card-message">{{ card.message }}</div>
+            <div class="card-vote-number">votes: {{ card.vote_number }}</div>
+            <div class="card-view-number">views: {{ card.view_number }}</div>
+            <img class="card-image" src="../static/{{ card.image }}">
+            <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ card.submission_time.date() }}<br>&ensp;{{ card.submission_time.time() }}</span></div>
         </div>
     {% endfor %}
 {% endblock %}

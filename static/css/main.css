@@ -142,6 +142,76 @@ body {
     box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
     min-height: 140px;
 }
+.search-card {
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    display: grid;
+    column-gap: 2em;
+    row-gap: 1em;
+    grid-template-columns: auto 160px;
+    grid-template-rows: repeat(5,auto);
+    grid-template-areas:
+        'title vote-number'
+        'message view-number'
+        'message smt'
+        'message-a vote-number-a'
+        'message-a smt-a';
+    margin: 20px;
+    padding: 0.5em;
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+    min-height: 140px;
+}
+div[class^="card-"] {
+  justify-content: flex-start;
+}
+.card-title{
+    grid-area: title;
+}
+
+.card-message{
+    grid-area: message;
+}
+.card-message-a{
+    grid-area: message-a;
+}
+
+.card-smt{
+    grid-area: smt;
+}
+.card-smt-a{
+    grid-area: smt-a;
+}
+.card-vote-number{
+    grid-area: vote-number;
+}
+.card-vote-number-a{
+    grid-area: vote-number-a;
+}
+.card-view-number{
+    grid-area: view-number;
+}
+.card-smt,
+.card-view-number,
+.card-vote-number,
+.card-smt-a,
+.card-vote-number-a{
+    font-size:0.9em ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-image{
+    margin: auto;
+    max-width: 100px;
+    max-height: 100px;
+    grid-area: image;
+    transform: scale(1,1);
+    transition: transform ease-in-out 200ms 500ms;
+}
+.card-image:hover{
+    grid-area: image;
+    transform: scale(2.5,2.5);
+}
 .question-card_for_one{
     color: var(--cardc);
     background-color: var(--cardbg);
@@ -180,43 +250,6 @@ body {
 }
 .question-card_for_add_comment textarea{
     width: auto;
-}
-.card-title{
-    grid-area: title;
-}
-.card-message{
-    grid-area: message;
-}
-.card-smt{
-    grid-area: smt;
-}
-.card-vote-number{
-    grid-area: vote-number;
-}
-.card-view-number{
-    grid-area: view-number;
-}
-.card-smt,
-.card-view-number,
-.card-vote-number{
-    font-size:0.9em ;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.card-image{
-    margin: auto;
-    max-width: 100px;
-    max-height: 100px;
-    grid-area: image;
-    transform: scale(1,1);
-    transition: transform ease-in-out 200ms 500ms;
-    z-index: 1;
-}
-.card-image:hover{
-    grid-area: image;
-    transform: scale(2.5,2.5);
-    z-index: 2;
 }
 .main_table table{
     width: 99%;

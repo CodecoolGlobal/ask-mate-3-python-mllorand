@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block page_title %}Home{% endblock %}
+{% block navbar %}
+<div class="main-nav">
+    <form class="nav-search" action="/search">
+        <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+    <div><a href="/list" type="submit">All question</a></div>
+    <div><a href="/add-question" type="submit">Add new question</a></div>
+<div>
+    <label for="sort_by">Sort by:</label>
+    <select onchange="location = this.value" name="sort_by" id="sort_by">
+        {% if request.args.get("sort_by") == None %}
+            <option>Select an option to sort questions</option>
+        {% else %}
+            <option value="/search?q={{ request.args["q"] }}&sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
+                {{ request.args["sort_by"].replace("_", " ").replace('a','answer').title()+"("+request.args["order"]+")" }}
+            </option>
+        {% endif %}
+        {% for column in columns if column in ["vote_number","a_vote_number","submission_time","a_submission_time"] %}
+            <option value="/search?q={{ request.args["q"] }}&sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').replace('a','answer').capitalize() }}(asc)</option>
+            <option value="/search?q={{ request.args["q"] }}&sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').replace('a','answer').capitalize() }}(desc)</option>
+        {% endfor %}
+    </select>
+</div>
+
+</div>
+{% endblock %}
+{% block content %}
+    {% for card in cards%}
+        <div class="search-card">
+            <div class="card-title">Q: <a href="/question/{{card.id}}">{{ card.title }}</a></div>
+            <div class="card-message">{{ card.message }}</div>
+            <div class="card-vote-number">votes: {{ card.vote_number }}</div>
+            <div class="card-view-number">views: {{ card.view_number }}</div>
+            <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ card.submission_time.date() }}<br>&ensp;{{ card.submission_time.time() }}</span></div>
+        {% if card.a_id is not none %}
+            <div class="card-message-a">Answer: <a href="/question/{{card.id}}">{{ card.a_message }}</a></div>
+            <div class="card-vote-number-a">votes: {{ card.a_vote_number }}</div>
+            <div class="card-smt-a"><label for ="card-smt-a" >created:&nbsp;</label><span id="card-smt-a">{{ card.a_submission_time.date() }}<br>&ensp;{{ card.a_submission_time.time() }}</span></div>
+        {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}
