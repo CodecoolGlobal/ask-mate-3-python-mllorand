@@ -1,6 +1,6 @@
 import datetime
 import os
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 import data_manager
 
 
@@ -8,30 +8,27 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/images'
 
 
+@app.route("/static/images/<path:filename>")
+def images(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+@app.route("/catch_hacker")
+def catch_hacker():
+    return render_template('hack.html')
+
+
 @app.route("/")
 def main():
-    column_names = data_manager.get_column_names('question')
-    questions = data_manager.get_table(table='question',
-                                       sort_by='submission_time',
-                                       order='desc',
-                                       limit='5')
-    return render_template("index.html",
-                           cards=questions,
-                           columns=column_names)
+    return render_template('index.html', payload=data_manager.get_main_page())
 
 
 @app.route("/list")
 def list():
-    column_names = data_manager.get_column_names('question')
-    if not request.args:
-        questions = data_manager.get_table(table='question',
-                                           columns=column_names)
-    else:
-        questions = data_manager.get_table(table='question',
-                                           columns=column_names,
-                                           sort_by=request.args['sort_by'],
-                                           order=request.args['order'])
-    return render_template("index.html", cards=questions, columns=column_names)
+    # if request.args.get('order'):
+    #     if request.args.get('order').lower() not in ['asc', 'desc']:
+    #         return redirect(url_for('catch_hacker'))
+    return render_template("index.html", payload=data_manager.get_list_page(request.args))
 
 
 @app.route("/search")
@@ -45,6 +42,7 @@ def search():
                                                            order=order)
     else:
         return redirect(url_for('main'))
+    if order not in ['asc', 'desc', None]: return redirect(url_for('catch_hacker'))
     return render_template("search.html", cards=search_result, columns=column_names)
 
 
@@ -107,14 +105,14 @@ def route_delete_answer(answer_id):
 @app.route("/add-question", methods=['GET', 'POST'])
 def route_add_question():
     if request.method == 'POST':
-        if request.files.get('image').content_type == 'application/octet-stream':
-            path = './static/images/no_image_found.png'
+        if request.files.get('image').filename == '':
+            path = 'no_image_found.png'
         else:
             image = request.files['image']
-            path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            path = image.filename
             image.save(path)
         form = dict(request.form)
-        form['submission_time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        form.update()
         form['image'] = path
         form['vote_number'] = form.get('vote_number', 0)
         form['view_number'] = form.get('view_number', 0)
@@ -122,7 +120,7 @@ def route_add_question():
         question_id = str(data_manager.get_table('question', columns=['id'],
                                                  sort_by='id', order='desc')[0].get('id'))
         return redirect('/question/' + question_id)
-    return render_template('add_question.html', question=data_manager.get_column_names('question'))
+    return render_template('add_question.html')
 
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
