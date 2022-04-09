@@ -2,23 +2,24 @@
 {% block page_title %}Home{% endblock %}
 {% block navbar %}
 <div class="main-nav">
-    <div><button onclick="location.href='/list'" type="submit">All question</button></div>
-    <div><button onclick="location.href='/add-question'" type="submit">Add new question</button></div>
+    <form class="nav-search" action="/search">
+        <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+    <div><a href="/list" type="submit">All question</a></div>
+    <div><a href="/add-question" type="submit">Add new question</a></div>
 <div>
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
-        {% if request.args.get("sort_by") == None %}
-            <option value="/list">Select an option to sort questions</option>
+        {% if request.args.get('sort_by') == None or request.args.get('order') == None %}
+            <option>Select an option to sort questions</option>
         {% else %}
-            <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
-                {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
+            <option value="/list?sort_by={{ request.args.sort_by }}&order={{ request.args.order }}">
+                {{ request.args.sort_by.replace("_", " ").title()+"("+request.args.order+")" }}
             </option>
         {% endif %}
-        {% for option in header %}
-            {% if option not in ["id","image"] %}
-                <option value="/list?sort_by={{ option }}&order=asc">{{ option.replace("_", " ").title() }}(asc)</option>
-                <option value="/list?sort_by={{ option }}&order=desc">{{ option.replace("_", " ").title() }}(desc)</option>
-            {% endif %}
+        {% for column in payload.columns if column not in ['id','image'] %}
+            <option value="/list?sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').capitalize() }}(asc)</option>
+            <option value="/list?sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').capitalize() }}(desc)</option>
         {% endfor %}
     </select>
 </div>
@@ -26,13 +27,14 @@
 </div>
 {% endblock %}
 {% block content %}
-    {% for question in questions %}
+    {% for card in payload.cards%}
         <div class="question-card">
-            <div class="card-title">{{ question.title }}</div>
-            <div class="card-message">{{ question.message }}</div>
-            <div class="card-vote-number">{{ question.vote_number }}</div>
-            <div class="card-view-number">{{ question.view_number }}</div>
-            <div class="card-smt">{{ question.submission_time.date() }}<br>{{ question.submission_time.time() }}</div>
+            <div class="card-title"><a href="/question/{{card.id}}">{{ card.title }}</a></div>
+            <div class="card-message">{{ card.message }}</div>
+            <div class="card-vote-number">votes: {{ card.vote_number }}</div>
+            <div class="card-view-number">views: {{ card.view_number }}</div>
+            <img class="card-image" src={{url_for('images', filename=card.image) }}>
+            <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ card.submission_time.date() }}<br>&ensp;{{ card.submission_time.time() }}</span></div>
         </div>
     {% endfor %}
 {% endblock %}

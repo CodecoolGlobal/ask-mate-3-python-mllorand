@@ -1,6 +1,6 @@
 do $$
     BEGIN
-        for cnt in 1..27 loop
+        for cnt in 1..97 loop
                 insert into question(view_number, vote_number, title, message, image)
                 values(floor(random() * 95 + 5)::int,
                        floor(random() * 95 + 5)::int,

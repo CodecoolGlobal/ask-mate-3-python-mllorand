@@ -1,10 +1,7 @@
-import datetime
-
 import psycopg2
-
 import connection
 from psycopg2 import sql
-import json
+import util
 
 
 @connection.connection_handler
@@ -33,14 +30,13 @@ def add_new_record(cursor, table_, form):
 
 
 @connection.connection_handler
-def get_column_names(cursor, table_):
+def get_column_names(cursor, table):
     query = """
-        SELECT *
-        FROM {table_}
-        LIMIT 0"""
-    cursor.execute(sql.SQL(query).format(
-        table_=sql.Identifier(table_)))
-    return [desc[0] for desc in cursor.description]
+    SELECT column_name 
+    FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = {table_name}"""
+    cursor.execute(sql.SQL(query).format(table_name=sql.Literal(table)))
+    return [elem.get('column_name') for elem in cursor.fetchall()]
 
 
 @connection.connection_handler
@@ -182,3 +178,25 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
 
 def QUESTION_FILE_PATH():
     return None
+
+
+@connection.connection_handler
+def get_main_page(cursor):
+    columns = util.query_select_fields_from_table('question')
+    order_by = util.add_order_by_to_query('submission_time')
+    limit = util.add_limit_to_query(5)
+    cursor.execute(columns + order_by + limit)
+    return {'cards': cursor.fetchall(), 'columns': get_column_names('question')}
+
+
+@connection.connection_handler
+def get_list_page(cursor, arguments: dict):
+    columns = util.query_select_fields_from_table('question')
+    if arguments.get('order'):
+        reverse = True if arguments.get('order').lower() == 'desc' else False
+        order_by = util.add_order_by_to_query(arguments.get('sort_by'), reverse)
+        cursor.execute(columns + order_by)
+    else:
+        order_by = util.add_order_by_to_query('submission_time')
+        cursor.execute(columns + order_by)
+    return {'cards': cursor.fetchall(), 'columns': get_column_names('question')}
