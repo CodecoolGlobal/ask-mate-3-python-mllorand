@@ -10,14 +10,14 @@
 <div>
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
-        {% if request.args.get("sort_by") == None %}
+        {% if request.args.get('sort_by') == None or request.args.get('order') == None %}
             <option>Select an option to sort questions</option>
         {% else %}
-            <option value="/list?sort_by={{ request.args["sort_by"] }}&order={{ request.args["order"] }}">
-                {{ request.args["sort_by"].replace("_", " ").title()+"("+request.args["order"]+")" }}
+            <option value="/list?sort_by={{ request.args.sort_by }}&order={{ request.args.order }}">
+                {{ request.args.sort_by.replace("_", " ").title()+"("+request.args.order+")" }}
             </option>
         {% endif %}
-        {% for column in columns if column not in ['id','image'] %}
+        {% for column in payload.columns if column not in ['id','image'] %}
             <option value="/list?sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').capitalize() }}(asc)</option>
             <option value="/list?sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').capitalize() }}(desc)</option>
         {% endfor %}
@@ -27,13 +27,13 @@
 </div>
 {% endblock %}
 {% block content %}
-    {% for card in cards%}
+    {% for card in payload.cards%}
         <div class="question-card">
             <div class="card-title"><a href="/question/{{card.id}}">{{ card.title }}</a></div>
             <div class="card-message">{{ card.message }}</div>
             <div class="card-vote-number">votes: {{ card.vote_number }}</div>
             <div class="card-view-number">views: {{ card.view_number }}</div>
-            <img class="card-image" src="{{ card.image }}">
+            <img class="card-image" src={{url_for('images', filename=card.image) }}>
             <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ card.submission_time.date() }}<br>&ensp;{{ card.submission_time.time() }}</span></div>
         </div>
     {% endfor %}
