@@ -1,9 +1,9 @@
 from psycopg2 import sql
 
 
-def query_select_fields_from_table(table: str, columns: list = False) -> sql.Composed:
+def query_select_fields_from_table(table: str, columns: list = None) -> sql.Composed:
     """Returns an executable SQL SELECT statement. At execution, it fetches the data
-    from the selected column(s) from a database.
+    from the selected column(s) from a table.
 
     Parameters:
         table (str): Table name
@@ -12,9 +12,11 @@ def query_select_fields_from_table(table: str, columns: list = False) -> sql.Com
         Composed SQL object
         """
     if columns:
-        return sql.SQL('select {columns} from {table}').format(table=sql.Identifier(table),
-                                                               columns=sql.Identifier(columns))
-    return sql.SQL('select * from {table}').format(table=sql.Identifier(table))
+        if type(columns) is not list:
+            columns = [columns]
+        return sql.SQL('select {columns} from {table} ').format(table=sql.Identifier(table),
+                                                               columns=sql.SQL(', ').join(map(sql.Identifier, columns)))
+    return sql.SQL('select * from {table} ').format(table=sql.Identifier(table))
 
 
 def add_order_by_to_query(columns: list, reverse: bool = True) -> sql.Composable:
@@ -45,3 +47,23 @@ def add_limit_to_query(limit: int) -> sql.Composable:
         Composable SQL object
         """
     return sql.SQL("limit {limit} ").format(limit=sql.Literal(limit))
+
+
+def add_where_to_query(identifier, operator, value):
+    return sql.SQL("where {first_operand} {operator} {second_operand}").format(
+        first_operand=sql.Identifier(identifier),
+        operator=sql.SQL(operator),
+        second_operand=sql.Literal(value)
+    )
+
+
+def query_delete_from_table_by_id(table, value, identifier="id", operator='='):
+    return sql.SQL("delete from {table}").format(table=sql.Identifier(table)) + \
+           add_where_to_query(identifier, operator, value)
+
+
+def add_inner_join_to_query(table, first_identifier, second_identifier):
+    return sql.SQL("inner JOIN {table} ON {first_identifier} = {second_identifier}")\
+        .format(table=sql.Identifier(table),
+                first_identifier=sql.Identifier(first_identifier),
+                second_identifier=sql.Identifier(second_identifier))

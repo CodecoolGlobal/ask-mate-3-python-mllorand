@@ -1,6 +1,6 @@
 do $$
     BEGIN
-        for cnt in 1..200 loop
+        for cnt in 1..7 loop
                 insert into comment(question_id, message, edited_count)
                 values((SELECT id
                         FROM question
@@ -13,7 +13,7 @@ do $$
 
 do $$
     BEGIN
-        for cnt in 1..200 loop
+        for cnt in 1..7 loop
                 insert into comment(answer_id, message, edited_count)
                 values((SELECT id
                         FROM answer
