@@ -146,6 +146,15 @@ def tag_to_question_tag(cursor, question_id, tag_id):
 
 
 @connection.connection_handler
+def add_existing_tag_to_question_tag(cursor, question_id, tag_id):
+    for tag in tag_id:
+        query = f"""
+            INSERT INTO question_tag
+            VALUES ('{question_id}', '{tag}')"""
+        cursor.execute(query)
+
+
+@connection.connection_handler
 def get_records_by_search(cursor, word, sort_by=None, order=None):
     query ="""
         select q.id,a.id as a_id,title,
@@ -171,27 +180,81 @@ def get_records_by_search(cursor, word, sort_by=None, order=None):
     return cursor.fetchall()
 
 
-def QUESTION_FILE_PATH():
-    return None
+@connection.connection_handler
+def delete_comment_by_comment_id(cursor, comment_id):
+    query = '''
+    DELETE from comment
+    WHERE id = %(comment_id)s
+    '''
+    cursor.execute(query, {"comment_id": comment_id})
 
+
+
+
+# REFACTOR STARTS HERE
 
 @connection.connection_handler
-def get_main_page(cursor):
-    columns = util.query_select_fields_from_table('question')
+def get_main_page_data(cursor):
+    questions = util.query_select_fields_from_table('question')
     order_by = util.add_order_by_to_query('submission_time')
     limit = util.add_limit_to_query(5)
-    cursor.execute(columns + order_by + limit)
-    return {'cards': cursor.fetchall(), 'columns': get_column_names('question')}
+    cursor.execute(questions + order_by + limit)
+    recent_questions = cursor.fetchall()
+    return {'questions': recent_questions, 'columns': get_column_names('question')}
 
 
 @connection.connection_handler
-def get_list_page(cursor, arguments: dict):
-    columns = util.query_select_fields_from_table('question')
+def get_list_page_data(cursor, arguments: dict):
+    questions = util.query_select_fields_from_table('question')
     if arguments.get('order'):
         reverse = True if arguments.get('order').lower() == 'desc' else False
         order_by = util.add_order_by_to_query(arguments.get('sort_by'), reverse)
-        cursor.execute(columns + order_by)
     else:
-        order_by = util.add_order_by_to_query('submission_time')
-        cursor.execute(columns + order_by)
-    return {'cards': cursor.fetchall(), 'columns': get_column_names('question')}
+        # default no reverse arg, False because test purposes
+        order_by = util.add_order_by_to_query('submission_time', reverse=False)
+    cursor.execute(questions + order_by)
+    all_question = cursor.fetchall()
+    return {'questions': all_question, 'columns': get_column_names('question')}
+
+
+@connection.connection_handler
+def get_question_page_data(cursor, question_id):
+    question = util.query_select_fields_from_table('question')
+    where = util.add_where_to_query('id', '=', question_id)
+    cursor.execute(question + where)
+    question = cursor.fetchall()
+
+    question_comments = util.query_select_fields_from_table('comment')
+    where = util.add_where_to_query('question_id', '=', question_id)
+    cursor.execute(question_comments + where)
+    question_comments = cursor.fetchall()
+
+    answers = util.query_select_fields_from_table('answer')
+    where = util.add_where_to_query('question_id', '=', question_id)
+    cursor.execute(answers + where)
+    answers = cursor.fetchall()
+    answer_ids = tuple([elem['id'] for elem in answers])
+
+    if answer_ids:
+        answer_comments = util.query_select_fields_from_table('comment')
+        where = util.add_where_to_query('answer_id', 'in', answer_ids)
+        cursor.execute(answer_comments + where)
+        answer_comments = cursor.fetchall()
+
+    tags = util.query_select_fields_from_table('question_tag', 'name')
+    join = util.add_inner_join_to_query('tag', 'tag_id', 'id')
+    where = util.add_where_to_query('question_id', '=', question_id)
+    cursor.execute(tags + join + where)
+    tags = [tag['name'] for tag in cursor.fetchall()]
+    return {'question': question,
+            'answers': answers,
+            'question_comments': question_comments,
+            'answer_comments': answer_comments if answer_ids else '',
+            'tags': tags}
+    #comments4question,answers,comment4answers
+
+
+@connection.connection_handler
+def delete_record_by_id(cursor, table, value):
+    query = util.query_delete_from_table_by_id(table, value)
+    cursor.execute(query)

@@ -1,110 +1,82 @@
 {% extends "layout.html" %}
 {% block navbar %}
     <div class="main-nav">
-        <div><a href="/">Home Page</a></div>
-        <div><a href="/list">All questions</a></div>
-        <div><a href='/question/{{ question_id }}/new-answer'>Add New Answer</a></div>
+        <div><a href="{{ url_for('load_main') }}">Home Page</a></div>
+        <div><a href="{{ url_for('load_list_page') }}">All questions</a></div>
     </div>
 {% endblock %}
 {% block content %}
-	<h1>Question {{ question_id }}</h1>
-    <div class="question-card_for_one">
-        <tr>
-            {% for cell in question %}
-                <div class="card-title"><th><strong>{{ cell.title }}</strong></th></div>
-            {% endfor %}
-        </tr>
-        <tr>
-        {% for cell in question %}
-            <div class="card-message"><td>{{ cell.message }}</td></div>
-        {% endfor %}
-            <div><td><button onclick="location.href='/question/{{ question_id }}/delete'">Delete Question</button></td></div>
-            <div><td><button onclick="location.href='/question/{{ question_id }}/edit'">Edit Question</button></td></div>
-            <div><td><button onclick="location.href='/question/{{ question_id }}/new-comment'">Add new comment</button></td></div>
-            <div><td><button onclick="location.href='/question/{{ question_id }}/new-tag'">Add new tag</button></td></div>
-        </tr>
-    <table>
-    <tr>
-        {% for tag in tags %}
-                <div class="card-message"><th>{{ tag.name }} <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i style="color: red" class="fa fa-times-circle"></i></a>,</th></div>
-        {% endfor %}
-    </tr>
-    </table>
-    </div>
-    {% if comment_for_question %}
-        <div  class="question-card_for_comment">
-            <table>
-                {% for comment in comment_for_question %}
-                    <tr>
-                        {% for cell in comment %}
-                            {% if cell in ["message", "submission_time"] %}
-                                <div><td>{{ comment[cell] }}</td></div>
-                            {% elif cell in ["edited_count"]%}
-                                <div><td>Edited {{ comment[cell] }} times</td></div>
-                            {% endif %}
-                        {% endfor %}
-                    <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
-                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
-                                </a></td>
-                    {% endfor %}
-                </tr>
-            </table>
+    {% for question in payload.question %}
+    <div class="question-card-self-page">
+        <div class="card-title"><h3>{{ question.title }}</h3></div>
+        <div class="card-message">{{ question.message }}</div>
+        <img class="card-image" src={{url_for('images', filename=question.image) }}>
+        <div class="card-misc">
+            <div class="card-vote-number">votes: <span>{{ question.vote_number }}</span></div>
+            <div class="card-view-number">views: <span>{{ question.view_number }}</span></div>
+            <div class="card-smt">created:&nbsp;<span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
         </div>
-    {% endif %}
-    <form method="get" action="/">
-        <button type="submit">Back to main page</button>
-    </form>
-	<h1 style="margin: 0;padding: 0">Answers:</h1><br>
-{#    <div class="question-card_for_one">#}
-    <div>
-    <table>
-        <tr>
-            {% for column_title in answer_headers %}
-                <th>{{ column_title.replace("_", " ").title() }}</th>
-            {% endfor %}
-        </tr>
-        {% for answer in answers %}
-            <tr>
-                {% for cell in answer %}
-                    {% if cell == "image" %}
-                        <td><img class="card-image" src=".{{ answer[cell] }}"></td>
-                    {% elif cell == "vote_number" %}
-                        <td style="text-align: center; white-space: nowrap">
-                            <button class="vote_button" onclick="location.href='/answer/{{ answer.id }}/vote-up'" type="submit">+</button>
-                            {{ answer[cell] | safe }}
-                            <button class="vote_button" onclick="location.href='/answer/{{ answer.id }}/vote-down'" type="submit">-</button>
-                        </td>
-                    {% else %}
-                        <td style="text-align: center">{{ answer[cell] | safe }}</td>
-                    {% endif %}
+        <div class="card-button">
+            <button onclick="location.href='{{ url_for('route_add_answer',question_id=question.id) }}'">Add New Answer</button>
+            <button onclick="location.href='{{ url_for('route_add_comment_to_question',question_id=question.id) }}'">Add new comment</button>
+            <button onclick="location.href=''">Add new tag</button>
+            <button onclick="location.href=''">Edit Question</button>
+            <button onclick="location.href='{{ url_for('delete_record_by_id', table="question", value=question.id) }}'">Delete Question</button>
+        </div>
+        <ul class="card-tag">
+            {% for tag in payload.tags %}
+                <li>{{ tag }} <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i style="color: red" class="fa fa-times"></i></a></li>
                 {% endfor %}
-                <td><button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button></td>
-                <td><button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button></td>
-                <td><button onclick="location.href='/answer/{{ answer['id'] }}/edit'">Edit answer</button></td>
-            {% for comment in comment_for_answers %}
-                {% if comment['answer_id'] == answer['id'] %}
-                    <tr  class="for_comment">
-                        {% for cell in comment %}
-                            {% if cell in ["submission_time"] %}
-                                <div><td>{{ comment[cell] }}</td></div>
-                            {% elif cell in ["message"] %}
-                                <div><td>{{ comment[cell] }}</td></div>
-                            {% elif cell in ["edited_count"] %}
+        </ul>
+        <ul class="card-comment">
+            {% if payload.question_comments %}
+            {% for comment in payload.question_comments if comment.question_id == question.id %}
+                <ul class="card-comment-line">
+                    <li>{{ comment.message }}</li>
+                    <li>{{ comment.submission_time }}</li>
+                    <li>{{ comment.edited_count }}</li>
+                    <li><button onclick="location.href='{{ url_for('route_edit_comment', comment_id=comment.id) }}'">Edit comment</button></li>
+                    <li><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
+                </ul>
+                {% endfor %}
+                {% else %}
+                <span>There are no comments yet</span>
+            {% endif %}
+        </ul>
 
-                                <div><td>Edited {{ comment[cell] }} times</td></div>
-                            {% endif %}
-                        {% endfor %}
-                        <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                    <td><button onclick="location.href='/comment/{{ comment['id'] }}/edit'">Edit comment</button></td>
-                    <td><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i>
-                                </a></td>
-                        {% endif %}
-                    {% endfor %}
-                    </tr>
-        {% endfor %}
-    </table>
     </div>
+        {% endfor %}
+
+    <h1 style="margin: 0;padding: 0">{{ payload.answers | length }} Answers:</h1><br>
+
+
+    {% for answer in payload.answers %}
+        <div class="answer-card">
+            <div class="card-title"><h3>{{ answer.title }}</h3></div>
+            <div class="card-message">{{ answer.message }}</div>
+            <img class="card-image" src={{url_for('images', filename=answer.image) }}>
+            <div class="card-misc">
+                <div class="card-vote-number">votes: <span>{{ answer.vote_number }}</span></div>
+                <div class="card-smt">created:&nbsp;<span id="card-smt">{{ answer.submission_time.date() }}<br>&ensp;{{ answer.submission_time.time() }}</span></div>
+            </div>
+            <div class="card-button">
+                <button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button>
+                <button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button>
+                <button onclick="location.href='/answer/{{ answer['id'] }}/edit'">Edit answer</button>
+            </div>
+            {% if payload.answer_comments %}
+                <ul class="card-comment">
+                    {% for comment in payload.answer_comments if comment.answer_id == answer.id %}
+                        <ul class="card-comment-line">
+                            <li>{{ comment.message }}</li>
+                            <li>{{ comment.submission_time }}</li>
+                            <li>{{ comment.edited_count }}</li>
+                            <li><button onclick="location.href='{{ url_for('route_edit_comment', comment_id=comment.id) }}'">Edit comment</button></li>
+                            <li><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
+                        </ul>
+                        {% endfor %}
+                </ul>
+                {% endif %}
+        </div>
+    {% endfor %}
 {% endblock %}
