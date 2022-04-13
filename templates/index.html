@@ -6,7 +6,7 @@
         <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
     </form>
     <div><a href="/list" type="submit">All question</a></div>
-    <div><a href="/add-question" type="submit">Add new question</a></div>
+    <div><a href="{{url_for('add_new_question')}}" type="submit">Add new question</a></div>
 <div>
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
@@ -27,14 +27,16 @@
 </div>
 {% endblock %}
 {% block content %}
-    {% for card in payload.cards%}
+    {% for question in payload.questions %}
         <div class="question-card">
-            <div class="card-title"><a href="/question/{{card.id}}">{{ card.title }}</a></div>
-            <div class="card-message">{{ card.message }}</div>
-            <div class="card-vote-number">votes: {{ card.vote_number }}</div>
-            <div class="card-view-number">views: {{ card.view_number }}</div>
-            <img class="card-image" src={{url_for('images', filename=card.image) }}>
-            <div class="card-smt"><label for ="card-smt" >created:&nbsp;</label><span id="card-smt">{{ card.submission_time.date() }}<br>&ensp;{{ card.submission_time.time() }}</span></div>
+            <div class="card-title"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
+            <div class="card-message">{{ question.message }}</div>
+            <div class="card-misc">
+                <div class="card-vote-number">votes: <span>{{ question.vote_number }}</span></div>
+                <div class="card-view-number">views: <span>{{ question.view_number }}</span></div>
+                <div class="card-smt">created:&nbsp;<span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
+            </div>
+            <img class="card-image" src={{url_for('images', filename=question.image) }}>
         </div>
     {% endfor %}
 {% endblock %}

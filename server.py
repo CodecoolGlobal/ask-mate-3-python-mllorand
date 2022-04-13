@@ -2,6 +2,7 @@ import datetime
 import os
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 import data_manager
+from psycopg2 import sql
 
 
 app = Flask(__name__)
@@ -13,22 +14,36 @@ def images(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
-@app.route("/catch_hacker")
+@app.route("/catch-hacker")
 def catch_hacker():
     return render_template('hack.html')
 
 
 @app.route("/")
-def main():
-    return render_template('index.html', payload=data_manager.get_main_page())
+def load_main():
+    return render_template('index.html', payload=data_manager.get_main_page_data())
 
 
 @app.route("/list")
-def list():
+def load_list_page():
     # if request.args.get('order'):
     #     if request.args.get('order').lower() not in ['asc', 'desc']:
     #         return redirect(url_for('catch_hacker'))
-    return render_template("index.html", payload=data_manager.get_list_page(request.args))
+    return render_template("index.html", payload=data_manager.get_list_page_data(request.args))
+
+
+@app.route("/question/<question_id>")
+def load_question_page(question_id):
+    return render_template("question.html", payload=data_manager.get_question_page_data(question_id))
+
+
+@app.route("/<table>/<value>/delete")
+def delete_record_by_id(table, value):
+    data_manager.delete_record_by_id(table, value)
+    return redirect("/list")
+
+
+# need refactor from down there
 
 
 @app.route("/search")
@@ -41,39 +56,23 @@ def search():
                                                            sort_by=sort_by,
                                                            order=order)
     else:
-        return redirect(url_for('main'))
+        return redirect(url_for('load_main'))
     if order not in ['asc', 'desc', None]: return redirect(url_for('catch_hacker'))
     return render_template("search.html", cards=search_result, columns=column_names)
 
 
-@app.route("/question/<question_id>")
-def route_question(question_id):
-    return render_template("question.html",
-                           question=data_manager.get_table('question', selector='id',
-                                                           selected_value=question_id),
-                           comment_for_question=data_manager.get_table('comment', selector='question_id',
-                                                                       selected_value=question_id),
-                           tags=data_manager.tag_table(question_id),
-                           answers=data_manager.get_table('answer', selector='question_id',
-                                                          selected_value=question_id),
-                           comment_for_answers=data_manager.get_table('comment'),
-                           answer_headers=data_manager.get_column_names('answer'),
-                           question_id=question_id)
-
-
-@app.route("/")
-@app.route("/question/<question_id>/delete")
-def route_delete_question(question_id):
-    answers = data_manager.get_table('answer', columns=['id'],
-                                     selector='question_id',
-                                     selected_value=question_id)
-    for cell in answers:
-        data_manager.delete_record_by_id('comment', selector='answer_id', selected_value=cell.get('id'))
-    data_manager.delete_record_by_id('answer', 'question_id', question_id)
-    data_manager.delete_record_by_id('question_tag', 'question_id', question_id)
-    data_manager.delete_record_by_id('comment', 'question_id', question_id)
-    data_manager.delete_record_by_id('question', 'id', question_id)
-    return redirect("/list")
+# @app.route("/question/<question_id>/delete")
+# def route_delete_question(question_id):
+#     answers = data_manager.get_table('answer', columns=['id'],
+#                                      selector='question_id',
+#                                      selected_value=question_id)
+#     for cell in answers:
+#         data_manager.delete_record_by_id('comment', selector='answer_id', selected_value=cell.get('id'))
+#     data_manager.delete_record_by_id('answer', 'question_id', question_id)
+#     data_manager.delete_record_by_id('question_tag', 'question_id', question_id)
+#     data_manager.delete_record_by_id('comment', 'question_id', question_id)
+#     data_manager.delete_record_by_id('question', 'id', question_id)
+#     return redirect("/list")
 
 
 @app.route("/question/<question_id>/new-answer", methods=['GET', 'POST'])
@@ -103,8 +102,10 @@ def route_delete_answer(answer_id):
 
 
 @app.route("/add-question", methods=['GET', 'POST'])
-def route_add_question():
+def add_new_question():
     if request.method == 'POST':
+        print('question' in request.referrer)
+
         if request.files.get('image').filename == '':
             path = 'no_image_found.png'
         else:
@@ -112,15 +113,13 @@ def route_add_question():
             path = image.filename
             image.save(path)
         form = dict(request.form)
-        form.update()
-        form['image'] = path
-        form['vote_number'] = form.get('vote_number', 0)
-        form['view_number'] = form.get('view_number', 0)
+        form.update({'image': path})
+        print(form)
         data_manager.add_new_record('question', form)
         question_id = str(data_manager.get_table('question', columns=['id'],
                                                  sort_by='id', order='desc')[0].get('id'))
         return redirect('/question/' + question_id)
-    return render_template('add_question.html')
+    return render_template('add_new_record.html', payload={'question': 'asd'})
 
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])

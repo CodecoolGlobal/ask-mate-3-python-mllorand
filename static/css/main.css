@@ -128,21 +128,57 @@ body {
     align-self: flex-end;
 }
 
+
 .question-card{
     color: var(--cardc);
     background-color: var(--cardbg);
     display: grid;
     grid-template-columns: auto 140px 140px;
-    grid-template-rows: 1fr 1fr 2fr;
+    grid-template-rows: 1fr 2fr 1fr;
     grid-template-areas:
-        'title image vote-number'
-        'message image view-number'
-        'message image smt';
+        'title image misc'
+        'message image misc'
+        'message image misc';
     margin: 20px;
     padding: 0.5em;
     box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
     min-height: 140px;
 }
+
+.question-card-self-page {
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    display: grid;
+    grid-template-columns: auto 140px 140px;
+    grid-template-rows: 1fr 2fr 1fr minmax(0fr,1fr);
+    grid-template-areas:
+        'title image misc'
+        'message image misc'
+        'button tag tag'
+        'comment comment comment';
+    margin: 20px;
+    padding: 0.5em;
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+    min-height: 140px;
+}
+
+.answer-card {
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    display: grid;
+    grid-template-columns: auto 140px 140px;
+    grid-template-rows: 1fr 2fr 1fr minmax(0fr,1fr);
+    grid-template-areas:
+        'title image misc'
+        'message image misc'
+        'button image misc'
+        'comment comment comment';
+    margin: 20px;
+    padding: 0.5em;
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+    min-height: 140px;
+}
+
 .search-card {
     color: var(--cardc);
     background-color: var(--cardbg);
@@ -165,6 +201,43 @@ body {
 div[class^="card-"] {
   justify-content: flex-start;
 }
+.card-button{
+    grid-area: button;
+    margin-top: 1em;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+.card-comment-line{
+    margin-left: auto;
+    margin-right: auto;
+}
+.card-comment-line li:first-child{
+    word-wrap: break-word;
+    max-width: 250px;
+}
+.card-comment-line button,
+.card-button button{
+    font-size: 0.7em;
+    margin-left: 1em;
+    border: black solid 1px;
+    background-color: var(--cardbg);
+    border-radius: 1em;
+}
+.card-tag{
+    grid-area: tag;
+    margin-top: 1em;
+    display: flex;
+    width: 100%;
+    list-style: none;
+    justify-content: center;
+}
+
+.card-comment-line li,
+.card-tag li{
+    font-size: 0.9em;
+    margin-right: 1em;
+}
 .card-title{
     grid-area: title;
 }
@@ -176,30 +249,59 @@ div[class^="card-"] {
     grid-area: message-a;
 }
 
-.card-smt{
-    grid-area: smt;
+.card-misc{
+    grid-area: misc;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: flex-start;
 }
+.card-comment{
+    border-top: #626262 solid 1px;
+    grid-area: comment;
+    text-align: center;
+    margin-bottom: 0;
+}
+.card-comment span{
+    font-size: 0.8em;
+}
+.card-comment ul{
+    margin-top: 0.5em;
+    display: flex;
+    width: 50%;
+    list-style: none;
+    justify-content: flex-end;
+}
+.card-comment-line li:first-child{
+    margin-right: auto;
+}
+.card-misc div:first-child{
+    margin-top: auto;
+}
+.card-misc div{
+    width: 100%;
+    margin-bottom: 5px;
+}
+.card-misc div span{
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .card-smt-a{
     grid-area: smt-a;
 }
-.card-vote-number{
-    grid-area: vote-number;
-}
 .card-vote-number-a{
     grid-area: vote-number-a;
-}
-.card-view-number{
-    grid-area: view-number;
 }
 .card-smt,
 .card-view-number,
 .card-vote-number,
 .card-smt-a,
 .card-vote-number-a{
-    font-size:0.9em ;
+    font-size:0.8em ;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-self: center;
 }
 .card-image{
     margin: auto;
@@ -207,26 +309,13 @@ div[class^="card-"] {
     max-height: 100px;
     grid-area: image;
     transform: scale(1,1);
-    transition: transform ease-in-out 200ms 500ms;
+    transition: transform ease 200ms 500ms;
+    z-index: 1;
 }
 .card-image:hover{
     grid-area: image;
     transform: scale(2.5,2.5);
-}
-.question-card_for_one{
-    color: var(--cardc);
-    background-color: var(--cardbg);
-    display: grid;
-    grid-template-columns: auto 200px;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-template-areas:
-        'title smt'
-        'message vote-number'
-        'message view-number'
-        'message .';
-    margin: 20px;
-    padding: 0.5em;
-    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+    z-index: 11;
 }
 .question-card_for_add_comment{
     color: var(--cardc);
