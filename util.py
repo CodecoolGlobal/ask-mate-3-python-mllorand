@@ -38,6 +38,15 @@ def add_order_by_to_query(columns: list, reverse: bool = True) -> sql.Composable
                                                      .join(map(sql.Identifier, columns)))
 
 
+def add_order_by_smt_desc_or_args(arguments=None):
+    if arguments.get('order'):
+        reverse = True if arguments.get('order').lower() == 'desc' else False
+        order_by = add_order_by_to_query(arguments.get('sort_by'), reverse)
+    else:
+        order_by = add_order_by_to_query('submission_time', reverse=True)
+    return order_by
+
+
 def add_limit_to_query(limit: int) -> sql.Composable:
     """Returns a composable SQL LIMIT clause with the given value
 
@@ -67,3 +76,10 @@ def add_inner_join_to_query(table, first_identifier, second_identifier):
         .format(table=sql.Identifier(table),
                 first_identifier=sql.Identifier(first_identifier),
                 second_identifier=sql.Identifier(second_identifier))
+
+
+def update_vote_number(table, record_id, vote):
+    return sql.SQL("""UPDATE {table} SET "vote_number" = "vote_number" {vote} WHERE id = {record_id}""").format(
+        table=sql.Identifier(table),
+        vote=sql.SQL(vote),
+        record_id=sql.Literal(record_id))

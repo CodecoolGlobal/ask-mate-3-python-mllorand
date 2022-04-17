@@ -1,17 +1,22 @@
 {% extends "layout.html" %}
 {% block content %}
     <body>
-        <h1>Add new question</h1>
-        {{ payload }}
+        <h1>Add new {{ payload.record }}</h1>
+
         <form action="/add-question" method="post" enctype="multipart/form-data">
+            {% if payload.record == 'question' %}
             <label for="title">Title:</label><br>
             <input type="text" id="title" name="title" required><br><br>
+            {% endif %}
             <label for="message">Message:</label><br>
             <textarea name="message" id="message" rows="4" cols="50" required ></textarea><br><br>
+            {% if payload.record != 'comment' %}
             <label for="image">Upload image:</label>
             <input type="file" id="image" name="image" accept=".png, .jpg"><br>
+            {% endif %}
         <br>
-        <button onclick="location.href='/add-question'" value="submit">Submit new question</button>
+        <button onclick="location.href='/add-question'" value="submit">Submit new {{ payload.record }}</button>
         </form>
+        <br><br>{{ payload }}
     </body>
 {% endblock %}

@@ -79,19 +79,19 @@ ALTER TABLE ONLY tag
     ADD CONSTRAINT pk_tag_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY comment
-    ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id) on delete  cascade;
+    ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id) on delete cascade;
 
 ALTER TABLE ONLY answer
-    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id) on delete  cascade;
+    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id) on delete cascade;
 
 ALTER TABLE ONLY question_tag
-    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id) on delete  cascade;
+    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id) on delete cascade;
 
 ALTER TABLE ONLY comment
-    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id) on delete  cascade;
+    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id) on delete cascade;
 
 ALTER TABLE ONLY question_tag
-    ADD CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag(id) on delete  cascade;
+    ADD CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag(id) on delete cascade;
 
 INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', 'no_image_found.png');
 INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
