@@ -7,7 +7,6 @@
     --cardbg: #e5e5e5;
     --cardc:black;
 }
-
 body {
     position: absolute;
     margin: 0;
@@ -96,7 +95,8 @@ body {
     margin-left:8%;
 
 }
-.nav-search button,input{
+.nav-search button,
+.nav-search input{
     outline: none;
     border: none;
     background-color: white;
@@ -198,24 +198,24 @@ body {
     box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
     min-height: 140px;
 }
-div[class^="card-"] {
-  justify-content: flex-start;
-}
 .card-button{
     grid-area: button;
-    margin-top: 1em;
     display: flex;
     width: 100%;
     align-items: center;
 }
 .card-comment-line{
-    margin-left: auto;
-    margin-right: auto;
+    width: 70%;
+    margin:0 auto 0 auto ;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
 }
 .card-comment-line li:first-child{
-    word-wrap: break-word;
-    max-width: 250px;
+    margin-right: auto;
 }
+
 .card-comment-line button,
 .card-button button{
     font-size: 0.7em;
@@ -260,20 +260,11 @@ div[class^="card-"] {
     border-top: #626262 solid 1px;
     grid-area: comment;
     text-align: center;
-    margin-bottom: 0;
+    margin: 0;
+    padding-top: 0.5em;
 }
 .card-comment span{
     font-size: 0.8em;
-}
-.card-comment ul{
-    margin-top: 0.5em;
-    display: flex;
-    width: 50%;
-    list-style: none;
-    justify-content: flex-end;
-}
-.card-comment-line li:first-child{
-    margin-right: auto;
 }
 .card-misc div:first-child{
     margin-top: auto;
@@ -282,7 +273,8 @@ div[class^="card-"] {
     width: 100%;
     margin-bottom: 5px;
 }
-.card-misc div span{
+
+.center-span{
     margin-left: auto;
     margin-right: auto;
 }
@@ -317,57 +309,6 @@ div[class^="card-"] {
     transform: scale(2.5,2.5);
     z-index: 11;
 }
-.question-card_for_add_comment{
-    color: var(--cardc);
-    background-color: var(--cardbg);
-    margin-right: auto;
-    padding: 0.5em;
-    width: 260px;   /* FIX ME!!!! */
-    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
-}
-.question-card_for_comment{
-    color: var(--fbg);
-    background-color: var(--cardbg);
-    margin: auto;
-    text-align: center;
-    padding: 0.5em;
-    width: max-content;   /* FIX ME!!!! */
-    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
-    position: -ms-device-fixed;
-}
-.question-card_for_comment tbody tr:nth-of-type(even){
-    background-color: var(--fc);
-}
-.question-card_for_add_comment textarea{
-    width: auto;
-}
-.main_table table{
-    width: 99%;
-    position: relative;
-    border-collapse: collapse;
-    top: 0;
-    bottom: 40px;
-    margin-bottom: 40px;
-}
-.main_table td:nth-child(-n+4){
-    width: 10px;
-}
-.main_table th:not(:first-child),td:not(:first-child){
-    padding-left: 30px;
-}
-
-.main_table thead tr{
-    background-color: #dddddd;
-    white-space: nowrap;
-    position: sticky;
-    top: 98px;
-}
-.main_table tbody tr:nth-of-type(even){
-    background-color: var(--fbg);
-}
-.for_comment{
-    background-color: var(--sbg) ;
-}
 
 .vote_button{
     color: var(--fc);
@@ -375,6 +316,16 @@ div[class^="card-"] {
     border: none;
     border-radius: 50%;
 }
-i{
+.fa-trash{
     color: red;
+}
+.fa-thumbs-up{
+    color: darkgreen;
+    fill: darkgreen;
+}
+.fa-thumbs-down{
+    transform: scale(-1,1);
+    position: relative;
+    top:2px;
+    color: darkred;
 }

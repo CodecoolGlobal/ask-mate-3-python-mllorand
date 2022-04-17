@@ -6,35 +6,40 @@
         <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
     </form>
     <div><a href="/list" type="submit">All question</a></div>
-    <div><a href="{{url_for('add_new_question')}}" type="submit">Add new question</a></div>
-<div>
-    <label for="sort_by">Sort by:</label>
-    <select onchange="location = this.value" name="sort_by" id="sort_by">
-        {% if request.args.get('sort_by') == None or request.args.get('order') == None %}
-            <option>Select an option to sort questions</option>
-        {% else %}
-            <option value="/list?sort_by={{ request.args.sort_by }}&order={{ request.args.order }}">
-                {{ request.args.sort_by.replace("_", " ").title()+"("+request.args.order+")" }}
-            </option>
-        {% endif %}
-        {% for column in payload.columns if column not in ['id','image'] %}
-            <option value="/list?sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').capitalize() }}(asc)</option>
-            <option value="/list?sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').capitalize() }}(desc)</option>
-        {% endfor %}
-    </select>
-</div>
-
+    <div><a href="{{url_for('add_new_record', record='question')}}" type="submit">Add new question</a></div>
+    <div>
+        <label for="sort_by">Sort by:</label>
+        <select onchange="location = this.value" name="sort_by" id="sort_by">
+            {% if request.args.get('sort_by') == None or request.args.get('order') == None %}
+                <option>Select an option to sort questions</option>
+            {% else %}
+                <option value="/list?sort_by={{ request.args.sort_by }}&order={{ request.args.order }}">
+                    {{ request.args.sort_by.replace("_", " ").title()+"("+request.args.order+")" }}
+                </option>
+            {% endif %}
+            {% for column in payload.sort_by_fields if column not in ['id','image'] %}
+                <option value="/list?sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').capitalize() }}(asc)</option>
+                <option value="/list?sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').capitalize() }}(desc)</option>
+            {% endfor %}
+        </select>
+    </div>
 </div>
 {% endblock %}
 {% block content %}
     {% for question in payload.questions %}
         <div class="question-card">
-            <div class="card-title"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
+            <div class="card-title" id="anchor_{{ question.id }}"><a href="/question/{{question.id}}">{{ question.title }}</a></div>
             <div class="card-message">{{ question.message }}</div>
             <div class="card-misc">
-                <div class="card-vote-number">votes: <span>{{ question.vote_number }}</span></div>
-                <div class="card-view-number">views: <span>{{ question.view_number }}</span></div>
-                <div class="card-smt">created:&nbsp;<span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
+                <div class="card-vote-number">votes:
+                    <span class="center-span">
+                    <a onclick="vote_on_record('question',{{ question.id }},'down')"><i class="fa fa-thumbs-down"></i></a>
+                    &nbsp;&nbsp;<span id="question_vote_number_{{ question.id }}">{{ question.vote_number }}</span>&nbsp;&nbsp;
+                    <a onclick="vote_on_record('question',{{ question.id }},'up')"><i class="fa fa-thumbs-up"></i></a>
+                    </span>
+                </div>
+                <div class="card-view-number">views: <span class="center-span">{{ question.view_number }}</span></div>
+                <div class="card-smt">created:&nbsp;<span class="center-span">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
             </div>
             <img class="card-image" src={{url_for('images', filename=question.image) }}>
         </div>

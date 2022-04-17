@@ -5,17 +5,6 @@ import util
 
 
 @connection.connection_handler
-def delete_record_by_id(cursor, table_, selector, selected_value):
-    query = """
-        DELETE FROM {table_}
-        WHERE {selector} = {selected_value}"""
-    cursor.execute(sql.SQL(query).format(
-        table_=sql.Identifier(table_),
-        selector=sql.Identifier(selector),
-        selected_value=sql.Literal(selected_value)))
-
-
-@connection.connection_handler
 def add_new_record(cursor, table_, form):
     form = dict(form)
     columns = sql.SQL(', ').join([sql.Identifier(key) for key in form.keys()])
@@ -54,22 +43,6 @@ def update_question(cursor, form):
         title=title,
         message=message,
         id_=id_))
-
-
-@connection.connection_handler
-def update_vote_number(cursor, table, id_, vote):
-    if vote == 'vote-up':
-        vote = '+'
-    else:
-        vote = '-'
-    query = f"""
-        UPDATE {table}
-        SET vote_number = vote_number {vote} 1
-        WHERE id = {id_}"""
-    cursor.execute(sql.SQL(query).format(
-        table=sql.Identifier(table),
-        vote=sql.Literal(vote),
-        id_=sql.Literal(id_)))
 
 
 @connection.connection_handler
@@ -189,36 +162,30 @@ def delete_comment_by_comment_id(cursor, comment_id):
     cursor.execute(query, {"comment_id": comment_id})
 
 
-
-
 # REFACTOR STARTS HERE
 
+
 @connection.connection_handler
-def get_main_page_data(cursor):
+def get_main_page_data(cursor, arguments):
     questions = util.query_select_fields_from_table('question')
-    order_by = util.add_order_by_to_query('submission_time')
+    order_by = util.add_order_by_smt_desc_or_args(arguments)
     limit = util.add_limit_to_query(5)
     cursor.execute(questions + order_by + limit)
     recent_questions = cursor.fetchall()
-    return {'questions': recent_questions, 'columns': get_column_names('question')}
+    return {'questions': recent_questions, 'sort_by_fields': get_column_names('question')}
 
 
 @connection.connection_handler
 def get_list_page_data(cursor, arguments: dict):
     questions = util.query_select_fields_from_table('question')
-    if arguments.get('order'):
-        reverse = True if arguments.get('order').lower() == 'desc' else False
-        order_by = util.add_order_by_to_query(arguments.get('sort_by'), reverse)
-    else:
-        # default no reverse arg, False because test purposes
-        order_by = util.add_order_by_to_query('submission_time', reverse=False)
+    order_by = util.add_order_by_smt_desc_or_args(arguments)
     cursor.execute(questions + order_by)
     all_question = cursor.fetchall()
-    return {'questions': all_question, 'columns': get_column_names('question')}
+    return {'questions': all_question, 'sort_by_fields': get_column_names('question')}
 
 
 @connection.connection_handler
-def get_question_page_data(cursor, question_id):
+def get_question_page_data(cursor, question_id, arguments):
     question = util.query_select_fields_from_table('question')
     where = util.add_where_to_query('id', '=', question_id)
     cursor.execute(question + where)
@@ -231,7 +198,8 @@ def get_question_page_data(cursor, question_id):
 
     answers = util.query_select_fields_from_table('answer')
     where = util.add_where_to_query('question_id', '=', question_id)
-    cursor.execute(answers + where)
+    order_by = util.add_order_by_smt_desc_or_args(arguments)
+    cursor.execute(answers + where + order_by)
     answers = cursor.fetchall()
     answer_ids = tuple([elem['id'] for elem in answers])
 
@@ -241,20 +209,28 @@ def get_question_page_data(cursor, question_id):
         cursor.execute(answer_comments + where)
         answer_comments = cursor.fetchall()
 
-    tags = util.query_select_fields_from_table('question_tag', 'name')
+    tags = util.query_select_fields_from_table('question_tag', ['tag_id','name'])
     join = util.add_inner_join_to_query('tag', 'tag_id', 'id')
     where = util.add_where_to_query('question_id', '=', question_id)
     cursor.execute(tags + join + where)
-    tags = [tag['name'] for tag in cursor.fetchall()]
+    tags = cursor.fetchall()
     return {'question': question,
             'answers': answers,
             'question_comments': question_comments,
             'answer_comments': answer_comments if answer_ids else '',
-            'tags': tags}
+            'tags': tags,
+            'sort_by_fields': get_column_names('answer')}
     #comments4question,answers,comment4answers
 
 
 @connection.connection_handler
 def delete_record_by_id(cursor, table, value):
     query = util.query_delete_from_table_by_id(table, value)
+    cursor.execute(query)
+
+
+@connection.connection_handler
+def update_vote_number(cursor, table, record_id, vote):
+    vote = "+ 1" if vote == 'up' else "- 1"
+    query = util.update_vote_number(table, record_id, vote)
     cursor.execute(query)
