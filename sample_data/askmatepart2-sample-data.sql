@@ -26,7 +26,7 @@ CREATE TABLE question (
     vote_number integer default 0,
     title text,
     message text,
-    image text
+    image text default 'no_image_found.png'
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -36,7 +36,7 @@ CREATE TABLE answer (
     vote_number integer default 0,
     question_id integer default 0,
     message text,
-    image text
+    image text default 'no_image_found.png'
 );
 
 DROP TABLE IF EXISTS public.comment;
