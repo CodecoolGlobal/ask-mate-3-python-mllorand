@@ -40,9 +40,9 @@
         </div>
         <div class="card-button">
             <button onclick="location.href='{{ url_for('add_new_record', record='answer', question_id=question.id) }}'">Add New Answer</button>
-            <button onclick="location.href='{{ url_for('add_new_record',record='comment', question_id=question.id) }}'">Add New comment</button>
+            <button onclick="location.href='{{ url_for('add_new_record', record='comment', question_id=question.id) }}'">Add New comment</button>
             <button onclick="location.href='{{ url_for('catch_hacker') }}'">Add new tag</button>
-            <button onclick="location.href='{{ url_for('catch_hacker') }}'">Edit Question</button>
+            <button onclick="location.href='{{ url_for('edit_record', record_type='question', record_id=question.id) }}'">Edit Question</button>
             <button onclick="location.href='{{ url_for('delete_record_by_id', table='question', record_id=question.id) }}'">Delete Question</button>
         </div>
         <ul class="card-tag">
@@ -50,26 +50,26 @@
                 <li>{{ tag.name }} <a href="{{ url_for('catch_hacker') }}"><i style="color: red" class="fa fa-times"></i></a></li>
                 {% endfor %}
         </ul>
-        <ul class="card-comment">
+        <div class="card-comment">
             {% if payload.question_comments %}
             {% for comment in payload.question_comments if comment.question_id == question.id %}
                 <ul class="card-comment-line">
                     <li>{{ comment.message }}</li>
-                    <li>{{ comment.submission_time }}</li>
+                    <li><span>created: </span>{{ comment.submission_time }}</li>
                     <li>Edited {{ comment.edited_count }} times</li>
-                    <li><button onclick="location.href='{{ url_for('catch_hacker') }}'">Edit comment</button></li>
-                    <li><a href="{{ url_for('catch_hacker') }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
+                    <li><button onclick="location.href='{{ url_for('edit_record', record_type='comment', record_id=comment.id) }}'">Edit comment</button></li>
+                    <li><a href="{{ url_for('delete_record_by_id', table='comment', record_id=comment.id, question_id=question.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
                 </ul>
                 {% endfor %}
                 {% else %}
                 <span>There are no comments yet</span>
             {% endif %}
-        </ul>
+        </div>
     </div>
         {% endfor %}
     <h1 style="margin: 0;padding: 0">{{ payload.answers | length }} Answers:</h1><br>
     {% for answer in payload.answers %}
-        <div class="answer-card">
+        <div class="answer-card" id="{{ answer.id }}">
             <div class="card-title"><h3>{{ answer.title }}</h3></div>
             <div class="card-message">{{ answer.message }}</div>
             <img class="card-image" src={{url_for('images', filename=answer.image) }}>
@@ -84,18 +84,18 @@
                 <div class="card-smt">created:&nbsp;<span class="center-span">{{ answer.submission_time.date() }}<br>&ensp;{{ answer.submission_time.time() }}</span></div>
             </div>
             <div class="card-button">
+                <button onclick="location.href='{{ url_for('edit_record', record_type='answer', record_id=answer.id) }}'">Edit answer</button>
+                <button onclick="location.href='{{ url_for('add_new_record',record='comment', answer_id=answer.id) }}'">Add new comment</button>
                 <button onclick="location.href='{{ url_for('delete_record_by_id', table='answer', record_id=answer.id ) }}'">Delete Answer</button>
-                <button onclick="location.href='{{ url_for('catch_hacker') }}'">Add new comment</button>
-                <button onclick="location.href='{{ url_for('catch_hacker') }}'">Edit answer</button>
             </div>
                 <div class="card-comment">
                     {% for comment in payload.answer_comments if comment.answer_id == answer.id %}
                             <ul class="card-comment-line">
                                 <li>{{ comment.message }}</li>
-                                <li>{{ comment.submission_time }}</li>
+                                <li><span>created: </span> {{ comment.submission_time }}</li>
                                 <li>Edited {{ comment.edited_count }} times</li>
-                                <li><button onclick="location.href='{{ url_for('catch_hacker') }}'">Edit comment</button></li>
-                                <li><a href="{{ url_for('catch_hacker') }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
+                                <li><button onclick="location.href='{{ url_for('edit_record', record_type='comment', record_id=comment.id) }}'">Edit comment</button></li>
+                                <li><a href="{{ url_for('delete_record_by_id', table='comment', record_id=comment.id ) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
                             </ul>
                         {% else %}
                         <span>There are no comments yet</span>

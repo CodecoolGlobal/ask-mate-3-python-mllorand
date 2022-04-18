@@ -1,6 +1,6 @@
 function vote_on_record(table, record_id, vote){
     let change_vote_by
-    if(vote == 'down'){
+    if(vote === 'down'){
         change_vote_by = -1
     } else {
         change_vote_by = 1
@@ -10,5 +10,5 @@ function vote_on_record(table, record_id, vote){
     const request = new XMLHttpRequest();
     request.open("POST","/vote_on_record");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    request.send("table="+table+"&record_id="+record_id+"&vote="+vote);
+    request.send("table="+table+"&id="+record_id+"&vote_number="+String(vote_number+change_vote_by));
 }

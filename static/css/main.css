@@ -7,6 +7,9 @@
     --cardbg: #e5e5e5;
     --cardc:black;
 }
+html{
+    scroll-padding-top: 200px;
+}
 body {
     position: absolute;
     margin: 0;
@@ -205,12 +208,14 @@ body {
     align-items: center;
 }
 .card-comment-line{
-    width: 70%;
-    margin:0 auto 0 auto ;
+    margin:0 100px 0 100px ;
     padding: 0;
     list-style: none;
     display: flex;
     justify-content: flex-end;
+}
+.card-comment-line li span{
+    font-size: 0.8em;
 }
 .card-comment-line li:first-child{
     margin-right: auto;
