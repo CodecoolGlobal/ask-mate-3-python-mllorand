@@ -12,8 +12,10 @@ def query_select_fields_from_table(table: str, columns: list = None) -> sql.Comp
         Composed SQL object
         """
     if columns:
-        if type(columns) is not list:
+        if type(columns) is str:
             columns = [columns]
+        elif type(columns) is not list:
+            columns = list(columns)
         return sql.SQL('select {columns} from {table} ').format(table=sql.Identifier(table),
                                                                 columns=sql.SQL(', ').join(map(sql.Identifier, columns)))
     return sql.SQL('select * from {table} ').format(table=sql.Identifier(table))
@@ -29,8 +31,10 @@ def add_order_by_to_query(columns: list, reverse: bool = True) -> sql.Composable
     Returns:
         Composable SQL object
         """
-    if type(columns) is not list:
+    if type(columns) is str:
         columns = [columns]
+    elif type(columns) is not list:
+        columns = list(columns)
     if reverse:
         return sql.SQL("order by {columns} desc ").format(columns=sql.SQL(', ')
                                                           .join(map(sql.Identifier, columns)))
@@ -39,6 +43,8 @@ def add_order_by_to_query(columns: list, reverse: bool = True) -> sql.Composable
 
 
 def add_order_by_smt_desc_or_args(arguments=None):
+    """add 'order by submission_time descending' to a query by default,
+    arguments should be in dict format like {'sort_by': '<column_name>','order': '<asc/desc>'}"""
     if arguments:
         reverse = True if arguments.get('order').lower() == 'desc' else False
         order_by = add_order_by_to_query(arguments.get('sort_by'), reverse)
@@ -75,7 +81,7 @@ def add_and_to_query(identifier, operator, value):
 
 
 def query_delete_from_table_by_identifier(table, value, identifier, operator='='):
-    return sql.SQL("delete from {table}").format(table=sql.Identifier(table)) + \
+    return sql.SQL("delete from {table} ").format(table=sql.Identifier(table)) + \
            add_where_to_query(identifier, operator, value)
 
 
@@ -87,6 +93,12 @@ def add_inner_join_to_query(table, first_identifier, second_identifier):
 
 
 def query_insert(table, columns, values):
+    if type(columns) is str:
+        columns = [columns]
+        values = [values]
+    elif type(columns) is not list:
+        columns = list(columns)
+        values = list(values)
     return sql.SQL("insert into {table}({columns}) values({values}) ").format(
         table=sql.Identifier(table),
         columns=sql.SQL(', ').join(map(sql.Identifier, columns)),

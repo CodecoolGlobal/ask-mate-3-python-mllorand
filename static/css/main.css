@@ -222,7 +222,8 @@ body {
 }
 
 .card-comment-line button,
-.card-button button{
+.card-button button,
+.tag-button{
     font-size: 0.7em;
     margin-left: 1em;
     border: black solid 1px;
@@ -333,4 +334,33 @@ body {
     position: relative;
     top:2px;
     color: darkred;
+}
+.tag-selector{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5em;
+    width: 60%;
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+
+}
+.tag-list{
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    align-content: center;
+}
+.tag-list li{
+    margin: 1em;
+}
+.tag-input{
+    align-self: center;
+    margin: 0 1em 1em auto;
+    outline: none;
+    display: block;
+    height: 1em;
+    width: 6em;
 }

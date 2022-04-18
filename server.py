@@ -23,9 +23,9 @@ def load_main():
 
 @app.route("/list")
 def load_list_page():
-    # if request.args.get('order'):
-    #     if request.args.get('order').lower() not in ['asc', 'desc']:
-    #         return redirect(url_for('catch_hacker'))
+    if request.args.get('order'):
+        if request.args.get('order').lower() not in ['asc', 'desc']:
+            return redirect(url_for('catch_hacker'))
     return render_template("index.html", payload=data_manager.get_list_page_data(request.args))
 
 
@@ -35,8 +35,12 @@ def load_question_page(question_id):
 
 
 @app.route("/<table>/<record_id>/delete")
-def delete_record_by_id(table, record_id, question_id=None, answer_id=None):
-    data_manager.delete_record_by_identifier(table, record_id, question_id, answer_id)
+@app.route("/question/<question_id>/<table>/<record_id>/delete")
+def delete_record_by_id(table, record_id, question_id=None):
+    if table != 'question_tag':
+        data_manager.delete_record_by_identifier(table, record_id, question_id, 'id')
+    else:
+        data_manager.delete_record_by_identifier(table, record_id, question_id, 'tag_id')
     if table == 'question':
         return redirect(url_for('load_list_page'))
     return redirect(request.referrer)
@@ -57,7 +61,8 @@ def add_new_record(record, question_id=None, answer_id=None):
         data_manager.add_new_record(record, question_id, answer_id, request)
         if record != 'question' and request.form.get('redirect'):
             return redirect(request.form['redirect'])
-        return redirect(url_for('load_question_page', question_id=data_manager.get_fields_from_table_by_value('id', 'question')['id']))
+        question_id = data_manager.get_fields_from_table_by_value('id', 'question', ordered=True)['id']
+        return redirect(url_for('load_question_page', question_id=question_id))
     return render_template('add_new_record.html', payload={'record': record,
                                                            'question_id': question_id,
                                                            'answer_id': answer_id,
@@ -74,6 +79,16 @@ def edit_record(record_type, record_id):
     return render_template('edit_record.html', payload={'record_type': record_type,
                                                         'record': record,
                                                         'redirect': request.referrer})
+
+
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def add_tag(question_id):
+    tags = data_manager.get_tag_table('tag', )
+    if request.method == 'POST':
+        data_manager.add_tag_to_question(question_id, form=dict(request.form))
+        return redirect(url_for('load_question_page', question_id=question_id))
+    if request.method == 'GET':
+        return render_template('add_tags.html', question_id=question_id, tags=tags)
 
 
 # need refactor from down there
@@ -93,25 +108,6 @@ def search():
     if order not in ['asc', 'desc', None]:
         return redirect(url_for('catch_hacker'))
     return render_template("search.html", cards=search_result, columns=column_names)
-
-
-@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
-def route_add_tag(question_id):
-    if request.method == 'POST':
-        data_manager.add_new_record('tag', request.form)
-        tag_id = data_manager.get_table('tag', columns=['id'])[-1:]
-        data_manager.tag_to_question_tag(question_id, tag_id)
-        return redirect(url_for('route_add_tag', question_id=question_id))
-    if request.method == 'GET':
-        data_manager.add_existing_tag_to_question_tag(question_id, request.args.values())
-    tags = data_manager.get_table(table='tag')
-    return render_template('add_tags.html', question_id=question_id, tags=tags)
-
-
-# @app.route('/question/<question_id>/delete-tag', methods=['GET'])
-# def delete_tag_from_question(question_id):
-#     data_manager.delete_record_by_id('question_tag', selector='tag_id', selected_value=request.args.get('tag_id'))
-#     return redirect(url_for("route_question", question_id=question_id))
 
 
 if __name__ == "__main__":
