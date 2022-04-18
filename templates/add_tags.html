@@ -2,24 +2,20 @@
 {% block content %}
     <body>
         <h1>Add Tags</h1>
-        <div class="question-card_for_comment">
-            <form action=/question/{{ question_id }}/new-tag method="post" enctype="multipart/form-data">
-                <input type="text" name="name" id="name" placeholder="Add a new tag"><br>
-            <br>
-            <button onclick="location.href='/question/{{ question_id }}/new-tag'" value="submit">Submit new tag</button>
-                <br><br>
+        <div class="tag-selector">
+            <form method="post" action={{url_for('add_tag', question_id=question_id)}}>
+                <ul class="tag-list">
+                    {% for tag in tags %}
+                        <li><input type="checkbox" name="{{ tag.name }}" value="{{ tag.id }}">{{ tag.name }}</li>
+                    {% endfor %}
+                    <input class="tag-input" type="text" name="new_tag" placeholder="Add new tag">
+                </ul>
+                <div class="card-comment">
+                    <button class="tag-button" value="submit">Update question tags</button>
+                    <button class="tag-button" onclick="location.href='{{ url_for('load_question_page', question_id=question_id) }}'">Back to question</button>
+                </div>
             </form>
-            <form>
-                {% for tag in tags %}
-                    <fieldset>
-                        <input type="checkbox" id="{{ tag.name }}" name="{{ tag.name }}" value="{{ tag.id }}"><label for="{{ tag.name }}">{{ tag.name }}</label>
-                    </fieldset>
-                {% endfor %}
-                <button onclick="location.href='/question/{{ question_id }}/new-tag'" value="submit">Add tags</button>
-            </form><br>
-            <form method="get" action="/question/{{ question_id }}">
-        <button type="submit">Back to question</button>
-    </form>
+
         </div>
     </body>
 {% endblock %}
