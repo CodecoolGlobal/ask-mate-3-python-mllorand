@@ -1,6 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory
-import data_manager
-
+from flask import Flask, render_template
+from bonus_questions import SAMPLE_QUESTIONS
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/images'
@@ -68,46 +67,9 @@ def add_new_record(record, question_id=None, answer_id=None):
                                                            'answer_id': answer_id,
                                                            'redirect': request.referrer})
 
-
-@app.route('/<record_type>/<record_id>/edit', methods=['GET', 'POST'])
-def edit_record(record_type, record_id):
-    record = data_manager.get_fields_from_table_by_value('', record_type, 'id', record_id)
-    if request.method == 'POST':
-        print(request.form)
-        data_manager.update_record(record_type, request.form)
-        return redirect(request.form['redirect'])
-    return render_template('edit_record.html', payload={'record_type': record_type,
-                                                        'record': record,
-                                                        'redirect': request.referrer})
-
-
-@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
-def add_tag(question_id):
-    tags = data_manager.get_tag_table('tag', )
-    if request.method == 'POST':
-        data_manager.add_tag_to_question(question_id, form=dict(request.form))
-        return redirect(url_for('load_question_page', question_id=question_id))
-    if request.method == 'GET':
-        return render_template('add_tags.html', question_id=question_id, tags=tags)
-
-
-# need refactor from down there
-
-
-@app.route("/search")
-def search():
-    column_names = ["vote_number", "a_vote_number", "submission_time", "a_submission_time"]
-    sort_by = request.args['sort_by'] if request.args.get('sort_by') in column_names else None
-    order = request.args['order'] if sort_by else None
-    if len(request.args['q'].strip()) > 0:
-        search_result = data_manager.get_records_by_search(searched_word=request.args['q'],
-                                                           sort_by=sort_by,
-                                                           order=order)
-    else:
-        return redirect(url_for('load_main'))
-    if order not in ['asc', 'desc', None]:
-        return redirect(url_for('catch_hacker'))
-    return render_template("search.html", cards=search_result, columns=column_names)
+@app.route("/bonus-questions")
+def main():
+    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
 if __name__ == "__main__":
