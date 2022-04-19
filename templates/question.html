@@ -3,6 +3,22 @@
     <div class="main-nav">
         <div><a href="{{ url_for('load_main') }}">Home Page</a></div>
         <div><a href="{{ url_for('load_list_page') }}">All questions</a></div>
+        <div>
+            <label for="sort_by">Sort by:</label>
+            <select onchange="location = this.value" name="sort_by" id="sort_by">
+                {% if request.args.get('sort_by') == None or request.args.get('order') == None %}
+                    <option>Select an option to sort answers</option>
+                {% else %}
+                    <option value="/list?sort_by={{ request.args.sort_by }}&order={{ request.args.order }}">
+                        {{ request.args.sort_by.replace("_", " ").title()+"("+request.args.order+")" }}
+                    </option>
+                {% endif %}
+                {% for column in payload.sort_by_fields if column not in ['id','image','question_id'] %}
+                    <option value="/question/{{ payload.question[0].id }}?sort_by={{ column }}&order=asc">{{ column.replace('_', ' ').capitalize() }}(asc)</option>
+                    <option value="/question/{{ payload.question[0].id }}?sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').capitalize() }}(desc)</option>
+                {% endfor %}
+            </select>
+        </div>
     </div>
 {% endblock %}
 {% block content %}
@@ -12,71 +28,80 @@
         <div class="card-message">{{ question.message }}</div>
         <img class="card-image" src={{url_for('images', filename=question.image) }}>
         <div class="card-misc">
-            <div class="card-vote-number">votes: <span>{{ question.vote_number }}</span></div>
-            <div class="card-view-number">views: <span>{{ question.view_number }}</span></div>
-            <div class="card-smt">created:&nbsp;<span id="card-smt">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
+            <div class="card-vote-number">Votes:
+                <span class="center-span">
+                <a onclick="vote_on_record('question',{{ question.id }},'down')"><i class="fa fa-thumbs-down"></i></a>
+                &nbsp;<span id="question_vote_number_{{ question.id }}">{{ question.vote_number }}</span>&nbsp;
+                <a onclick="vote_on_record('question',{{ question.id }},'up')"><i class="fa fa-thumbs-up"></i></a>
+                </span>
+            </div>
+            <div class="card-view-number">views: <span class="center-span">{{ question.view_number }}</span></div>
+            <div class="card-smt">created:&nbsp;<span class="center-span">{{ question.submission_time.date() }}<br>&ensp;{{ question.submission_time.time() }}</span></div>
         </div>
         <div class="card-button">
-            <button onclick="location.href='{{ url_for('route_add_answer',question_id=question.id) }}'">Add New Answer</button>
-            <button onclick="location.href='{{ url_for('route_add_comment_to_question',question_id=question.id) }}'">Add new comment</button>
-            <button onclick="location.href=''">Add new tag</button>
-            <button onclick="location.href=''">Edit Question</button>
-            <button onclick="location.href='{{ url_for('delete_record_by_id', table="question", value=question.id) }}'">Delete Question</button>
+            <button onclick="location.href='{{ url_for('add_new_record', record='answer', question_id=question.id) }}'">Add New Answer</button>
+            <button onclick="location.href='{{ url_for('add_new_record', record='comment', question_id=question.id) }}'">Add New comment</button>
+            <button onclick="location.href='{{ url_for('add_tag', question_id=question.id) }}'">Add new tag</button>
+            <button onclick="location.href='{{ url_for('edit_record', record_type='question', record_id=question.id) }}'">Edit Question</button>
+            <button onclick="location.href='{{ url_for('delete_record_by_id', table='question', record_id=question.id) }}'">Delete Question</button>
         </div>
         <ul class="card-tag">
             {% for tag in payload.tags %}
-                <li>{{ tag }} <a href="{{ url_for('delete_tag_from_question', tag_id=tag.id, question_id=question_id) }}"><i style="color: red" class="fa fa-times"></i></a></li>
+                <li>{{ tag.name }} <a href="{{ url_for('delete_record_by_id', table='question_tag', record_id=tag.tag_id, question_id=question.id) }}"><i style="color: red" class="fa fa-times"></i></a></li>
                 {% endfor %}
         </ul>
-        <ul class="card-comment">
+        <div class="card-comment">
             {% if payload.question_comments %}
             {% for comment in payload.question_comments if comment.question_id == question.id %}
                 <ul class="card-comment-line">
                     <li>{{ comment.message }}</li>
-                    <li>{{ comment.submission_time }}</li>
-                    <li>{{ comment.edited_count }}</li>
-                    <li><button onclick="location.href='{{ url_for('route_edit_comment', comment_id=comment.id) }}'">Edit comment</button></li>
-                    <li><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
+                    <li><span>created: </span>{{ comment.submission_time }}</li>
+                    <li>Edited {{ comment.edited_count }} times</li>
+                    <li><button onclick="location.href='{{ url_for('edit_record', record_type='comment', record_id=comment.id) }}'">Edit comment</button></li>
+                    <li><a href="{{ url_for('delete_record_by_id', table='comment', record_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
                 </ul>
                 {% endfor %}
                 {% else %}
                 <span>There are no comments yet</span>
             {% endif %}
-        </ul>
-
+        </div>
     </div>
         {% endfor %}
-
     <h1 style="margin: 0;padding: 0">{{ payload.answers | length }} Answers:</h1><br>
-
-
     {% for answer in payload.answers %}
-        <div class="answer-card">
+        <div class="answer-card" id="{{ answer.id }}">
             <div class="card-title"><h3>{{ answer.title }}</h3></div>
             <div class="card-message">{{ answer.message }}</div>
             <img class="card-image" src={{url_for('images', filename=answer.image) }}>
             <div class="card-misc">
-                <div class="card-vote-number">votes: <span>{{ answer.vote_number }}</span></div>
-                <div class="card-smt">created:&nbsp;<span id="card-smt">{{ answer.submission_time.date() }}<br>&ensp;{{ answer.submission_time.time() }}</span></div>
+                <div class="card-vote-number">Votes:
+                    <span class="center-span">
+                    <a onclick="vote_on_record('answer',{{ answer.id }},'down')"><i class="fa fa-thumbs-down"></i></a>
+                    &nbsp;<span id="answer_vote_number_{{ answer.id }}">{{ answer.vote_number }}</span>&nbsp;
+                    <a onclick="vote_on_record('answer',{{ answer.id }},'up')"><i class="fa fa-thumbs-up"></i></a>
+                </span>
+                </div>
+                <div class="card-smt">created:&nbsp;<span class="center-span">{{ answer.submission_time.date() }}<br>&ensp;{{ answer.submission_time.time() }}</span></div>
             </div>
             <div class="card-button">
-                <button onclick="location.href='/answer/{{ answer['id'] }}/delete'">Delete Answer</button>
-                <button onclick="location.href='/answer/{{ answer['id'] }}/new-comment'">Add new comment</button>
-                <button onclick="location.href='/answer/{{ answer['id'] }}/edit'">Edit answer</button>
+                <button onclick="location.href='{{ url_for('edit_record', record_type='answer', record_id=answer.id) }}'">Edit answer</button>
+                <button onclick="location.href='{{ url_for('add_new_record',record='comment', answer_id=answer.id) }}'">Add new comment</button>
+                <button onclick="location.href='{{ url_for('delete_record_by_id', table='answer', record_id=answer.id ) }}'">Delete Answer</button>
             </div>
-            {% if payload.answer_comments %}
-                <ul class="card-comment">
+                <div class="card-comment">
                     {% for comment in payload.answer_comments if comment.answer_id == answer.id %}
-                        <ul class="card-comment-line">
-                            <li>{{ comment.message }}</li>
-                            <li>{{ comment.submission_time }}</li>
-                            <li>{{ comment.edited_count }}</li>
-                            <li><button onclick="location.href='{{ url_for('route_edit_comment', comment_id=comment.id) }}'">Edit comment</button></li>
-                            <li><a href="{{ url_for('delete_comment', comment_id=comment.id) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
-                        </ul>
+                            <ul class="card-comment-line">
+                                <li>{{ comment.message }}</li>
+                                <li><span>created: </span> {{ comment.submission_time }}</li>
+                                <li>Edited {{ comment.edited_count }} times</li>
+                                <li><button onclick="location.href='{{ url_for('edit_record', record_type='comment', record_id=comment.id) }}'">Edit comment</button></li>
+                                <li><a href="{{ url_for('delete_record_by_id', table='comment', record_id=comment.id ) }}" onclick="return confirm('Do you want to delete?')"><i class="fa fa-trash"></i></a></li>
+                            </ul>
+                        {% else %}
+                        <span>There are no comments yet</span>
                         {% endfor %}
-                </ul>
-                {% endif %}
+                </div>
         </div>
     {% endfor %}
+    <br><br>
 {% endblock %}

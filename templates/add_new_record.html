@@ -1,17 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
     <body>
-        <h1>Add new question</h1>
-        {{ payload }}
-        <form action="/add-question" method="post" enctype="multipart/form-data">
+        <h1>Add new {{ payload.record_type }}</h1>
+
+        <form action="{{url_for('add_new_record', record=payload.record, question_id=payload.get('question_id'), answer_id=payload.get('answer_id'), redirect_id=payload.get('redirect_id'))}}" method="post" enctype="multipart/form-data">
+            {% if payload.record == 'question' %}
             <label for="title">Title:</label><br>
             <input type="text" id="title" name="title" required><br><br>
+            {% endif %}
             <label for="message">Message:</label><br>
             <textarea name="message" id="message" rows="4" cols="50" required ></textarea><br><br>
+            {% if payload.record != 'comment' %}
             <label for="image">Upload image:</label>
             <input type="file" id="image" name="image" accept=".png, .jpg"><br>
+            {% endif %}
+            <input type="hidden" value="{{ payload.redirect }}" name="redirect">
         <br>
-        <button onclick="location.href='/add-question'" value="submit">Submit new question</button>
+        <button value="submit">Submit new {{ payload.record }}</button>
         </form>
+        <br><br>
     </body>
 {% endblock %}
