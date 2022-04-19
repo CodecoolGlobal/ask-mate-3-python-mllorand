@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block page_title %}{% endblock %} | Ask Overflow</title>
+    <script src="{{ url_for('static', filename='/scripts/scripts.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static',filename='/css/main.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon-white.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('images', filename='favicon-white.png') }}">
 </head>
 <body>
 <div class="header-container">
-    <a href="/" class="header-logo"><img height="100px" src="{{ url_for('static', filename='/images/logo-white.png') }}" /></a>
+    <a href="/" class="header-logo"><img height="100px" src="{{ url_for('images', filename='logo-white.png') }}" /></a>
     <div class="navbar-fix">
         This place is reserved for future functions (login/signin etc.)
     </div>

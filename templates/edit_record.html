@@ -1,0 +1,24 @@
+{% extends 'add_new_record.html' %}
+{% block content %}
+	<body>
+        <h1>Edit {{ payload.record_type | title }}</h1>
+        <form action="{{url_for('edit_record', record_type=payload.record_type, record_id=payload.record.id)}}" method="post">
+        {% for key in payload.record %}
+            {% if key == 'title' %}
+                <label for="{{ key }}">{{ key | replace('_',' ') | capitalize }}:</label><br>
+                <input type="text" id="{{ key }}" name="{{ key }}" value="{{ payload.record[key] }}"><br><br>
+            {% elif key == 'message' %}
+                <label for="{{ key }}">{{ key | replace('_',' ') | capitalize }}:</label><br>
+                <textarea cols="50" rows="4" id="{{ key }}" name="{{ key }}">{{ payload.record[key] }}</textarea>
+            {% elif key == 'edited_count' %}
+                {% set counter = payload.record[key] + 1 %}
+                <input type="hidden" value="{{ counter }}" name="{{ key }}">
+            {% endif %}
+            {% endfor %}
+        <input type="hidden" value="{{ payload.record['id'] }}" name="id">
+        <input type="hidden" value="{{ payload.redirect }}" name="redirect">
+        <br><br><br>
+        <button type="submit">Edit {{ payload.record_type | title }}</button>
+        </form>
+    </body>
+{% endblock %}
