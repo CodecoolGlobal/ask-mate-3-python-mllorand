@@ -1,10 +1,12 @@
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, flash, session
 import data_manager
+import util
 from bonus_questions import SAMPLE_QUESTIONS
-
+import os
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/images'
+app.secret_key = os.urandom(16)
 
 
 @app.route("/static/images/<path:filename>")
@@ -19,7 +21,11 @@ def catch_hacker():
 
 @app.route("/")
 def load_main():
-    return render_template('index.html', payload=data_manager.get_main_page_data(request.args))
+    if 'username' in session:
+        user_name = session.get('username')
+    else:
+        user_name = None
+    return render_template('index.html', payload=data_manager.get_main_page_data(request.args), user_name=user_name)
 
 
 @app.route("/list")
@@ -114,6 +120,53 @@ def search():
 @app.route("/bonus-questions")
 def main():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
+
+
+@app.route("/registration", methods=["GET", "POST"])
+def register_user():
+    if request.method == "GET":
+        return render_template("registration_page.html")
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user_name = request.form.get('user_name')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        if len(email) < 4:
+            flash('Email has to be at least 4 characters!', category='error')
+        elif len(user_name) < 2:
+            flash('First name has to be at least 2 characters!', category='error')
+        elif password1 != password2:
+            flash('Passwords must match!', category='error')
+        elif len(password1) < 7:
+            flash('Password has to be at least 7 characters!', category='error')
+        else:
+            flash(f"Nice to meet you {user_name} your account is ready!", category='success')
+            data_manager.add_new_user(email, user_name, password=util.hash_password(password1))
+            return redirect(url_for('load_main'))
+        
+        
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        try:
+            if util.verify_password(request.form['password'],
+                                    data_manager.get_user_by_email(request.form['email'])['password']):
+                session['username'] = request.form['email']
+                return redirect(url_for("load_main"))
+            else:
+                flash('Invalid credentials!', category='error')
+                return render_template("login.html")
+        except TypeError:
+            flash('Invalid credentials!', category='error')
+            return render_template("login.html")
+    else:
+        return render_template("login.html")
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('load_main'))
 
 
 if __name__ == "__main__":

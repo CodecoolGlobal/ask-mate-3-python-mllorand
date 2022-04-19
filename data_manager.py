@@ -3,6 +3,7 @@ from psycopg2 import sql
 import util
 import server
 import os
+from datetime import datetime
 
 
 @connection.connection_handler
@@ -171,3 +172,23 @@ def add_tag_to_question(cursor, question_id, form):
         if not cursor.fetchall():
             cursor.execute(util.query_insert('question_tag', ['question_id', 'tag_id'], [question_id, form[tag]]))
 
+
+@connection.connection_handler
+def add_new_user(cursor, email, user_name, password):
+    print(user_name)
+    query = '''
+        INSERT INTO public.users (email, user_name, password)
+        VALUES ({email}, {user_name}, {password})'''
+    cursor.execute(sql.SQL(query).format(
+        email=sql.Literal(email),
+        user_name=sql.Literal(user_name),
+        password=sql.Literal(password)))
+
+
+@connection.connection_handler
+def get_user_by_email(cursor, email):
+    query = '''
+        SELECT * FROM public.users
+        WHERE email = {email}'''
+    cursor.execute(sql.SQL(query).format(email=sql.Literal(email)))
+    return cursor.fetchone()
