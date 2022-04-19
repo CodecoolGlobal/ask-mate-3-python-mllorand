@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 import data_manager
+from bonus_questions import SAMPLE_QUESTIONS
 
 
 app = Flask(__name__)
@@ -108,6 +109,11 @@ def search():
     if order not in ['asc', 'desc', None]:
         return redirect(url_for('catch_hacker'))
     return render_template("search.html", cards=search_result, columns=column_names)
+
+
+@app.route("/bonus-questions")
+def main():
+    return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
 if __name__ == "__main__":
