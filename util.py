@@ -1,4 +1,5 @@
 from psycopg2 import sql
+import bcrypt
 
 
 def query_select_fields_from_table(table: str, columns: list = None) -> sql.Composed:
@@ -138,6 +139,18 @@ def get_records_by_search(word, sort_by=None, order=None):
                                                                          order=order,
                                                                          null_handler=null_handler)
     return sql.SQL(query).format(word=sql.SQL(word))
+
+
+# hashing
+
+def hash_password(plain_text_password):
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
 
 
 def get_tag_page_data():
