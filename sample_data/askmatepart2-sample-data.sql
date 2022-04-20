@@ -1,3 +1,8 @@
+alter table question
+    add user_id int;
+
+
+
 -- Custom configurations:
 set time zone 'Europe/Budapest';
 --
@@ -26,7 +31,8 @@ CREATE TABLE question (
     vote_number integer default 0,
     title text,
     message text,
-    image text default 'no_image_found.png'
+    image text default 'no_image_found.png',
+    owner text
 );
 
 DROP TABLE IF EXISTS public.answer;
