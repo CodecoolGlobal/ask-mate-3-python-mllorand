@@ -7,6 +7,11 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/images'
 
 
+@app.route('/bonus')
+def bonus():
+    return render_template('bonus_questions.html')
+
+
 @app.route("/static/images/<path:filename>")
 def images(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)

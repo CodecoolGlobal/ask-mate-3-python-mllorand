@@ -153,6 +153,28 @@ def get_tag_table(cursor, table):
 
 
 @connection.connection_handler
+def gain_reputation(cursor, user_id, reputation_value):
+    query = '''
+    UPDATE users
+    SET reputation_level = COALESCE(reputation_level, 0) + {reputation_value}
+    WHERE user_id = {user_id}
+    '''
+    cursor.execute(sql.SQL(query).format(user_id=sql.Literal(user_id),
+                                         reputation_value=sql.Literal(reputation_value)))
+    # if table == "question":
+    #     gain = 5 # if question vote up
+    #     gain = -2 # if guestion vote down
+    #     data_manager.gain_reputation()
+    # if table == "answer":
+    #     gain = 10  # if answer vote up
+    #     gain = -2 # if answer vote down
+    #     data_manager.gain_reputation()
+    # if table == "answer":
+    #     gain = 15  # if answer is accepted vote up
+    #     data_manager.gain_reputation()
+
+
+@connection.connection_handler
 def add_tag_to_question(cursor, question_id, form):
     existing_tags = [tag['name'] for tag in get_tag_table('tag', )]
     if form.get('new_tag'):
