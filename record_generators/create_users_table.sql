@@ -1,3 +1,4 @@
+drop table if exists public.users cascade;
 create table users
 (
     user_id           serial
@@ -6,7 +7,10 @@ create table users
     user_name         varchar(100) not null,
     email             varchar(120) not null,
     password          varchar(200) not null,
-    registration_date timestamp    not null
+    registration_date timestamp without time zone default now()::timestamp(0),
+    reputation_level  INT default 0,
+    image text default 'no_image_found.png'
+
 );
 
 
