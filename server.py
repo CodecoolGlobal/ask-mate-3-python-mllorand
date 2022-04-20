@@ -30,7 +30,7 @@ def load_main():
         user_name = session.get('username')
     else:
         user_name = None
-    return render_template('index.html', payload=data_manager.get_main_page_data(request.args), user_name=user_name)
+    return render_template('index.html', payload=data_manager.get_main_page_data(request.args))
 
 
 @app.route("/list")
@@ -87,7 +87,6 @@ def add_new_record(record, question_id=None, answer_id=None):
 def edit_record(record_type, record_id):
     record = data_manager.get_fields_from_table_by_value('', record_type, 'id', record_id)
     if request.method == 'POST':
-        print(request.form)
         data_manager.update_record(record_type, request.form)
         return redirect(request.form['redirect'])
     return render_template('edit_record.html', payload={'record_type': record_type,
@@ -131,6 +130,7 @@ def main():
 
 @app.route("/tags")
 def load_tags_page():
+    session['username'] = session.get('username')
     tags = data_manager.get_tag_page_data()
     return render_template('tags.html', tags=tags)
 
