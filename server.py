@@ -116,5 +116,11 @@ def main():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
+@app.route("/tags")
+def load_tags_page():
+    tags = data_manager.get_tag_page_data()
+    return render_template('tags.html', tags=tags)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

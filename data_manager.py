@@ -171,3 +171,9 @@ def add_tag_to_question(cursor, question_id, form):
         if not cursor.fetchall():
             cursor.execute(util.query_insert('question_tag', ['question_id', 'tag_id'], [question_id, form[tag]]))
 
+
+@connection.connection_handler
+def get_tag_page_data(cursor):
+    query = util.get_tag_page_data()
+    cursor.execute(query)
+    return cursor.fetchall()

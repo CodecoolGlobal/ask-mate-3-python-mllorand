@@ -335,6 +335,7 @@ body {
     top:2px;
     color: darkred;
 }
+.tag-page-card,
 .tag-selector{
     margin-left: auto;
     margin-right: auto;
@@ -352,6 +353,31 @@ body {
     margin: 0;
     padding: 0;
     align-content: center;
+}
+.tag-page-container{
+    max-width: max-content;
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+    margin: 3em auto auto auto;
+    padding: 0.5em;
+}
+.tag-page-table{
+    border-collapse: collapse;
+}
+.tag-page-table td:last-child{
+    text-align: center;
+}
+.tag-page-table td{
+    padding: 0.5em 1em 0.5em 1em;
+    border-top: black 1px dashed;
+}
+.tag-page-table tr{
+    padding: 0.5em;
+}
+.tag-page-table th {
+    border-bottom: black 4px double;
+    padding: 0.5em 1em 0.5em 1em;
 }
 .tag-list li{
     margin: 1em;

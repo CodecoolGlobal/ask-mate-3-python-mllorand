@@ -138,3 +138,10 @@ def get_records_by_search(word, sort_by=None, order=None):
                                                                          order=order,
                                                                          null_handler=null_handler)
     return sql.SQL(query).format(word=sql.SQL(word))
+
+
+def get_tag_page_data():
+    query = """select name, count(tag_id) from question_tag
+               right join tag t on question_tag.tag_id = t.id
+               group by name"""
+    return sql.SQL(query)
