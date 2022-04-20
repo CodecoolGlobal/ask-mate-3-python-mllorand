@@ -69,8 +69,10 @@ def vote_on_record():
 @app.route("/answer/<answer_id>/new-<record>", methods=['GET', 'POST'])
 @app.route("/add-<record>", methods=['GET', 'POST'])
 def add_new_record(record, question_id=None, answer_id=None):
+    user_id = data_manager.get_fields_from_table_by_value(fields='user_id', table='users', key='email',
+                                                          key_value=session['username'])
     if request.method == 'POST':
-        data_manager.add_new_record(record, question_id, answer_id, request)
+        data_manager.add_new_record(record, question_id, answer_id, request, user_id=user_id.get('user_id'))
         if record != 'question' and request.form.get('redirect'):
             return redirect(request.form['redirect'])
         question_id = data_manager.get_fields_from_table_by_value('id', 'question', ordered=True)['id']

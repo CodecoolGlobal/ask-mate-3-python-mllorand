@@ -104,8 +104,9 @@ def delete_record_by_identifier(cursor, table,  record_id, question_id, identifi
 
 
 @connection.connection_handler
-def add_new_record(cursor, record, question_id, answer_id, request):
+def add_new_record(cursor, record, question_id, answer_id, request, user_id):
     form = dict(request.form)
+    form.update({'user_id': user_id})
     if form.get('redirect'):
         del form['redirect']
     if answer_id:
@@ -214,6 +215,8 @@ def get_user_by_email(cursor, email):
         WHERE email = {email}'''
     cursor.execute(sql.SQL(query).format(email=sql.Literal(email)))
     return cursor.fetchone()
+
+
 @connection.connection_handler
 def get_tag_page_data(cursor):
     query = util.get_tag_page_data()
