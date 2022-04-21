@@ -76,7 +76,11 @@
     {% for answer in payload.answers %}
         <div class="answer-card" id="{{ answer.id }}">
             <div class="card-title"><h3>{{ answer.title }}</h3></div>
-            <div class="card-message">{{ '*' + answer.message if answer.accepted == True else answer.message }}</div>
+            {% if answer.accepted == True %}
+                <div class="card-message"><i id="accept" class="fa fa-check"></i>{{ answer.message }}</div>
+            {% elif answer.accepted == False %}
+                <div class="card-message">{{ answer.message }}</div>
+            {% endif %}
             <img class="card-image" src={{url_for('images', filename=answer.image) }}>
             <div class="card-misc">
                 <div class="card-vote-number">Votes:

@@ -430,3 +430,7 @@ body {
 }.card-user-record-line:last-child{
     border: none;
 }
+
+ #accept{
+     color: green;
+ }
