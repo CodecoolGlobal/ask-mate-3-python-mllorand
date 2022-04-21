@@ -47,6 +47,10 @@ def load_question_page(question_id):
 @app.route("/<table>/<record_id>/delete")
 @app.route("/question/<question_id>/<table>/<record_id>/delete")
 def delete_record_by_id(table, record_id, question_id=None):
+    record = data_manager.get_fields_from_table_by_value('', table, 'id', record_id)
+    if session.get('user_id') != record.get('user_id'):
+        flash('You have no permission to deleté mó!', category='error')
+        return redirect(url_for('load_question_page', question_id=record_id))
     if table != 'question_tag':
         data_manager.delete_record_by_identifier(table, record_id, question_id, 'id')
     else:
@@ -87,6 +91,9 @@ def add_new_record(record, question_id=None, answer_id=None):
 @app.route('/<record_type>/<record_id>/edit', methods=['GET', 'POST'])
 def edit_record(record_type, record_id):
     record = data_manager.get_fields_from_table_by_value('', record_type, 'id', record_id)
+    if session.get('user_id') != record.get('user_id'):
+        flash('You have no permission to edit this!', category='error')
+        return redirect(url_for('load_question_page', question_id=record_id))
     if request.method == 'POST':
         data_manager.update_record(record_type, request.form)
         return redirect(request.form['redirect'])
