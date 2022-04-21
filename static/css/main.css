@@ -6,11 +6,19 @@
     --sbg: #626262;
     --cardbg: #e5e5e5;
     --cardc:black;
+    --cardbg_accepted: #bbe5a0;
+    --card_accepted: 2px solid green;
+    --card_unaccepted: none;
+    font-family: 'Times New Roman', Times, serif;
 }
 html{
     scroll-padding-top: 200px;
 }
+.header-container{
+    color: white;
+}
 body {
+    font-family: 'Times New Roman', Times, serif;
     position: absolute;
     margin: 0;
     padding: 0;

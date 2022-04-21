@@ -13,3 +13,21 @@ function vote_on_record(table, record_id, vote){
     request.send("table="+table+"&id="+record_id+"&vote_number="+String(vote_number+change_vote_by)+'&vote='+vote);
 }
 
+function mark_answer(status, answer_id, question_id){
+    const request = new XMLHttpRequest();
+    let current_status = document.getElementById('accept_'+answer_id).innerHTML
+    if (current_status == 'Accept'){
+        document.getElementById('accept_'+answer_id).innerHTML = 'Unaccept'
+        document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg_accepted)'
+        document.getElementById('message_'+answer_id).innerHTML = ''
+    } else {
+        document.getElementById('accept_'+answer_id).innerHTML = 'Accept'
+        document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg)'
+        document.getElementById('message_'+answer_id).innerHTML = '<i id="accept" className="fa fa-check"></i>'
+    }
+    console.log(current_status)
+    request.open("POST","/test-accept-answer");
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.send("status="+status+"&answer_id="+answer_id+"&question_id="+question_id);
+}
+

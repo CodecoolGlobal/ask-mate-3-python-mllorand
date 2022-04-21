@@ -77,7 +77,7 @@
         <div class="answer-card" id="{{ answer.id }}">
             <div class="card-title"><h3>{{ answer.title }}</h3></div>
             {% if answer.accepted == True %}
-                <div class="card-message"><i id="accept" class="fa fa-check"></i>{{ answer.message }}</div>
+                <div class="card-message"><span id="message_{{ answer.id }}"></span>{{ answer.message }}</div>
             {% elif answer.accepted == False %}
                 <div class="card-message">{{ answer.message }}</div>
             {% endif %}
@@ -97,6 +97,8 @@
                 <button onclick="location.href='{{ url_for('add_new_record',record='comment', answer_id=answer.id) }}'">Add new comment</button>
                 <button onclick="location.href='{{ url_for('delete_record_by_id', table='answer', record_id=answer.id ) }}'">Delete Answer</button>
 	            {% if session.user_id == payload.question[0].user_id %}
+                <button id="accept_{{ answer.id }}" onclick="mark_answer('{{ answer.accepted }}',{{ answer.id }},{{ payload.question[0].id }} )">{{ 'Accept' if answer.accepted == False else 'Unaccept' }}</button>
+
                 <button onclick="location.href='{{ url_for('mark_accepted', status=True if answer.accepted == False else False, answer_id=answer.id, question_id=payload.question[0].id) }}'">{{ 'Accept' if answer.accepted == False else 'Unaccept' }}</button>
                 {% endif %}
             </div>

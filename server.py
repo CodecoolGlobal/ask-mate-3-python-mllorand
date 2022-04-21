@@ -191,7 +191,6 @@ def login():
                 return redirect(url_for("load_main"))
             else:
                 flash('Invalid credentials!', category='error')
-                session.clear()
                 return render_template("login.html")
         except TypeError:
             flash('Invalid credentials!', category='error')
