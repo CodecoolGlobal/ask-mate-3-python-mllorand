@@ -225,6 +225,18 @@ def get_tag_page_data(cursor):
 
 
 @connection.connection_handler
+def get_user_page_data(cursor, user_id):
+    user_details = ''
+    questions = ''
+    answers = ''
+    comments = ''
+    return {'user_details': user_details,
+            'questions': questions,
+            'answers': answers,
+            'comments': comments}
+
+
+@connection.connection_handler
 def get_user_page_data(user_id):
 
     return {'user_details': user_details,

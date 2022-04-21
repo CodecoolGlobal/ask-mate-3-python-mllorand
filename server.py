@@ -27,6 +27,7 @@ def catch_hacker():
 
 @app.route("/")
 def load_main():
+    print(session)
     return render_template('index.html', payload=data_manager.get_main_page_data(request.args))
 
 

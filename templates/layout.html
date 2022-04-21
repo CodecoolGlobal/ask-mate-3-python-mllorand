@@ -13,7 +13,7 @@
     <a href="/" class="header-logo"><img height="100px" src="{{ url_for('images', filename='logo-white.png') }}" /></a>
     <div class="navbar-fix">
 	    {% if session %}
-	    <p>Signed in as {{ session.get('username') }}</p>
+        <p>Signed in as <a href="{{ url_for('load_user_page', user_id=session.user_id) }}">{{ session.username }}</a></p>
             <p>Signed in as <a href="{{ url_for('load_user_page', user_id=session.user_id) }}">{{ session.user_name }}</a></p>
 	    <div><a href="/logout" type="submit">Logout</a></div>
 	    {% else %}
