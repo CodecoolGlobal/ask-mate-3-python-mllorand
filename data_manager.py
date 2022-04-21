@@ -226,18 +226,6 @@ def get_tag_page_data(cursor):
 
 @connection.connection_handler
 def get_user_page_data(cursor, user_id):
-    user_details = ''
-    questions = ''
-    answers = ''
-    comments = ''
-    return {'user_details': user_details,
-            'questions': questions,
-            'answers': answers,
-            'comments': comments}
-
-
-@connection.connection_handler
-def get_user_page_data(cursor, user_id):
     user_data = get_fields_from_table_by_value(['user_id', 'user_name', 'email', 'registration_date', 'reputation_level', 'image'], 'users', 'user_id', user_id)
 
     query = util.query_select_fields_from_table('question', ['id', 'title', 'submission_time'])
