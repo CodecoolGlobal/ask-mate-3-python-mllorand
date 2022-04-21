@@ -215,6 +215,13 @@ def get_users_list(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
+@connection.connection_handler
+def answer_accept_status(cursor, status, answer_id):
+    query = util.accept_answer(status, answer_id)
+    return cursor.execute(query)
+
+
 @connection.connection_handler
 def get_tag_page_data(cursor):
     query = util.get_tag_page_data()

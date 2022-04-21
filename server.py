@@ -41,7 +41,9 @@ def load_list_page():
 
 @app.route("/question/<question_id>")
 def load_question_page(question_id):
-    return render_template("question.html", payload=data_manager.get_question_page_data(question_id, request.args))
+    payload = data_manager.get_question_page_data(question_id, request.args)
+    print(payload)
+    return render_template("question.html", payload=payload)
 
 
 @app.route("/<table>/<record_id>/delete")
@@ -143,7 +145,7 @@ def load_users_list(user_id=None):
     if not user_id:
         users = data_manager.get_users_list()
         return render_template("users_list.html", users=users)
-    return redirect(url_for('load_user', user_id=user_id))
+    return redirect(url_for('load_user_page', user_id=user_id))
 
 
 @app.route("/registration", methods=["GET", "POST"])
@@ -198,13 +200,19 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.clear()
     return redirect(url_for('load_main'))
+
+
+@app.route('/accept-answer/<status>/<answer_id>/<question_id>')
+def mark_accepted(status, answer_id, question_id):
+    print(status, answer_id, question_id)
+    data_manager.answer_accept_status(status=status, answer_id=answer_id)
+    return redirect(url_for('load_question_page', question_id=question_id))
 
 
 @app.route('/user/<user_id>')
 def load_user_page(user_id):
-    print(session)
     return render_template('user_page.html', payload=data_manager.get_user_page_data(user_id))
 
 

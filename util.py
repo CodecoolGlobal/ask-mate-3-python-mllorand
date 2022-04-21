@@ -165,3 +165,12 @@ def modify_reputation(value, id):
                SET reputation_level = reputation_level + {value}
                WHERE user_id = {id}"""
     return sql.SQL(query).format(value=sql.Literal(value), id=sql.Literal(id))
+
+
+def accept_answer(status, answer_id):
+    query = '''
+        UPDATE answer
+        SET accepted = {status}
+        WHERE id = {answer_id}'''
+    return sql.SQL(query).format(status=sql.Literal(status),
+                                 answer_id=sql.Literal(answer_id))

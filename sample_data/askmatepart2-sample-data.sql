@@ -61,7 +61,8 @@ CREATE TABLE answer (
     question_id integer default 0,
     message text,
     image text default 'no_image_found.png',
-    user_id integer
+    user_id integer,
+    accepted bool default false
 );
 
 DROP TABLE IF EXISTS public.comment;
