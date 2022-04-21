@@ -434,3 +434,7 @@ body {
  #accept{
      color: green;
  }
+
+ mark {
+     background-color: rgba(202,182,0,1);
+ }
