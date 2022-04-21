@@ -158,3 +158,10 @@ def get_tag_page_data():
                right join tag t on question_tag.tag_id = t.id
                group by name"""
     return sql.SQL(query)
+
+
+def modify_reputation(value, id):
+    query = """UPDATE users 
+               SET reputation_level = reputation_level + {value}
+               WHERE user_id = {id}"""
+    return sql.SQL(query).format(value=sql.Literal(value), id=sql.Literal(id))
