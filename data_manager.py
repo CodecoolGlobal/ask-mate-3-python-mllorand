@@ -137,6 +137,26 @@ def get_fields_from_table_by_value(cursor, fields, table, key=None, key_value=No
 @connection.connection_handler
 def update_record(cursor, table, form):
     key_value_dict = dict(form)
+    direction = key_value_dict.pop('vote')
+    tables = key_value_dict.get('table')
+    if tables == 'question':
+        user_id = get_fields_from_table_by_value(fields='user_id', table='question', key='id',
+                                                 key_value=key_value_dict.get('id'))
+        if direction == 'up':
+            result = util.modify_reputation(value=+5, id=user_id.get('user_id'))
+            cursor.execute(result)
+        elif direction == 'down':
+            result = util.modify_reputation(value=-2, id=user_id.get('user_id'))
+            cursor.execute(result)
+    if tables == 'answer':
+        user_id = get_fields_from_table_by_value(fields='user_id', table='answer', key='id',
+                                                 key_value=key_value_dict.get('id'))
+        if direction == 'up':
+            result = util.modify_reputation(value=+10, id=user_id.get('user_id'))
+            cursor.execute(result)
+        elif direction == 'down':
+            result = util.modify_reputation(value=-2, id=user_id.get('user_id'))
+            cursor.execute(result)
     if key_value_dict.get('redirect'):
         del key_value_dict['redirect']
     if key_value_dict.get('table'):
@@ -152,28 +172,6 @@ def get_tag_table(cursor, table):
     query += util.add_order_by_smt_desc_or_args({'sort_by': 'name', 'order': 'asc'})
     cursor.execute(query)
     return cursor.fetchall()
-
-
-@connection.connection_handler
-def gain_reputation(cursor, user_id, reputation_value):
-    query = '''
-    UPDATE users
-    SET reputation_level = COALESCE(reputation_level, 0) + {reputation_value}
-    WHERE user_id = {user_id}
-    '''
-    cursor.execute(sql.SQL(query).format(user_id=sql.Literal(user_id),
-                                         reputation_value=sql.Literal(reputation_value)))
-    # if table == "question":
-    #     gain = 5 # if question vote up
-    #     gain = -2 # if guestion vote down
-    #     data_manager.gain_reputation()
-    # if table == "answer":
-    #     gain = 10  # if answer vote up
-    #     gain = -2 # if answer vote down
-    #     data_manager.gain_reputation()
-    # if table == "answer":
-    #     gain = 15  # if answer is accepted vote up
-    #     data_manager.gain_reputation()
 
 
 @connection.connection_handler
@@ -209,13 +207,13 @@ def add_new_user(cursor, email, user_name, password):
 
 
 @connection.connection_handler
-def get_user_by_email(cursor, email):
-    query = '''
-        SELECT * FROM public.users
-        WHERE email = {email}'''
-    cursor.execute(sql.SQL(query).format(email=sql.Literal(email)))
-    return cursor.fetchone()
-
+def get_users_list(cursor):
+    query = util.query_select_fields_from_table('users',
+                                                ['user_id', 'user_name',
+                                                 'email', 'registration_date',
+                                                 'reputation_level', 'image'])
+    cursor.execute(query)
+    return cursor.fetchall()
 
 @connection.connection_handler
 def get_tag_page_data(cursor):
