@@ -3,6 +3,7 @@ import data_manager
 import util
 from bonus_questions import SAMPLE_QUESTIONS
 import os
+from psycopg2.errors import UniqueViolation
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './static/images'
@@ -26,10 +27,6 @@ def catch_hacker():
 
 @app.route("/")
 def load_main():
-    if 'username' in session:
-        user_name = session.get('username')
-    else:
-        user_name = None
     return render_template('index.html', payload=data_manager.get_main_page_data(request.args))
 
 
@@ -140,31 +137,40 @@ def register_user():
     if request.method == "GET":
         return render_template("registration_page.html")
     if request.method == 'POST':
-        email = request.form.get('email')
-        user_name = request.form.get('user_name')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
-        if len(email) < 4:
-            flash('Email has to be at least 4 characters!', category='error')
-        elif len(user_name) < 2:
-            flash('First name has to be at least 2 characters!', category='error')
-        elif password1 != password2:
-            flash('Passwords must match!', category='error')
-        elif len(password1) < 7:
-            flash('Password has to be at least 7 characters!', category='error')
-        else:
-            flash(f"Nice to meet you {user_name} your account is ready!", category='success')
-            data_manager.add_new_user(email, user_name, password=util.hash_password(password1))
-            return redirect(url_for('load_main'))
+        try:
+            email = request.form.get('email')
+            user_name = request.form.get('user_name')
+            password1 = request.form.get('password1')
+            password2 = request.form.get('password2')
+            if len(email) < 4:
+                flash('Email has to be at least 4 characters!', category='error')
+            elif len(user_name) < 2:
+                flash('First name has to be at least 2 characters!', category='error')
+            elif password1 != password2:
+                flash('Passwords must match!', category='error')
+            elif len(password1) < 7:
+                flash('Password has to be at least 7 characters!', category='error')
+            else:
+                flash(f"Nice to meet you {user_name} your account is ready!", category='success')
+                data_manager.add_new_user(email, user_name, password=util.hash_password(password1))
+                return redirect(url_for('load_main'))
+        except UniqueViolation:
+            flash('Username or email is already taken!', category='error')
+            return render_template("registration_page.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         try:
-            if util.verify_password(request.form['password'],
-                                    data_manager.get_user_by_email(request.form['email'])['password']):
-                session['username'] = request.form['email']
+            user = data_manager.get_fields_from_table_by_value(fields=['user_id', 'user_name', 'password'],
+                                                               table='users',
+                                                               key='email',
+                                                               key_value=request.form['email'])
+            if util.verify_password(request.form['password'], user['password']):
+                session['username'] = user['user_name']
+                session['user_id'] = user['user_id']
+                flash(f"Welcome {session['username']}!", category='success')
                 return redirect(url_for("load_main"))
             else:
                 flash('Invalid credentials!', category='error')
