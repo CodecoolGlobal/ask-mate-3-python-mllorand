@@ -14,7 +14,6 @@
     <div class="navbar-fix">
 	    {% if session %}
 	    <p>Signed in as {{ session.get('username') }}</p>
-	    {% if user_name != None %}
             <p>Signed in as <a href="{{ url_for('load_user_page', user_id=session.user_id) }}">{{ session.user_name }}</a></p>
 	    <div><a href="/logout" type="submit">Logout</a></div>
 	    {% else %}

@@ -188,8 +188,9 @@ def logout():
     return redirect(url_for('load_main'))
 
 
-@app.route('/user/<user-id>')
+@app.route('/user/<user_id>')
 def load_user_page(user_id):
+    print(session)
     return render_template('user_page.html', payload=data_manager.get_user_page_data(user_id))
 
 
