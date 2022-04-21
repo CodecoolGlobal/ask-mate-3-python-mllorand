@@ -2,3 +2,47 @@
 {% block page_title %}
     User Page
 {% endblock %}
+{% block navbar %}
+    <div class="main-nav">
+    <div><a href="{{ url_for('load_main') }}">Home Page</a></div>
+	<div><a href="{{ url_for('load_users_list') }}" type="submit">All users</a></div>
+    <div><a href="{{ url_for('load_list_page') }}" type="submit">All question</a></div>
+    <div><a href="{{ url_for('load_tags_page') }}" type="submit">Tags</a></div>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="card-user-details">
+    <ul>
+    {% for data in payload.user_data if data != 'image' %}
+        <li class="card-user-data"><strong>{{ data | replace('_',' ') }}</strong>: {{ payload.user_data[data] }}</li>
+    {% endfor %}
+    </ul>
+    <img class="card-user-image" src="{{ url_for('images', filename = payload.user_data['image']) }}">
+    </div>
+    <div class="card-user-records">
+    <h3>Questions asked:</h3>
+    {% for question in payload.questions %}
+        <div class="card-user-record-line">
+        <a href="{{ url_for('load_question_page', question_id=question.id) }}">{{ question.title }}</a><span>{{ question.submission_time }}</span>
+        </div>
+    {% endfor %}
+    </div>
+    <div class="card-user-records">
+    <h3>Answers:</h3>
+    {% for answer in payload.answers %}
+        <div class="card-user-record-line">
+        <a href="/question/{{answer.question_id}}#{{answer.id}}">{{ answer.message }}</a><span>{{ answer.submission_time }}</span>
+        </div>
+    {% endfor %}
+    </div>
+    <div class="card-user-records">
+    <h3>Comments:</h3>
+    {% for comment in payload.comments %}
+        <div class="card-user-record-line">
+        <span>{{ comment.message }}</span><span>{{ comment.submission_time }}</span>
+        </div>
+    {% endfor %}
+    </div>
+
+    {{ payload.comments }}
+{% endblock %}
