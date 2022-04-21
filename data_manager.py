@@ -33,7 +33,6 @@ def get_records_by_search(cursor, searched_word, sort_by, order):
                         else:
                             highlighted.append(word)
                 row[match] = (" ").join(highlighted)
-            print(row[match])
     return search_results
 
 
@@ -99,7 +98,6 @@ def delete_record_by_identifier(cursor, table,  record_id, question_id, identifi
     query = util.query_delete_from_table_by_identifier(table, record_id, identifier)
     if question_id:
         query += util.add_and_to_query('question_id', '=', question_id)
-    print(query.as_string(cursor))
     cursor.execute(query)
 
 
@@ -184,7 +182,6 @@ def add_tag_to_question(cursor, question_id, form):
             if tag['name'] == form.get('new_tag').lower():
                 form.update({form['new_tag'].lower(): tag['id']})
     del form['new_tag']
-    print(form)
     for tag in form:
         condition = util.query_select_fields_from_table('question_tag', 'question_id')
         condition += util.add_where_to_query('tag_id', '=', form[tag])
@@ -196,7 +193,6 @@ def add_tag_to_question(cursor, question_id, form):
 
 @connection.connection_handler
 def add_new_user(cursor, email, user_name, password):
-    print(user_name)
     query = '''
         INSERT INTO public.users (email, user_name, password)
         VALUES ({email}, {user_name}, {password})'''
@@ -251,3 +247,11 @@ def get_user_page_data(cursor, user_id):
             'questions': questions,
             'answers': answers,
             'comments': comments}
+
+
+@connection.connection_handler
+def gain_when_accepted(cursor, answer_id, value):
+    user_id = get_fields_from_table_by_value(fields='user_id', table='answer', key='id',
+                                             key_value=answer_id)
+    result = util.modify_reputation(value=value, id=user_id.get('user_id'))
+    cursor.execute(result)

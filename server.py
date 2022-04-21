@@ -27,7 +27,6 @@ def catch_hacker():
 
 @app.route("/")
 def load_main():
-    print(session)
     return render_template('index.html', payload=data_manager.get_main_page_data(request.args))
 
 
@@ -42,7 +41,6 @@ def load_list_page():
 @app.route("/question/<question_id>")
 def load_question_page(question_id):
     payload = data_manager.get_question_page_data(question_id, request.args)
-    print(payload)
     return render_template("question.html", payload=payload)
 
 
@@ -206,9 +204,13 @@ def logout():
 
 @app.route('/accept-answer/<status>/<answer_id>/<question_id>')
 def mark_accepted(status, answer_id, question_id):
-    print(status, answer_id, question_id)
     data_manager.answer_accept_status(status=status, answer_id=answer_id)
-    return redirect(url_for('load_question_page', question_id=question_id))
+    if status != 'False':
+        data_manager.gain_when_accepted(answer_id=answer_id, value=+15)
+        return redirect(url_for('load_question_page', question_id=question_id))
+    else:
+        data_manager.gain_when_accepted(answer_id=answer_id, value=-15)
+        return redirect(url_for('load_question_page', question_id=question_id))
 
 
 @app.route('/user/<user_id>')
