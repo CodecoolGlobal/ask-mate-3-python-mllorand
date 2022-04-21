@@ -237,9 +237,12 @@ def get_user_page_data(cursor, user_id):
 
 
 @connection.connection_handler
-def get_user_page_data(user_id):
-
+def get_user_page_data(cursor, user_id):
+    user_details = ''
+    questions = ''
+    answers = ''
+    comments = ''
     return {'user_details': user_details,
-            'questions': bonus_questions,
+            'questions': questions,
             'answers': answers,
             'comments': comments}
