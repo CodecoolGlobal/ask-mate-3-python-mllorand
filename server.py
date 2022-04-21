@@ -49,7 +49,7 @@ def load_question_page(question_id):
 def delete_record_by_id(table, record_id, question_id=None):
     record = data_manager.get_fields_from_table_by_value('', table, 'id', record_id)
     if session.get('user_id') != record.get('user_id'):
-        flash('You have no permission to deleté mó!', category='error')
+        flash('You have no permission to delete!', category='error')
         return redirect(url_for('load_question_page', question_id=record_id))
     if table != 'question_tag':
         data_manager.delete_record_by_identifier(table, record_id, question_id, 'id')
@@ -92,7 +92,7 @@ def add_new_record(record, question_id=None, answer_id=None):
 def edit_record(record_type, record_id):
     record = data_manager.get_fields_from_table_by_value('', record_type, 'id', record_id)
     if session.get('user_id') != record.get('user_id'):
-        flash('You have no permission to edit this!', category='error')
+        flash('You have no permission to edit!', category='error')
         return redirect(url_for('load_question_page', question_id=record_id))
     if request.method == 'POST':
         data_manager.update_record(record_type, request.form)
@@ -104,6 +104,10 @@ def edit_record(record_type, record_id):
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
 def add_tag(question_id):
+    record = data_manager.get_fields_from_table_by_value('user_id', 'question', 'id', question_id)
+    if session.get('user_id') != record.get('user_id'):
+        flash('You have no permission to add tag!', category='error')
+        return redirect(url_for('load_question_page', question_id=question_id))
     tags = data_manager.get_tag_table('tag', )
     if request.method == 'POST':
         data_manager.add_tag_to_question(question_id, form=dict(request.form))
