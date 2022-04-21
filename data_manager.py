@@ -104,8 +104,9 @@ def delete_record_by_identifier(cursor, table,  record_id, question_id, identifi
 
 
 @connection.connection_handler
-def add_new_record(cursor, record, question_id, answer_id, request):
+def add_new_record(cursor, record, question_id, answer_id, request, user_id):
     form = dict(request.form)
+    form.update({'user_id': user_id})
     if form.get('redirect'):
         del form['redirect']
     if answer_id:
