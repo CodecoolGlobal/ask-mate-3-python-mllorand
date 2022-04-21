@@ -1,8 +1,3 @@
-alter table question
-    add user_id int;
-
-
-
 -- Custom configurations:
 set time zone 'Europe/Budapest';
 --
