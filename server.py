@@ -69,6 +69,9 @@ def vote_on_record():
 @app.route("/answer/<answer_id>/new-<record>", methods=['GET', 'POST'])
 @app.route("/add-<record>", methods=['GET', 'POST'])
 def add_new_record(record, question_id=None, answer_id=None):
+    if 'username' not in session:
+        flash('Please log in to contribute!', category='error')
+        return redirect(url_for('login'))
     user_id = data_manager.get_fields_from_table_by_value(fields='user_id', table='users', key='email',
                                                           key_value=session['username'])
     if request.method == 'POST':
@@ -190,6 +193,7 @@ def login():
                 return redirect(url_for("load_main"))
             else:
                 flash('Invalid credentials!', category='error')
+                session.clear()
                 return render_template("login.html")
         except TypeError:
             flash('Invalid credentials!', category='error')
@@ -206,7 +210,6 @@ def logout():
 
 @app.route('/accept-answer/<status>/<answer_id>/<question_id>')
 def mark_accepted(status, answer_id, question_id):
-    print(status, answer_id, question_id)
     data_manager.answer_accept_status(status=status, answer_id=answer_id)
     return redirect(url_for('load_question_page', question_id=question_id))
 
