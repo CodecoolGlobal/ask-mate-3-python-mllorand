@@ -19,11 +19,11 @@ function mark_answer(status, answer_id, question_id){
     if (current_status == 'Accept'){
         document.getElementById('accept_'+answer_id).innerHTML = 'Unaccept'
         document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg_accepted)'
-        document.getElementById('message_'+answer_id).innerHTML = ''
+        document.getElementById('accept_mark_'+answer_id).innerHTML = '<i class="fa fa-check"></i>'
     } else {
         document.getElementById('accept_'+answer_id).innerHTML = 'Accept'
         document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg)'
-        document.getElementById('message_'+answer_id).innerHTML = '<i id="accept" className="fa fa-check"></i>'
+        document.getElementById('accept_mark_'+answer_id).innerHTML = ''
     }
     console.log(current_status)
     request.open("POST","/test-accept-answer");
