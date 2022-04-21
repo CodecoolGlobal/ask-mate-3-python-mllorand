@@ -209,13 +209,13 @@ def add_new_user(cursor, email, user_name, password):
 
 
 @connection.connection_handler
-def get_user_by_email(cursor, email):
-    query = '''
-        SELECT * FROM public.users
-        WHERE email = {email}'''
-    cursor.execute(sql.SQL(query).format(email=sql.Literal(email)))
-    return cursor.fetchone()
-
+def get_users_list(cursor):
+    query = util.query_select_fields_from_table('users',
+                                                ['user_id', 'user_name',
+                                                 'email', 'registration_date',
+                                                 'reputation_level', 'image'])
+    cursor.execute(query)
+    return cursor.fetchall()
 
 @connection.connection_handler
 def get_tag_page_data(cursor):

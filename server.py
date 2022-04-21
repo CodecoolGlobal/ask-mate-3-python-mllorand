@@ -132,6 +132,19 @@ def load_tags_page():
     return render_template('tags.html', tags=tags)
 
 
+@app.route("/users")
+@app.route("/users/<user_id>")
+def load_users_list(user_id=None):
+    if 'username' not in session:
+        flash('Please log in to view fellow users!', category='error')
+        return redirect(url_for('login'))
+
+    if not user_id:
+        users = data_manager.get_users_list()
+        return render_template("users_list.html", users=users)
+    return redirect(url_for('load_user', user_id=user_id))
+
+
 @app.route("/registration", methods=["GET", "POST"])
 def register_user():
     if request.method == "GET":

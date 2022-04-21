@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div class="tag-page-container">
+    <table class="tag-page-table">
+    <tr><th>Username</th><th>Registration date</th><th>Reputation</th><th>Email</th></tr>
+    {% for user in users %}
+    <tr>
+	    <td><a href="/user/{{ user.user_id }}">{{ user.user_name }}</a></td>
+        <td>{{ user.registration_date }}</td>
+	    <td>{{ user.reputation_level }}</td>
+	    <td>{{ user.email }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    </div>
+{% endblock %}
