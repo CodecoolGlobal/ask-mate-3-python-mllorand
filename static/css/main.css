@@ -390,3 +390,43 @@ body {
     height: 1em;
     width: 6em;
 }
+.card-user-details{
+    color: var(--cardc);
+    background-color: var(--cardbg);
+    display: grid;
+    grid-template-columns: auto 140px;
+    grid-template-areas:
+        'details image';
+    margin: 20px;
+    padding: 0.5em;
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
+    min-height: 140px;
+}
+.card-user-data{
+    list-style: none;
+    padding-top: 0.5em;
+    grid-area: details;
+}
+.card-user-image{
+    width: 140px;
+    list-style: none;
+    grid-area: image;
+}
+.card-user-records{
+    margin: 20px;
+    background-color: var(--cardbg);
+    color: var(--cardc);
+    text-align: center;
+    padding-top: 0.5em;
+}
+.card-user-records a{
+    text-decoration: none;
+}
+.card-user-record-line{
+    display: flex;
+    justify-content: space-between;
+    margin: 0.2em 1em 0.2em 1em;
+    border-bottom: black 1px dotted;
+}.card-user-record-line:last-child{
+    border: none;
+}

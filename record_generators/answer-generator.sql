@@ -4,7 +4,7 @@
 
 do $$
     BEGIN
-        for cnt in 1..150 loop
+        for cnt in 1..28 loop
                 insert into answer(vote_number, question_id, message, image, user_id)
                 values(floor(random() * 95 + 5)::int,
                         (SELECT id

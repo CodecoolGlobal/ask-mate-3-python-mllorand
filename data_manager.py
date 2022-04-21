@@ -224,23 +224,23 @@ def get_tag_page_data(cursor):
 
 @connection.connection_handler
 def get_user_page_data(cursor, user_id):
-    user_details = ''
-    questions = ''
-    answers = ''
-    comments = ''
-    return {'user_details': user_details,
-            'questions': questions,
-            'answers': answers,
-            'comments': comments}
+    user_data = get_fields_from_table_by_value(['user_id', 'user_name', 'email', 'registration_date', 'reputation_level', 'image'], 'users', 'user_id', user_id)
 
+    query = util.query_select_fields_from_table('question', ['id', 'title', 'submission_time'])
+    query += util.add_where_to_query('user_id', '=', user_id)
+    cursor.execute(query)
+    questions = cursor.fetchall()
 
-@connection.connection_handler
-def get_user_page_data(cursor, user_id):
-    user_details = ''
-    questions = ''
-    answers = ''
-    comments = ''
-    return {'user_details': user_details,
+    query = util.query_select_fields_from_table('answer', ['id', 'question_id', 'message', 'submission_time'])
+    query += util.add_where_to_query('user_id', '=', user_id)
+    cursor.execute(query)
+    answers = cursor.fetchall()
+
+    query = util.query_select_fields_from_table('comment', ['id', 'question_id', 'answer_id', 'message', 'submission_time'])
+    query += util.add_where_to_query('user_id', '=', user_id)
+    cursor.execute(query)
+    comments = cursor.fetchall()
+    return {'user_data': user_data,
             'questions': questions,
             'answers': answers,
             'comments': comments}
