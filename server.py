@@ -180,5 +180,10 @@ def logout():
     return redirect(url_for('load_main'))
 
 
+@app.route('/user/<user-id>')
+def load_user_page(user_id):
+    return render_template('user_page.html', payload=data_manager.get_user_page_data(user_id))
+
+
 if __name__ == "__main__":
     app.run(debug=True)

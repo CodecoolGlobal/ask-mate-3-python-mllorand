@@ -214,8 +214,19 @@ def get_user_by_email(cursor, email):
         WHERE email = {email}'''
     cursor.execute(sql.SQL(query).format(email=sql.Literal(email)))
     return cursor.fetchone()
+
+
 @connection.connection_handler
 def get_tag_page_data(cursor):
     query = util.get_tag_page_data()
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@connection.connection_handler
+def get_user_page_data(user_id):
+
+    return {'user_details': user_details,
+            'questions': bonus_questions,
+            'answers': answers,
+            'comments': comments}
