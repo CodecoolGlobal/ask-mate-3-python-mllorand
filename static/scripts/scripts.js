@@ -25,7 +25,6 @@ function mark_answer(status, answer_id, question_id){
         document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg)'
         document.getElementById('accept_mark_'+answer_id).innerHTML = ''
     }
-    console.log(current_status)
     request.open("POST","/test-accept-answer");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send("status="+status+"&answer_id="+answer_id+"&question_id="+question_id);

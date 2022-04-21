@@ -227,6 +227,12 @@ def mark_accepted(status, answer_id, question_id):
         return redirect(url_for('load_question_page', question_id=question_id))
 
 
+@app.route('/test-accept-answer', methods=['POST'])
+def test_mark_accepted():
+    print(request.form)
+    return '', 202
+
+
 @app.route('/user/<user_id>')
 def load_user_page(user_id):
     return render_template('user_page.html', payload=data_manager.get_user_page_data(user_id))
