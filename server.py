@@ -27,6 +27,7 @@ def catch_hacker():
 
 @app.route("/")
 def load_main():
+    print(session)
     return render_template('index.html', payload=data_manager.get_main_page_data(request.args))
 
 
@@ -186,6 +187,12 @@ def login():
 def logout():
     session.pop('username', None)
     return redirect(url_for('load_main'))
+
+
+@app.route('/user/<user_id>')
+def load_user_page(user_id):
+    print(session)
+    return render_template('user_page.html', payload=data_manager.get_user_page_data(user_id))
 
 
 if __name__ == "__main__":
