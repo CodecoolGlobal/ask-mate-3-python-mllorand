@@ -29,8 +29,8 @@ ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_
 drop table if exists public.users cascade;
 create table users(
     user_id serial constraint users_pk primary key,
-    user_name varchar(100) not null,
-    email varchar(120) not null,
+    user_name varchar(100) not null unique,
+    email varchar(120) not null unique,
     password varchar(200) not null,
     registration_date timestamp without time zone default now()::timestamp(0),
     reputation_level  INT default 0,
