@@ -219,10 +219,12 @@ def logout():
 
 @app.route('/accept-answer', methods=['POST'])
 def mark_accepted():
-    data_manager.answer_accept_status(status=request.form['status'], answer_id=request.form['answer_id'])
+    print(request.form['status'])
     if request.form['status'] == 'False':
+        data_manager.answer_accept_status(status='true', answer_id=request.form['answer_id'])
         data_manager.gain_when_accepted(answer_id=request.form['answer_id'], value=+15)
     else:
+        data_manager.answer_accept_status(status='false', answer_id=request.form['answer_id'])
         data_manager.gain_when_accepted(answer_id=request.form['answer_id'], value=-15)
     return '', 202
 
