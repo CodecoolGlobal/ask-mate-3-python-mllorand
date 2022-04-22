@@ -23,7 +23,7 @@ def get_records_by_search(cursor, searched_word, sort_by, order):
     search_results = cursor.fetchall()
     for row in search_results:
         for match in row:
-            if match in ['title', 'message', 'a_message']:
+            if match in ['q.title', 'q.message', 'a_message']:
                 highlighted = []
                 if searched_word.lower() in str(row[match]).lower():
                     words = row[match].split()
