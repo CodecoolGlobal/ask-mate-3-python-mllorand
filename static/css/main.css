@@ -75,8 +75,10 @@ body {
     color: var(--fc);
 }
 
-.main-nav div{
+.main-nav div,
+.main-nav div label{
     margin-right: 1em;
+    margin-bottom: 0;
 }
 
 .main-nav a:hover {
@@ -236,7 +238,7 @@ body {
     font-size: 0.8em;
     margin-left: 1em;
     border: black solid 1px;
-    background-color: var(--cardbg);
+    background-color: transparent;
     border-radius: 1em;
 }
 .card-tag{

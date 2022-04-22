@@ -219,7 +219,7 @@ def get_users_list(cursor):
 @connection.connection_handler
 def answer_accept_status(cursor, status, answer_id):
     query = util.accept_answer(status, answer_id)
-    return cursor.execute(query)
+    cursor.execute(query)
 
 
 @connection.connection_handler

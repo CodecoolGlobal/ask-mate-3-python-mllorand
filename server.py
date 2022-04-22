@@ -216,15 +216,14 @@ def logout():
     return redirect(url_for('load_main'))
 
 
-@app.route('/accept-answer/<status>/<answer_id>/<question_id>')
-def mark_accepted(status, answer_id, question_id):
-    data_manager.answer_accept_status(status=status, answer_id=answer_id)
-    if status != 'False':
-        data_manager.gain_when_accepted(answer_id=answer_id, value=+15)
-        return redirect(url_for('load_question_page', question_id=question_id))
+@app.route('/accept-answer', methods=['POST'])
+def mark_accepted():
+    data_manager.answer_accept_status(status=request.form['status'], answer_id=request.form['answer_id'])
+    if request.form['status'] == 'False':
+        data_manager.gain_when_accepted(answer_id=request.form['answer_id'], value=+15)
     else:
-        data_manager.gain_when_accepted(answer_id=answer_id, value=-15)
-        return redirect(url_for('load_question_page', question_id=question_id))
+        data_manager.gain_when_accepted(answer_id=request.form['answer_id'], value=-15)
+    return '', 202
 
 
 @app.route('/user/<user_id>')

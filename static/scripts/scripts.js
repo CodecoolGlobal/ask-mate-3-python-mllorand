@@ -15,18 +15,21 @@ function vote_on_record(table, record_id, vote){
 
 function mark_answer(status, answer_id, question_id){
     const request = new XMLHttpRequest();
-    let current_status = document.getElementById('accept_'+answer_id).innerHTML
-    if (current_status == 'Accept'){
+    if (document.getElementById('accept_'+answer_id).innerHTML == 'Accept'){
+        status = 'False'
+    } else {
+        status = 'True'
+    }
+    if (status == 'False'){
         document.getElementById('accept_'+answer_id).innerHTML = 'Unaccept'
         document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg_accepted)'
-        document.getElementById('message_'+answer_id).innerHTML = ''
+        document.getElementById('accept_mark_'+answer_id).innerHTML = '<i class="fa fa-check"></i>'
     } else {
         document.getElementById('accept_'+answer_id).innerHTML = 'Accept'
         document.getElementById(answer_id).style.backgroundColor = 'var(--cardbg)'
-        document.getElementById('message_'+answer_id).innerHTML = '<i id="accept" className="fa fa-check"></i>'
+        document.getElementById('accept_mark_'+answer_id).innerHTML = ''
     }
-    console.log(current_status)
-    request.open("POST","/test-accept-answer");
+    request.open("POST","/accept-answer");
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.send("status="+status+"&answer_id="+answer_id+"&question_id="+question_id);
 }

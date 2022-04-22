@@ -73,13 +73,12 @@
         {% endfor %}
     <h1 style="margin: 0;padding: 0">{{ payload.answers | length }} Answers:</h1><br>
     {% for answer in payload.answers %}
-        <div class="answer-card" id="{{ answer.id }}">
+        <div class="answer-card" style="{{ 'background-color: var(--cardbg_accepted)' if answer.accepted}}" id="{{ answer.id }}">
             <div class="card-title"><h3>{{ answer.title }}</h3></div>
             <div class="card-message">
-            {% if answer.accepted == True %}
-                <i class="fa fa-check"></i>
-            {% endif %}
-                {{ answer.message }}</div>
+            <span id="accept_mark_{{ answer.id }}">{{ '<i class="fa fa-check"></i>'|safe if answer.accepted}}</span>
+                {{ answer.message }}
+            </div>
             <img class="card-image" src={{url_for('images', filename=answer.image) }}>
             <div class="card-misc">
                 <div class="card-vote-number">Votes:
@@ -96,7 +95,7 @@
                 <button onclick="location.href='{{ url_for('add_new_record',record='comment', answer_id=answer.id) }}'">Add new comment</button>
                 <button onclick="location.href='{{ url_for('delete_record_by_id', table='answer', record_id=answer.id ) }}'">Delete Answer</button>
 	            {% if session.user_id == payload.question[0].user_id %}
-                <button onclick="location.href='{{ url_for('mark_accepted', status=True if answer.accepted == False else False, answer_id=answer.id, question_id=payload.question[0].id) }}'">{{ 'Accept' if answer.accepted == False else 'Unaccept' }}</button>
+                <button id="accept_{{ answer.id }}" onclick="mark_answer(document.getElementById('accept_{{ answer.id }}').innerHTML,{{ answer.id }},{{ payload.question[0].id }} )">{{ 'Accept' if answer.accepted == False else 'Unaccept' }}</button>
                 {% endif %}
             </div>
                 <div class="card-comment">
