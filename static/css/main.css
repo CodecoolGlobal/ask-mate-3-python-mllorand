@@ -124,6 +124,7 @@ body {
 }
 
 .content-container {
+    margin-top: 2em;
     grid-area: content;
     position: relative;
     width: 100%;
@@ -232,7 +233,7 @@ body {
 .card-comment-line button,
 .card-button button,
 .tag-button{
-    font-size: 0.7em;
+    font-size: 0.8em;
     margin-left: 1em;
     border: black solid 1px;
     background-color: var(--cardbg);
@@ -400,15 +401,16 @@ body {
 }
 .card-user-details{
     color: var(--cardc);
-    background-color: var(--cardbg);
+    /*background-color: var(--cardbg);*/
     display: grid;
-    grid-template-columns: auto 140px;
+    min-width: max-content;
+    max-width: max-content;
+    grid-template-columns: 1fr 1fr;
     grid-template-areas:
         'details image';
-    margin: 20px;
     padding: 0.5em;
-    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
-    min-height: 140px;
+    /*box-shadow: 6px 6px 14px rgba(0,0,0,0.8);*/
+    margin: 0 auto 0 auto;
 }
 .card-user-data{
     list-style: none;
@@ -419,10 +421,12 @@ body {
     width: 140px;
     list-style: none;
     grid-area: image;
+    margin: auto auto auto auto;
 }
 .card-user-records{
-    margin: 20px;
+    margin: 3em 10% 0 10%;
     background-color: var(--cardbg);
+    box-shadow: 6px 6px 14px rgba(0,0,0,0.8);
     color: var(--cardc);
     text-align: center;
     padding-top: 0.5em;
@@ -445,4 +449,20 @@ body {
 
  mark {
      background-color: rgba(202,182,0,1);
+ }
+ label{
+     margin: 0;
+ }
+ .card-login{
+     margin: 2em auto 0 auto;
+     padding: 1em;
+     background-color: var(--cardbg);
+     width: max-content;
+ }
+ .card-login h3,
+ .card-login button{
+     display: block;
+     text-align: center;
+     margin-left: auto;
+     margin-right: auto;
  }
