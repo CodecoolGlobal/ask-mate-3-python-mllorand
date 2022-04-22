@@ -57,8 +57,12 @@ body {
 }
 .navbar-fix{
     grid-area: upper-nav;
+    display: flex;
     margin-left: auto;
     margin-right: 2em;
+}
+.navbar-fix div{
+    margin-left: 1em;
 }
 .navbar-custom-container{
     grid-area: lower-nav;
