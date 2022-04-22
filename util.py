@@ -174,3 +174,11 @@ def accept_answer(status, answer_id):
         WHERE id = {answer_id}'''
     return sql.SQL(query).format(status=sql.Literal(status),
                                  answer_id=sql.Literal(answer_id))
+
+
+def gain_view_number(question_id):
+    query = '''
+            UPDATE question
+            SET view_number = view_number + 1
+            WHERE id = {question_id}'''
+    return sql.SQL(query).format(question_id=sql.Literal(question_id))

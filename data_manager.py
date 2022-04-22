@@ -255,3 +255,9 @@ def gain_when_accepted(cursor, answer_id, value):
                                              key_value=answer_id)
     result = util.modify_reputation(value=value, id=user_id.get('user_id'))
     cursor.execute(result)
+
+
+@connection.connection_handler
+def update_view_nuber(cursor, question_id):
+    result = util.gain_view_number(question_id=question_id)
+    cursor.execute(result)

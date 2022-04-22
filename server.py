@@ -40,6 +40,7 @@ def load_list_page():
 
 @app.route("/question/<question_id>")
 def load_question_page(question_id):
+    data_manager.update_view_nuber(question_id=question_id)
     payload = data_manager.get_question_page_data(question_id, request.args)
     return render_template("question.html", payload=payload)
 
