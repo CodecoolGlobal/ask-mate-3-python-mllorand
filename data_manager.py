@@ -22,17 +22,21 @@ def get_records_by_search(cursor, searched_word, sort_by, order):
     cursor.execute(query)
     search_results = cursor.fetchall()
     for row in search_results:
-        for match in row:
-            if match in ['q.title', 'q.message', 'a_message']:
+        print(row)
+    for row in search_results:
+        for column in row:
+            if column in ['title', 'q.message', 'a_message']:
                 highlighted = []
-                if searched_word.lower() in str(row[match]).lower():
-                    words = row[match].split()
+                if searched_word.lower() in str(row[column]).lower():
+                    words = row[column].split()
                     for word in words:
-                        if word.lower() == searched_word.lower():
+                        if searched_word.lower() in word.lower():
                             highlighted.append('<mark>'+word+'</mark>')
                         else:
                             highlighted.append(word)
-                row[match] = (" ").join(highlighted)
+                    row[column] = (" ").join(highlighted)
+    for row in search_results:
+        print(row)
     return search_results
 
 
