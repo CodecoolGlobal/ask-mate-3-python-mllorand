@@ -2,14 +2,6 @@
 {% block page_title %}
     User Page
 {% endblock %}
-{% block navbar %}
-    <div class="main-nav">
-    <div><a href="{{ url_for('load_main') }}">Home Page</a></div>
-	<div><a href="{{ url_for('load_users_list') }}" type="submit">All users</a></div>
-    <div><a href="{{ url_for('load_list_page') }}" type="submit">All question</a></div>
-    <div><a href="{{ url_for('load_tags_page') }}" type="submit">Tags</a></div>
-    </div>
-{% endblock %}
 {% block content %}
     <div class="card-user-details">
     <ul>

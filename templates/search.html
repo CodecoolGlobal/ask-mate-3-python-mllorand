@@ -1,12 +1,6 @@
 {% extends "layout.html" %}
 {% block page_title %}Home{% endblock %}
 {% block navbar %}
-<div class="main-nav">
-    <form class="nav-search" action="/search">
-        <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
-    </form>
-    <div><a href="/list" type="submit">All question</a></div>
-    <div><a href="/add-question" type="submit">Add new question</a></div>
 <div>
     <label for="sort_by">Sort by:</label>
     <select onchange="location = this.value" name="sort_by" id="sort_by">
@@ -22,8 +16,6 @@
             <option value="/search?q={{ request.args["q"] }}&sort_by={{ column }}&order=desc">{{ column.replace('_', ' ').replace('a','answer').capitalize() }}(desc)</option>
         {% endfor %}
     </select>
-</div>
-
 </div>
 {% endblock %}
 {% block content %}
