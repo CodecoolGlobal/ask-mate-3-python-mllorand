@@ -38,8 +38,17 @@
 	    {% endif %}
     </div>
     <div class="navbar-custom-container">
+        <div class="main-nav">
+            <form class="nav-search" action="/search">
+                <input name="q" type="text"><button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+            <div><a href="{{ url_for('load_list_page') }}" type="submit">All question</a></div>
+            <div><a href="{{url_for('add_new_record', record='question')}}" type="submit">Add new question</a></div>
+            <div><a href="{{ url_for('load_users_list') }}" type="submit">All users</a></div>
+            <div><a href="{{ url_for('load_tags_page') }}" type="submit">Tags</a></div>
     {% block navbar %}
     {% endblock %}
+        </div>
     </div>
 </div>
 <div class="content-container">

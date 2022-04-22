@@ -3,10 +3,6 @@
     Question Page
 {% endblock %}
 {% block navbar %}
-    <div class="main-nav">
-        <div><a href="{{ url_for('load_main') }}">Home Page</a></div>
-        <div><a href="{{ url_for('load_list_page') }}">All questions</a></div>
-        <div><a href="{{ url_for('load_tags_page') }}" type="submit">Tags</a></div>
         <div>
             <label for="sort_by">Sort by:</label>
             <select onchange="location = this.value" name="sort_by" id="sort_by">
@@ -23,7 +19,6 @@
                 {% endfor %}
             </select>
         </div>
-    </div>
 {% endblock %}
 {% block content %}
     {% for question in payload.question %}
