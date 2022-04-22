@@ -120,7 +120,7 @@ def query_update(table, key_value_dict):
 def get_records_by_search(word, sort_by=None, order=None):
     query ="""
             select q.id,a.id as a_id,title,
-            q.message,a.message as a_message,
+            q.message ,a.message as a_message,
             q.view_number,
             q.vote_number,a.vote_number as a_vote_number,
             q.submission_time,a.submission_time as a_submission_time
