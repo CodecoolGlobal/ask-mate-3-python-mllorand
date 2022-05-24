@@ -48,10 +48,10 @@ def load_question_page(question_id):
 @app.route("/<table>/<record_id>/delete")
 @app.route("/question/<question_id>/<table>/<record_id>/delete")
 def delete_record_by_id(table, record_id, question_id=None):
-    record = data_manager.get_fields_from_table_by_value('', table, 'id', record_id)
+    record = data_manager.get_fields_from_table_by_value('', table if table != 'question_tag' else "question", 'id', record_id if table != 'question_tag' else question_id)
     if session.get('user_id') != record.get('user_id'):
         flash('You have no permission to delete!', category='error')
-        return redirect(url_for('load_question_page', question_id=record_id))
+        return redirect(url_for('load_question_page', question_id=record_id if table != 'question_tag' else question_id))
     if table != 'question_tag':
         data_manager.delete_record_by_identifier(table, record_id, question_id, 'id')
     else:
