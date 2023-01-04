@@ -76,7 +76,7 @@ def add_new_record(record, question_id=None, answer_id=None):
         flash('Please log in to contribute!', category='error')
         return redirect(url_for('login'))
     user_id = data_manager.get_fields_from_table_by_value(fields='user_id', table='users', key='email',
-                                                          key_value=session['username'])
+                                                          key_value=session['email'])
     if request.method == 'POST':
         data_manager.add_new_record(record, question_id, answer_id, request, user_id=user_id.get('user_id'))
         if record != 'question' and request.form.get('redirect'):
@@ -192,13 +192,14 @@ def register_user():
 def login():
     if request.method == 'POST':
         try:
-            user = data_manager.get_fields_from_table_by_value(fields=['user_id', 'user_name', 'password'],
+            user = data_manager.get_fields_from_table_by_value(fields=['user_id', 'user_name', 'password', 'email'],
                                                                table='users',
                                                                key='email',
                                                                key_value=request.form['email'])
             if util.verify_password(request.form['password'], user['password']):
                 session['username'] = user['user_name']
                 session['user_id'] = user['user_id']
+                session['email'] = user['email']
                 flash(f"Welcome {session['username']}!", category='success')
                 return redirect(url_for("load_main"))
             else:
